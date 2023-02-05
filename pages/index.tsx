@@ -19,7 +19,7 @@ function Home() {
           <Typography variant="h4" component="h1" gutterBottom>
             Simplify Your Life with AI-Powered Conversations
           </Typography>
-          <Typography variant="h5" component="h3">
+          <Typography variant="h6" component="h4">
             Save Time and Effort with Every Chat
           </Typography>
         </Box>
