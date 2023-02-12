@@ -1,0 +1,90 @@
+@import "mixins";
+@import "variables";
+
+.heroPaper {
+  height: 600px;
+  background-size: 400% 400%;
+  -ms-transform: skew(0, 10deg);
+  -webkit-transform: skew(0, 10deg);
+  background-image: linear-gradient(45deg, #00dbde 0%, #fc00ff 100%);
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
+    rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  margin-top: -5em;
+  padding: 7%;
+  transform: skew(0, 10deg);
+  z-index: 0;
+  position: relative;
+  color: white;
+  animation: gradient 15s ease infinite;
+  -webkit-animation: gradient 15s ease infinite;
+  -moz-animation: gradient 15s ease infinite;
+  -o-animation: gradient 15s ease infinite;
+  -ms-animation: gradient 15s ease infinite;
+
+  .heroBox {
+    display: "flex";
+    flex-direction: "column";
+    text-align: center;
+    transform: rotateZ(-8deg);
+    -webkit-transform: skew(0, -10deg);
+    -ms-transform: skew(0, -10deg);
+    transform: skew(0, -10deg);
+    padding-top: 120px;
+  }
+
+  .heroIllustrationBox {
+    // put margin on the bottom
+    margin-bottom: 2em;
+  }
+
+  .heroGrid {
+    display: "flex";
+    flex-direction: "column";
+    text-align: center;
+    transform: rotateZ(-8deg);
+    -webkit-transform: skew(0, -10deg);
+    -ms-transform: skew(0, -10deg);
+    transform: skew(0, -10deg);
+    margin-top: -100px;
+    background: transparent;
+
+    .heroIllustration {
+      display: "flex";
+      flex-direction: "column";
+      text-align: center;
+      transform: rotateZ(-8deg);
+      -webkit-transform: skew(0, -10deg);
+      -ms-transform: skew(0, -10deg);
+      transform: skew(0, -10deg);
+      padding-top: 120px;
+      background: transparent;
+
+      .heroIllustrationImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
+
+@include desktop() {
+  .heroPaper {
+    background-size: cover;
+    background-position: initial;
+  }
+}
+
+// animate the background colors
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

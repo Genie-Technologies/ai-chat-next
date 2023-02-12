@@ -1,0 +1,11 @@
+@mixin desktop() {
+  @media (max-width: 600px) {
+    @content();
+  }
+}
+
+@mixin mq($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}

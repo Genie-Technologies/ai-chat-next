@@ -22,10 +22,10 @@ export default function ChatCard() {
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={8}>
-            <Item>
+            <Item style={{ boxShadow: "none" }}>
               <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
+                sx={{ fontSize: 18 }}
+                color="text.primary"
                 gutterBottom
               >
                 Shagun Mistry
@@ -33,15 +33,22 @@ export default function ChatCard() {
             </Item>
           </Grid>
           <Grid item xs={4}>
-            <Item>Some Daily Summary or something here.</Item>
+            <Item style={{ boxShadow: "none" }}>
+              Some Daily Summary or something here.
+            </Item>
           </Grid>
           <Grid item xs={4}>
-            <Item>
+            <Item style={{ boxShadow: "none" }}>
               <ChatsList />
             </Item>
           </Grid>
           <Grid item xs={8}>
-            <Item>
+            <Item
+              style={{
+                borderRadius: "10px",
+                boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+              }}
+            >
               <Chat />
             </Item>
           </Grid>

@@ -1,30 +1,27 @@
+import { Hero } from "../components/Landing/Hero";
+import { Layout, Page } from "@vercel/examples-ui";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { Layout, Text, Page } from "@vercel/examples-ui";
+import FeaturesList from "../components/Features";
+import Head from "next/head";
+import SignUpForm from "../components/Signup/Signup";
 
 function Home() {
   return (
-    <Page className="flex flex-col gap-12">
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            my: 4,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4" component="h1" gutterBottom>
-            Simplify Your Life with AI-Powered Conversations
-          </Typography>
-          <Typography variant="h6" component="h4">
-            Save Time and Effort with Every Chat
-          </Typography>
-        </Box>
+    <div>
+      <Head>
+        <title>Cosmic Chat</title>
+      </Head>
+      <Hero />
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <Container maxWidth="lg" style={{ marginTop: "10em" }}>
+        <FeaturesList />
+        <SignUpForm />
       </Container>
-    </Page>
+    </div>
   );
 }
 
