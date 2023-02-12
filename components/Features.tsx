@@ -24,7 +24,8 @@ export default function FeaturesList() {
               A valuable tool for anyone who wants to stay up-to-date with their
               chats, even when they are busy or on-the-go. Whether you are in a
               group chat for work, socializing with friends, or organizing an
-              event, this feature will help you stay on top of what's important.
+              event, this feature will help you stay on top of what is
+              important.
             </Typography>
           </Paper>
         </Grid>
@@ -66,7 +67,6 @@ export default function FeaturesList() {
               conversation feels like a one-of-a-kind experience. So why settle
               for an ordinary chat when you can have a personalized one?
               <br />
-              {/** Surround the text with a link to the chat */}
               <Button variant="contained" color="secondary">
                 <Link href="/chat">Try it out now!</Link>
               </Button>
@@ -93,7 +93,7 @@ export default function FeaturesList() {
               className={styles.featureDetails}
             >
               Tired of typing out long responses every time you message someone?
-              With Smart Replies, you'll receive
+              With Smart Replies, you will receive
               <Typography variant="body1" component="strong" color="secondary">
                 {" "}
                 personalized suggestions based on your texting style and the
