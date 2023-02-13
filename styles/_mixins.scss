@@ -4,6 +4,19 @@
   }
 }
 
+// Create mixins for media queries
+@mixin mobile() {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
+
+@mixin tablet() {
+  @media (min-width: 600px) {
+    @content;
+  }
+}
+
 @mixin mq($breakpoint) {
   @media (min-width: $breakpoint) {
     @content;

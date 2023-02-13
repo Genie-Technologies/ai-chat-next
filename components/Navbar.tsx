@@ -96,7 +96,7 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={() => handleMenuItemClick(page)}>
-                  <Button variant="outlined">{page}</Button>
+                  <Button variant="contained">{page}</Button>
                 </MenuItem>
               ))}
             </Menu>

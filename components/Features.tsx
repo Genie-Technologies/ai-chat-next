@@ -5,11 +5,15 @@ import Link from "next/link";
 export default function FeaturesList() {
   return (
     <div>
-      <Typography variant="h3" component="h2" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom textAlign={"center"}>
         Features
       </Typography>
-      <Grid container spacing={4}>
-        <Grid item xs={6}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
+        <Grid item xs={6} lg={3}>
           <Paper elevation={0} className={styles.featureText}>
             <Typography
               variant="h4"
@@ -20,7 +24,11 @@ export default function FeaturesList() {
             >
               AI-Powered Chat Summaries
             </Typography>
-            <Typography variant="body1" component="p">
+            <Typography
+              variant="body1"
+              component="p"
+              className={styles.featureDetails}
+            >
               A valuable tool for anyone who wants to stay up-to-date with their
               chats, even when they are busy or on-the-go. Whether you are in a
               group chat for work, socializing with friends, or organizing an
@@ -40,7 +48,11 @@ export default function FeaturesList() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={4}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
         <Grid item xs={6}>
           <Paper elevation={0}>
             <img
@@ -61,21 +73,26 @@ export default function FeaturesList() {
             >
               A Personalized Chat Experience for Every Person
             </Typography>
-            <Typography variant="body1" component="p">
+            <Typography
+              variant="body1"
+              component="p"
+              className={styles.featureDetails}
+            >
               Say goodbye to generic one-size-fits-all messaging and hello to a
               truly personalized experience for every person you talk to! Every
               conversation feels like a one-of-a-kind experience. So why settle
               for an ordinary chat when you can have a personalized one?
               <br />
-              <Button variant="contained" color="secondary">
-                <Link href="/chat">Try it out now!</Link>
-              </Button>
             </Typography>
           </Paper>
         </Grid>
       </Grid>
 
-      <Grid container spacing={4}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
         <Grid item xs={6}>
           <Paper elevation={0} className={styles.featureText}>
             <Typography

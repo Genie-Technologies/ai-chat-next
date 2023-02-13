@@ -1,3 +1,5 @@
+@import "mixins";
+
 .featureHeader {
   font-size: 2rem;
   font-weight: 700;
@@ -14,6 +16,10 @@
   margin: 2rem auto;
   padding: 0 1rem;
   max-width: 500px;
+
+  @include mobile() {
+    text-align: left;
+  }
 }
 
 .featureText {
@@ -22,6 +28,11 @@
   margin: 7rem auto 0 auto;
   padding: 0 1rem;
   max-width: 500px;
+
+  @include mobile() {
+    margin: 2rem auto 0 auto;
+    text-align: center;
+  }
 }
 
 .featureImage {
@@ -31,6 +42,13 @@
   box-shadow: 0 0 0 0 #10002b, 0 0 0 0 #7209b7;
   animation: pulse 2s infinite;
   border-radius: 10px;
+
+  @include mobile() {
+    width: 50%;
+    height: 50%;
+    margin: 10px auto;
+    display: block;
+  }
 }
 
 .moreFeatures {

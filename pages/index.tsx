@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import FeaturesList from "../components/Features";
 import Head from "next/head";
 import SignUpForm from "../components/Signup/Signup";
+import ForWho from "../components/Landing/ForWho";
 
 function Home() {
   return (
@@ -12,12 +13,9 @@ function Home() {
         <title>Cosmic Chat</title>
       </Head>
       <Hero />
-      <br />
-      <br />
-      <br />
-      <br />
+      <ForWho />
 
-      <Container maxWidth="lg" style={{ marginTop: "10em" }}>
+      <Container maxWidth="lg" style={{ marginTop: "10%" }}>
         <FeaturesList />
         <SignUpForm />
       </Container>
