@@ -14,14 +14,14 @@ export const light = {
     contrastText: "#fff",
   },
   secondary: {
-    light: "#ffb74d",
+    light: "#92fe9d",
     main: "#f9b934",
     dark: "#FF9800",
     contrastText: "rgba(0, 0, 0, 0.87)",
   },
   text: {
     primary: "#1e2022",
-    secondary: "#677788",
+    secondary: "#92fe9d",
   },
   divider: "rgba(0, 0, 0, 0.12)",
   background: {

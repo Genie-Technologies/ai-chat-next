@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import styles from "../../../../../styles/Reviews.module.scss";
+import styles from "../../../../../styles/ForWho.module.scss";
 
 const forWho = [
   {

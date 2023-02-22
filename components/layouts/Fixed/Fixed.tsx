@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { alpha, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
+import React, { useState } from "react";
+import { alpha, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import AppBar from "@mui/material/AppBar";
 
-import Container from 'components/Container';
-import { Topbar, Sidebar, Footer } from './components';
-import pages from '../navigation--docs';
+import Container from "../../Container";
+import { Topbar, Sidebar, Footer } from "./components";
+import pages from "../navigation--docs";
 
 interface Props {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ interface Props {
 
 const Fixed = ({ children }: Props): JSX.Element => {
   const theme = useTheme();
-  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
+  const isMd = useMediaQuery(theme.breakpoints.up("md"), {
     defaultMatches: true,
   });
 
@@ -34,7 +34,7 @@ const Fixed = ({ children }: Props): JSX.Element => {
   return (
     <Box>
       <AppBar
-        position={'fixed'}
+        position={"fixed"}
         sx={{
           backgroundColor: theme.palette.background.paper,
           borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -48,7 +48,7 @@ const Fixed = ({ children }: Props): JSX.Element => {
       <Sidebar
         onClose={handleSidebarClose}
         open={open}
-        variant={isMd ? 'permanent' : 'temporary'}
+        variant={isMd ? "permanent" : "temporary"}
         pages={pages}
       />
       <main>
@@ -57,7 +57,7 @@ const Fixed = ({ children }: Props): JSX.Element => {
           display="flex"
           flex="1 1 auto"
           overflow="hidden"
-          paddingLeft={{ md: '256px' }}
+          paddingLeft={{ md: "256px" }}
         >
           <Box display="flex" flex="1 1 auto" overflow="hidden">
             <Box flex="1 1 auto" height="100%" overflow="auto">

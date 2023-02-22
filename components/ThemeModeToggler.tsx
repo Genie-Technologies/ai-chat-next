@@ -4,13 +4,12 @@ import { alpha, useTheme } from "@mui/material/styles";
 
 const ThemeModeToggler = (): JSX.Element => {
   const theme = useTheme();
-  // const { themeToggler } = theme;
   const { mode } = theme.palette;
 
   return (
     <Button
       variant={"outlined"}
-      // onClick={() => themeToggler()}
+      // TODO: onClick={() => themeToggler()}
       aria-label="Dark mode toggler"
       color={mode === "light" ? "primary" : "secondary"}
       sx={{

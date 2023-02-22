@@ -10,7 +10,7 @@ import {
   Hub,
   Partners,
   Pricings,
-  Reviews,
+  ForWho,
   Support,
 } from "./components";
 
@@ -30,7 +30,7 @@ const Landing = (): JSX.Element => {
           <Hero />
         </Container>
         <Container paddingY={"0 !important"}>
-          <Reviews />
+          <ForWho />
         </Container>
         <Container>
           <Hub />
@@ -53,9 +53,9 @@ const Landing = (): JSX.Element => {
           ></path>
         </Box>
       </Box>
-      <Container>
+      {/* <Container>
         <Support />
-      </Container>
+      </Container> */}
       <Box bgcolor={"alternate.main"} position={"relative"}>
         <Container position="relative" zIndex={2}>
           <Customization />

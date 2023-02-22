@@ -1,57 +1,34 @@
-@import "mixins";
+.ForWhoBox {
+  // Create an animated gradient effect with #38ef7d and #11998e colors that goes in a 45 degree angle
+  // background: linear-gradient(45deg, #38ef7d, #11998e);
+  background-size: 300% 300%;
+  background-image: linear-gradient(
+    45deg,
+    #e23e57 0%,
+    #0ef4b3 25%,
+    #e23e57 51%,
+    #38ef7d 100%
+  );
+  animation: AnimateBG 20s ease infinite;
 
-.heroIllustrationBox {
-  // put margin on the bottom
-  margin-bottom: 2em;
-}
+  // box-shadow: 0 0 10px 0 #38ef7d;
+  border-radius: 10px;
+  padding: 10px;
 
-.heroGrid {
-  display: "flex";
-  flex-direction: "column";
-  text-align: center;
-  transform: rotateZ(-8deg);
-  -webkit-transform: skew(0, -7deg);
-  -ms-transform: skew(0, -7deg);
-  transform: skew(0, -7deg);
-  margin-top: -100px;
-  background: transparent;
-
-  .heroIllustration {
-    display: "flex";
-    flex-direction: "column";
-    text-align: center;
-    transform: rotateZ(-8deg);
-    -webkit-transform: skew(0, 7deg);
-    -ms-transform: skew(0, 7deg);
-    transform: skew(0, 7deg);
-    padding-top: 120px;
-    background: transparent;
-
-    .heroIllustrationImage {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+  &:hover {
+    // Have a  minimal glow effect of the card with #e23e57 color
+    box-shadow: 0 0 10px 0 #11998e;
   }
 }
 
-// On mobile, the image is too big
-@include mobile() {
-  .heroIllustrationBox {
-    margin-bottom: 0;
+@keyframes AnimateBG {
+  0% {
+    background-position: 0% 50%;
   }
-
-  .heroGrid {
-    margin-top: 0;
-
-    .heroIllustration {
-      padding-top: 10px;
-
-      .heroIllustrationImage {
-        width: 60%;
-        height: 60%;
-        object-fit: contain;
-      }
-    }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

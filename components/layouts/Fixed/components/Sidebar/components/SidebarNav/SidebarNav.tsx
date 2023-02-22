@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { alpha, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useEffect, useState } from "react";
+import { alpha, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
+import { PageItem } from "../../../../../../utils";
 
 interface Props {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   onClose: () => void;
   pages: Array<{
     groupTitle: string;
@@ -16,17 +16,17 @@ interface Props {
 
 const SidebarNav = ({ pages, onClose }: Props): JSX.Element => {
   const theme = useTheme();
-  const [activeLink, setActiveLink] = useState('');
+  const [activeLink, setActiveLink] = useState("");
   useEffect(() => {
-    setActiveLink(window && window.location ? window.location.pathname : '');
+    setActiveLink(window && window.location ? window.location.pathname : "");
   }, []);
 
   return (
     <Box paddingBottom={2}>
       <Box
-        justifyContent={'flex-end'}
+        justifyContent={"flex-end"}
         onClick={() => onClose()}
-        display={{ xs: 'flex', md: 'none' }}
+        display={{ xs: "flex", md: "none" }}
       >
         <CloseIcon fontSize="small" />
       </Box>
@@ -37,9 +37,9 @@ const SidebarNav = ({ pages, onClose }: Props): JSX.Element => {
               variant="caption"
               sx={{
                 fontWeight: 700,
-                textTransform: 'uppercase',
+                textTransform: "uppercase",
                 marginBottom: 1,
-                display: 'block',
+                display: "block",
               }}
             >
               {item.groupTitle}
@@ -48,12 +48,12 @@ const SidebarNav = ({ pages, onClose }: Props): JSX.Element => {
               {item.pages.map((p, i) => (
                 <Box marginBottom={1 / 2} key={i}>
                   <Button
-                    component={'a'}
+                    component={"a"}
                     href={p.href}
                     target={p.target}
                     fullWidth
                     sx={{
-                      justifyContent: 'flex-start',
+                      justifyContent: "flex-start",
                       color:
                         activeLink === p.href
                           ? theme.palette.primary.main
@@ -61,7 +61,7 @@ const SidebarNav = ({ pages, onClose }: Props): JSX.Element => {
                       backgroundColor:
                         activeLink === p.href
                           ? alpha(theme.palette.primary.main, 0.1)
-                          : 'transparent',
+                          : "transparent",
                       fontWeight: activeLink === p.href ? 600 : 400,
                     }}
                     onClick={() => onClose()}

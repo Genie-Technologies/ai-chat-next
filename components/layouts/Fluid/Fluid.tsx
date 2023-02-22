@@ -1,19 +1,19 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
-import Fab from '@mui/material/Fab';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Zoom from '@mui/material/Zoom';
-import NoSsr from '@mui/material/NoSsr';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import AppBar from "@mui/material/AppBar";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Zoom from "@mui/material/Zoom";
+import NoSsr from "@mui/material/NoSsr";
 
-import Container from 'components/Container';
-import TopNav from 'components/TopNav';
+import Container from "../../Container";
+import TopNav from "../../TopNav";
 
-import { Footer } from './components';
+import { Footer } from "./components";
 
 interface Props {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ interface Props {
 const Fluid = ({
   children,
   colorInvert = false,
-  bgcolor = 'alternate.main',
+  bgcolor = "alternate.main",
 }: Props): JSX.Element => {
   const theme = useTheme();
   const { mode } = theme.palette;
@@ -36,19 +36,21 @@ const Fluid = ({
 
   const scrollTo = (id: string): void => {
     setTimeout(() => {
-      const element: HTMLElement = document.querySelector(`#${id}`);
+      const element: HTMLElement = document.querySelector(
+        `#${id}`
+      ) as HTMLElement;
       if (!element) {
         return;
       }
 
-      window.scrollTo({ left: 0, top: element.offsetTop, behavior: 'smooth' });
+      window.scrollTo({ left: 0, top: element.offsetTop, behavior: "smooth" });
     });
   };
 
   return (
     <Box id="js--fluid-top">
       <AppBar
-        position={'relative'}
+        position={"relative"}
         sx={{
           top: 0,
           backgroundColor: bgcolor,
@@ -57,31 +59,31 @@ const Fluid = ({
       >
         <Container
           maxWidth={1500}
-          paddingTop={'8px !important'}
-          paddingBottom={'0 !important'}
+          paddingTop={"8px !important"}
+          paddingBottom={"0 !important"}
         >
           <TopNav colorInvert={colorInvert} />
         </Container>
         <Container paddingY={1} maxWidth={1500}>
           <Box
-            display={'flex'}
-            justifyContent={'space-between'}
-            alignItems={'center'}
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
             width={1}
           >
             <Box
-              display={'flex'}
+              display={"flex"}
               component="a"
               href="/"
               title="theFront"
               width={{ xs: 100, md: 120 }}
             >
               <Box
-                component={'img'}
+                component={"img"}
                 src={
-                  mode === 'light' && !colorInvert
-                    ? 'https://assets.maccarianagency.com/the-front/logos/logo.svg'
-                    : 'https://assets.maccarianagency.com/the-front/logos/logo-negative.svg'
+                  mode === "light" && !colorInvert
+                    ? "https://assets.maccarianagency.com/the-front/logos/logo.svg"
+                    : "https://assets.maccarianagency.com/the-front/logos/logo-negative.svg"
                 }
                 height={1}
                 width={1}
@@ -110,9 +112,9 @@ const Fluid = ({
       <NoSsr>
         <Zoom in={trigger}>
           <Box
-            onClick={() => scrollTo('js--fluid-top')}
+            onClick={() => scrollTo("js--fluid-top")}
             role="presentation"
-            sx={{ position: 'fixed', bottom: 24, right: 32 }}
+            sx={{ position: "fixed", bottom: 24, right: 32 }}
           >
             <Fab color="primary" size="small" aria-label="scroll back to top">
               <KeyboardArrowUpIcon />

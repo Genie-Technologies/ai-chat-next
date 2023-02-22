@@ -5,7 +5,7 @@ import FeaturesList from "../components/Features";
 import Head from "next/head";
 import SignUpForm from "../components/Signup/Signup";
 import ForWho from "../components/Landing/ForWho";
-import DesktopApp from "../components/views/DesktopApp/Landing";
+import Landing from "../components/views/DesktopApp/Landing";
 
 function Home() {
   return (
@@ -13,7 +13,7 @@ function Home() {
       <Head>
         <title>Cosmic Chat</title>
       </Head>
-      <DesktopApp />
+      <Landing />
       {/* <Hero />
       <ForWho />
 

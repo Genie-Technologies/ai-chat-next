@@ -9,7 +9,7 @@ export default function Layout({ children }: any) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Navbar />
-        <main style={{ backgroundColor: theme.palette.background.default }}>
+        <main style={{ backgroundColor: theme().palette.background.default }}>
           {children}
         </main>
       </ThemeProvider>

@@ -1,32 +1,35 @@
-import React from 'react';
-import NextImage from 'next/image';
-import Box from '@mui/material/Box';
-import { SxProps, Theme } from '@mui/material/styles';
+import React from "react";
+import NextImage from "next/image";
+import Box from "@mui/material/Box";
+import { SxProps, Theme } from "@mui/material/styles";
 
 interface Props {
   src: string;
   imageProps?: {
     width?: string | number;
     height?: string | number;
-    layout?: 'fill' | 'fixed' | 'responsive' | 'intrinsic';
+    layout?: "fill" | "fixed" | "responsive" | "intrinsic";
     // All other props
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [x: string]: any;
   };
   style?: SxProps<Theme>;
   // All other props
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
-const Image = ({ src, imageProps = {}, style = {}, ...rest }: Props): JSX.Element => {
+const Image = ({
+  src,
+  imageProps = {},
+  style = {},
+  ...rest
+}: Props): JSX.Element => {
   return (
     <Box
-      className={'image'}
+      className={"image"}
       sx={{
-        '&.image > span': {
-          height: '100% !important',
-          width: '100% !important',
+        "&.image > span": {
+          height: "100% !important",
+          width: "100% !important",
         },
         ...style,
       }}
@@ -34,10 +37,14 @@ const Image = ({ src, imageProps = {}, style = {}, ...rest }: Props): JSX.Elemen
     >
       <NextImage
         src={src}
-        layout={'responsive'}
-        width={'100%'}
-        height={'100%'}
         {...imageProps}
+        alt="Exampe Image"
+        width={1000}
+        height={1000}
+        style={{
+          maxWidth: "100%",
+          height: "auto",
+        }}
       />
     </Box>
   );

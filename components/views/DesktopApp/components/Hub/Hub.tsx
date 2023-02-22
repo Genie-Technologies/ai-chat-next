@@ -7,29 +7,35 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 
+import ForumIcon from "@mui/icons-material/Forum";
+import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import ShieldIcon from "@mui/icons-material/Shield";
+
 const mock = [
   {
-    title: 300,
+    icon: <ForumIcon color="primary" />,
     subtitle: "AI-generated replies based on your texting style",
     suffix: "+",
   },
   {
-    title: 45,
+    icon: <CameraEnhanceIcon color="primary" />,
     subtitle: "AI-generated memes/pictures of the conversation context",
     suffix: "+",
   },
   {
-    title: 99,
+    icon: <SummarizeIcon color="primary" />,
     subtitle: "Daily summaries of unread messages",
     suffix: "%",
   },
   {
-    title: 100,
+    icon: <SaveAsIcon color="primary" />,
     subtitle: "AI-generated notes based on conversations",
     suffix: "%",
   },
   {
-    title: 100,
+    icon: <ShieldIcon color="primary" />,
     subtitle: "Privacy-Focused and your data is in your control",
     suffix: "%",
   },
@@ -105,23 +111,28 @@ const Hero = (): JSX.Element => {
               {mock.map((item, i) => (
                 <Grid key={i} item xs={12} md={4}>
                   <Typography variant="h3" gutterBottom>
-                    <Box fontWeight={600}>
+                    <Box component="span" display="block" textAlign={"center"}>
                       <VisibilitySensor
                         onChange={(isVisible: any) =>
                           setViewPortVisibility(isVisible)
                         }
                         delayedCall
                       >
-                        <CountUp
+                        {/* <CountUp
                           duration={2}
                           end={viewPortEntered ? item.title : 0}
                           start={0}
                           suffix={item.suffix}
-                        />
+                        /> */}
+                        {item.icon}
                       </VisibilitySensor>
                     </Box>
                   </Typography>
-                  <Typography color="text.primary" component="p">
+                  <Typography
+                    color="#92fe9d"
+                    component="p"
+                    textAlign={"center"}
+                  >
                     {item.subtitle}
                   </Typography>
                 </Grid>

@@ -16,11 +16,11 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
         <Link
           underline="none"
           component="a"
-          href="/demos"
+          href="/demo"
           color={colorInvert ? "common.white" : "text.primary"}
           sx={{ display: "flex", alignItems: "center" }}
         >
-          Demos
+          Try Now
           <Box
             padding={0.5}
             display={"inline-flex"}
@@ -37,18 +37,8 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
           </Box>
         </Link>
       </Box>
-      <Box marginRight={{ xs: 1, sm: 2 }}>
-        <Link
-          underline="none"
-          component="a"
-          href="/blocks"
-          color={colorInvert ? "common.white" : "text.primary"}
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          Components
-        </Link>
-      </Box>
-      <Box marginRight={{ xs: 1, sm: 2 }}>
+
+      {/* <Box marginRight={{ xs: 1, sm: 2 }}>
         <Link
           underline="none"
           component="a"
@@ -60,7 +50,7 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
       </Box>
       <Box>
         <ThemeModeToggler />
-      </Box>
+      </Box> */}
     </Box>
   );
 };
