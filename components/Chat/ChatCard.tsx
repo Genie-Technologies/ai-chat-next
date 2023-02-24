@@ -46,9 +46,7 @@ export default function ChatCard() {
             </Item>
           </Grid>
           <Grid item xs={4}>
-            <Item style={{ boxShadow: "none" }}>
-              Some Daily Summary or something here.
-            </Item>
+            <Item>Some Daily Summary or something here.</Item>
           </Grid>
           <Grid item xs={4}>
             <Item

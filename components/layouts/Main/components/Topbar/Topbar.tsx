@@ -6,6 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { NavItem } from "./components";
 import { PageItem } from "../../../../utils";
+import Link from "next/link";
 
 interface Props {
   onSidebarOpen: () => void;
@@ -53,73 +54,16 @@ const Topbar = ({
         <Box
           component={"img"}
           src={
-            mode === "light" && !colorInvert
-              ? "https://assets.maccarianagency.com/the-front/logos/logo.svg"
-              : "https://assets.maccarianagency.com/the-front/logos/logo-negative.svg"
+            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FResponai-logos_transparent-cropped.png?alt=media&token=cbdc78be-1540-4c98-b82f-24416ffa114e"
           }
           height={1}
-          width={1}
+          width={200}
         />
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
-        <Box>
-          <NavItem
-            title={"Landings"}
-            id={"landing-pages"}
-            items={landingPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
         <Box marginLeft={4}>
-          <NavItem
-            title={"Company"}
-            id={"company-pages"}
-            items={companyPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
-        <Box marginLeft={4}>
-          <NavItem
-            title={"Account"}
-            id={"account-pages"}
-            items={accountPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
-        <Box marginLeft={4}>
-          <NavItem
-            title={"Pages"}
-            id={"secondary-pages"}
-            items={secondaryPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
-        <Box marginLeft={4}>
-          <NavItem
-            title={"Blog"}
-            id={"blog-pages"}
-            items={blogPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
-        <Box marginLeft={4}>
-          <NavItem
-            title={"Portfolio"}
-            id={"portfolio-pages"}
-            items={portfolioPages}
-            colorInvert={colorInvert}
-          />
-        </Box>
-        <Box marginLeft={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            component="a"
-            target="blank"
-            href="https://mui.com/store/items/the-front-landing-page/"
-            size="large"
-          >
-            Buy now
+          <Button variant="contained" color="primary" size="large">
+            <Link href="/chat">Try Now</Link>
           </Button>
         </Box>
       </Box>

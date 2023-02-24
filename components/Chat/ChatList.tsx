@@ -22,13 +22,14 @@ export default function ChatsList() {
         boxShadow: `0 0 0 1px ${theme.palette.primary.main}`,
       }}
     >
-      {chatListItems.map((item) => {
+      {chatListItems.map((item, idx) => {
         return (
           <ListItem
             alignItems="flex-start"
             sx={{
               color: theme.palette.secondary.main,
             }}
+            key={idx}
           >
             <ListItemAvatar>
               <Avatar alt={item.sender} src="/static/images/avatar/2.jpg" />

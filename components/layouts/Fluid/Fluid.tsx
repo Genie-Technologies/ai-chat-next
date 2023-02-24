@@ -57,13 +57,13 @@ const Fluid = ({
         }}
         elevation={0}
       >
-        <Container
+        {/* <Container
           maxWidth={1500}
           paddingTop={"8px !important"}
           paddingBottom={"0 !important"}
         >
           <TopNav colorInvert={colorInvert} />
-        </Container>
+        </Container> */}
         <Container paddingY={1} maxWidth={1500}>
           <Box
             display={"flex"}

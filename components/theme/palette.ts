@@ -45,14 +45,14 @@ export const dark = {
   mode: "dark" as PaletteMode,
   primary: {
     main: "#E23E57",
-    light: "#7743DB",
-    dark: "#3B3486",
+    light: "#9A1663",
+    dark: "#609966",
     contrastText: "#fff",
   },
   secondary: {
-    light: "#88304E",
-    main: "#FCFDF2",
-    dark: "#DBBE01",
+    light: "#38ef7d",
+    main: "#03C988",
+    dark: "#609966",
     contrastText: "rgba(0, 0, 0, 0.87)",
   },
   text: {

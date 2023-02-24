@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { alpha, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Dialog from "../../../../GeneralDialog/Dialog";
+import SignUpForm from "../../../../Signup/Signup";
 
 const Hero = (): JSX.Element => {
   const theme = useTheme();
+  const [openSignUp, setOpenSignUp] = useState(false);
 
   const isMd = useMediaQuery(theme.breakpoints.up("md"), {
     defaultMatches: true,
   });
+
+  const openSignUpDialog = () => {
+    setOpenSignUp(true);
+  };
 
   return (
     <Grid container spacing={4}>
@@ -54,6 +61,13 @@ const Hero = (): JSX.Element => {
               color="primary"
               size="large"
               fullWidth={isMd ? false : true}
+              sx={{
+                boxShadow: 3,
+                borderRadius: 2,
+                marginRight: isMd ? 2 : 0,
+                marginBottom: isMd ? 0 : 2,
+              }}
+              onClick={openSignUpDialog}
             >
               SIGN UP FOR EARLY ACCESS
             </Button>
@@ -86,6 +100,13 @@ const Hero = (): JSX.Element => {
           }}
         />
       </Grid>
+      <Dialog
+        open={openSignUp}
+        handleClose={() => setOpenSignUp(false)}
+        showActions={false}
+      >
+        <SignUpForm />
+      </Dialog>
     </Grid>
   );
 };

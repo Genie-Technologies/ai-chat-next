@@ -1,10 +1,5 @@
-import { Hero } from "../components/Landing/Hero";
-import { Layout, Page } from "@vercel/examples-ui";
-import Container from "@mui/material/Container";
-import FeaturesList from "../components/Features";
+import { Layout } from "@vercel/examples-ui";
 import Head from "next/head";
-import SignUpForm from "../components/Signup/Signup";
-import ForWho from "../components/Landing/ForWho";
 import Landing from "../components/views/DesktopApp/Landing";
 
 function Home() {

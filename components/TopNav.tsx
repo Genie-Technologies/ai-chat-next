@@ -16,7 +16,7 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
         <Link
           underline="none"
           component="a"
-          href="/demo"
+          href="/chat"
           color={colorInvert ? "common.white" : "text.primary"}
           sx={{ display: "flex", alignItems: "center" }}
         >

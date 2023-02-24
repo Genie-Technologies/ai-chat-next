@@ -3,11 +3,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material";
 
 type DialogProps = {
   open: boolean;
   handleClose: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   showActions?: boolean;
   title?: string;
   confirmButtonText?: string;
@@ -17,16 +18,26 @@ type DialogProps = {
 export default function Dialog({
   open,
   handleClose,
-  children,
+  children = null,
   showActions = false,
   title = "",
   confirmButtonText = "Confirm",
   cancelButtonText = "Cancel",
 }: DialogProps) {
+  const theme = useTheme();
+
   return (
-    <MUIDialog open={open} onClose={handleClose}>
+    <MUIDialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       {title && <DialogTitle>{title}</DialogTitle>}
-      <DialogContent>{children}</DialogContent>
+      {children && (
+        <DialogContent
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+          }}
+        >
+          {children}
+        </DialogContent>
+      )}
       {showActions && (
         <DialogActions>
           <Button onClick={handleClose} variant="contained" color="error">
