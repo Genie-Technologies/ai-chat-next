@@ -1,5 +1,5 @@
 import { Chat } from "../Chat";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -17,15 +17,28 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ChatCard() {
+  const theme = useTheme();
+
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card
+      sx={{
+        minWidth: 275,
+        backgroundColor: theme.palette.background.paper,
+        minHeight: "70vh",
+      }}
+    >
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={8}>
-            <Item style={{ boxShadow: "none" }}>
+            <Item
+              style={{
+                boxShadow: "none",
+                backgroundColor: theme.palette.background.paper,
+              }}
+            >
               <Typography
                 sx={{ fontSize: 18 }}
-                color="text.primary"
+                color={theme.palette.primary.main}
                 gutterBottom
               >
                 Shagun Mistry
@@ -38,7 +51,12 @@ export default function ChatCard() {
             </Item>
           </Grid>
           <Grid item xs={4}>
-            <Item style={{ boxShadow: "none" }}>
+            <Item
+              style={{
+                boxShadow: "none",
+                backgroundColor: theme.palette.background.paper,
+              }}
+            >
               <ChatsList />
             </Item>
           </Grid>
@@ -47,6 +65,8 @@ export default function ChatCard() {
               style={{
                 borderRadius: "10px",
                 boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+                minHeight: "70vh",
+                backgroundColor: theme.palette.background.paper,
               }}
             >
               <Chat />
