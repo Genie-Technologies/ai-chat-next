@@ -28,7 +28,7 @@ export default function ChatsList() {
         border: `1px solid ${theme.palette.secondary.main}`,
         minHeight: "70vh",
         backgroundColor: theme.palette.background.paper,
-        padding: "5px",
+        padding: "20px 0 0 0",
       }}
     >
       <Grid container spacing={2}>
@@ -40,7 +40,12 @@ export default function ChatsList() {
           }}
         >
           <InputBase
-            sx={{ ml: 1, flex: 1 }}
+            sx={{
+              ml: 1,
+              flex: 1,
+              borderBottom: `1px solid ${theme.palette.secondary.main}`,
+              borderRadius: "0",
+            }}
             placeholder="Search Chats"
             inputProps={{ "aria-label": "Search Chats" }}
           />

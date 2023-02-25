@@ -4,6 +4,8 @@ import { type Message, ChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
 import { Grid, List, Paper, Typography, useTheme } from "@mui/material";
 import Card from "@mui/material/Card";
+import Button from "@mui/material/Button";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -76,9 +78,20 @@ export function Chat() {
         borderRadius: 10,
       }}
     >
-      <Typography variant="h5" sx={{ p: 2 }}>
-        Chat with AI
-      </Typography>
+      {/* // There should be a chat title to the left and a menu options button to */}
+      {/* the right of the screen */}
+      <Grid container>
+        <Grid item xs={6}>
+          <Typography variant="h5" sx={{ color: "white", paddingTop: 2 }}>
+            Chat
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button sx={{ float: "right" }} variant="contained">
+            <MenuIcon />
+          </Button>
+        </Grid>
+      </Grid>
       <List sx={{ overflow: "auto", p: 2 }}>
         {messages.map((message, index) => (
           <ChatLine
