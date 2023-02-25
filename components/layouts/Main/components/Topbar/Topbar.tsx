@@ -45,14 +45,10 @@ const Topbar = ({
       alignItems={"center"}
       width={1}
     >
-      <Box
-        display={"flex"}
-        component="a"
-        href="/"
-        title="ResponAi"
-        width={{ xs: 100, md: 120 }}
-      >
-        <Box component={"img"} src={croppedLogoSrc} height={1} width={200} />
+      <Box display={"flex"} title="ResponAi" width={{ xs: 100, md: 120 }}>
+        <Link href={"/"} style={{ textDecoration: "none" }}>
+          <Box component={"img"} src={croppedLogoSrc} height={1} width={200} />
+        </Link>
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
         <Box marginLeft={4}>

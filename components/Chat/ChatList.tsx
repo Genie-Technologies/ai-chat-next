@@ -24,9 +24,8 @@ export default function ChatsList() {
       sx={{
         width: "100%",
         maxWidth: 360,
-        borderRadius: "10px",
-        border: `1px solid ${theme.palette.secondary.main}`,
-        minHeight: "70vh",
+        borderRight: `1px solid ${theme.palette.secondary.main}`,
+        minHeight: "100vh",
         backgroundColor: theme.palette.background.paper,
         padding: "20px 0 0 0",
       }}
@@ -73,7 +72,6 @@ export default function ChatsList() {
             }}
           >
             <AddIcon />
-            <Typography sx={{ fontSize: 14 }}>Add</Typography>
           </Button>
         </Grid>
       </Grid>

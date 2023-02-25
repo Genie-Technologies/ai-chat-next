@@ -54,3 +54,12 @@ export const chatListItems: ChatListItem[] = [
     recievers: ["John Doe", "Jane Smith", "Bob Johnson", "Mary Williams"],
   },
 ];
+
+export const featuresForPricing = [
+  "AI-assisted messaging",
+  "Auto-generated replies based on your texting style",
+  "Auto-generated memes",
+  "Daily summaries of unread messages",
+  "AI-generated notes based on conversations",
+  "Basic integrations with other apps",
+];

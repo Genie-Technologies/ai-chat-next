@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { initialMessages } from "../../components/Chat";
-import { type Message } from "../../components/ChatLine";
+import { initialMessages } from "../../components/Chat/Chat";
+import { type Message } from "../../components/Chat/ChatLine";
 
 // break the app if the API key is missing
 if (!process.env.OPENAI_API_KEY) {

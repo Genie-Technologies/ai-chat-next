@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import { featuresForPricing } from "../../../../utils";
 
 const Pricing = (): JSX.Element => {
   const theme = useTheme();
@@ -55,7 +56,7 @@ const Pricing = (): JSX.Element => {
             marginTop: theme.spacing(1),
           }}
         >
-          Simple pricing
+          It is Free!
         </Typography>
         <Typography
           variant="h6"
@@ -63,96 +64,19 @@ const Pricing = (): JSX.Element => {
           color={"text.secondary"}
           data-aos={"fade-up"}
         >
-          Pick the best plan based on your ad spend
+          For a limited time only!
         </Typography>
-        <Box marginTop={2} display={"flex"} justifyContent={"center"}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            endIcon={
-              <Box
-                component={"svg"}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                width={24}
-                height={24}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </Box>
-            }
-          >
-            Learn more
-          </Button>
-        </Box>
       </Box>
       <Grid container spacing={isMd ? 0 : 2}>
         <Grid item xs={12} md={6}>
-          <Card data-aos={isMd ? "fade-right" : "fade-up"}>
+          <Card
+            data-aos={isMd ? "fade-right" : "fade-up"}
+            sx={{
+              boxShadow: 0,
+              backgroundColor: theme.palette.primary.main,
+            }}
+          >
             <CardContent sx={{ padding: { sm: 4 } }}>
-              <Box display={"flex"} justifyContent={"center"} marginBottom={4}>
-                <ToggleButtonGroup
-                  value={pricingOption}
-                  exclusive
-                  onChange={handleClick}
-                >
-                  <ToggleButton
-                    value="annual"
-                    size={"small"}
-                    sx={{
-                      backgroundColor:
-                        pricingOption === "annual"
-                          ? `${theme.palette.primary.light} !important`
-                          : "transparent",
-                      border: `1px solid ${theme.palette.primary.main}`,
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: "medium",
-                        color:
-                          pricingOption === "annual"
-                            ? theme.palette.common.white
-                            : "primary",
-                      }}
-                    >
-                      Annual
-                    </Typography>
-                  </ToggleButton>
-                  <ToggleButton
-                    value="monthly"
-                    size={"small"}
-                    sx={{
-                      backgroundColor:
-                        pricingOption === "monthly"
-                          ? `${theme.palette.primary.light} !important`
-                          : "transparent",
-                      border: `1px solid ${theme.palette.primary.main}`,
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: "medium",
-                        color:
-                          pricingOption !== "annual"
-                            ? theme.palette.common.white
-                            : "primary",
-                      }}
-                    >
-                      Monthly
-                    </Typography>
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </Box>
               <Box marginBottom={4}>
                 <Typography
                   fontWeight={600}
@@ -160,23 +84,11 @@ const Pricing = (): JSX.Element => {
                   align={"center"}
                   gutterBottom
                 >
-                  ${pricingOption === "annual" ? "240" : "29"}
-                </Typography>
-                <Typography color="text.secondary" align={"center"}>
-                  6 month of technical support.
-                  <br />
-                  Plus unlimited updates.
+                  $0
                 </Typography>
               </Box>
               <Grid container spacing={1}>
-                {[
-                  "All features",
-                  "Email support",
-                  "Google Ads",
-                  "SSO via Google",
-                  "API access",
-                  "Facebook Ads",
-                ].map((item, i) => (
+                {featuresForPricing.map((item, i) => (
                   <Grid item xs={12} sm={6} key={i}>
                     <Box
                       component={ListItem}
@@ -191,7 +103,7 @@ const Pricing = (): JSX.Element => {
                       >
                         <Box
                           component={Avatar}
-                          bgcolor={theme.palette.secondary.main}
+                          bgcolor={theme.palette.warning.main}
                           width={20}
                           height={20}
                         >
@@ -218,12 +130,19 @@ const Pricing = (): JSX.Element => {
             </CardContent>
             <Divider />
             <CardActions sx={{ justifyContent: "center" }}>
-              <Button size={"large"}>Learn more</Button>
+              <Button size={"large"} variant={"contained"} color={"secondary"}>
+                GET STARTED
+              </Button>
             </CardActions>
           </Card>
         </Grid>
         <Grid item container xs={12} md={6} alignItems={"center"}>
-          <Box component={Card} bgcolor={theme.palette.primary.main}>
+          <Box
+            component={Card}
+            bgcolor={theme.palette.background.paper}
+            minWidth={500}
+            color={theme.palette.secondary.main}
+          >
             <CardContent
               sx={{
                 display: "flex",
@@ -232,7 +151,7 @@ const Pricing = (): JSX.Element => {
                 padding: { sm: 4 },
               }}
             >
-              <Box color={theme.palette.common.white} marginBottom={4}>
+              <Box marginBottom={4}>
                 <svg
                   width={80}
                   height={80}
@@ -243,32 +162,17 @@ const Pricing = (): JSX.Element => {
                   <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z" />
                 </svg>
               </Box>
-              <Typography
-                variant={"h4"}
-                gutterBottom
-                sx={{ fontWeight: 600, color: theme.palette.common.white }}
-              >
+              <Typography variant={"h4"} gutterBottom sx={{ fontWeight: 600 }}>
                 Customized
               </Typography>
-              <Typography
-                gutterBottom
-                align={"center"}
-                sx={{ color: theme.palette.common.white }}
-              >
+              <Typography gutterBottom align={"center"}>
                 Design a custom package for your business.
-              </Typography>
-              <Typography
-                align={"center"}
-                sx={{ color: theme.palette.common.white }}
-              >
-                Available for businesses with large payments volume or unique
-                business models.
               </Typography>
             </CardContent>
             <Divider />
             <CardActions sx={{ justifyContent: "center" }}>
-              <Button size={"large"} sx={{ color: theme.palette.common.white }}>
-                Contact sales
+              <Button size={"large"} disabled>
+                Coming Soon!
               </Button>
             </CardActions>
           </Box>

@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
-import InputMessage from "./Chat/InputMessage";
 import { type Message, ChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
-import { Grid, List, Paper, Typography, useTheme } from "@mui/material";
-import Card from "@mui/material/Card";
+import { useEffect, useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import InputMessage from "./InputMessage";
+import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -71,22 +76,43 @@ export function Chat() {
       sx={{
         width: "100%",
         height: "100%",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "black",
-        borderRadius: 10,
+        padding: 2,
       }}
     >
-      {/* // There should be a chat title to the left and a menu options button to */}
-      {/* the right of the screen */}
-      <Grid container>
-        <Grid item xs={6}>
-          <Typography variant="h5" sx={{ color: "white", paddingTop: 2 }}>
-            Chat
+      <Grid container spacing={0}>
+        <Grid
+          item
+          xs={8}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <AvatarGroup max={3}>
+            <Avatar
+              alt="Remy Sharp"
+              src="https://material-ui.com/static/images/avatar/1.jpg"
+            />
+            <Avatar
+              alt="Travis Howard"
+              src="https://material-ui.com/static/images/avatar/2.jpg"
+            />
+            <Avatar
+              alt="Cindy Baker"
+              src="https://material-ui.com/static/images/avatar/3.jpg"
+            />
+          </AvatarGroup>
+          <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
+            Title of Chat here
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Button sx={{ float: "right" }} variant="contained">
             <MenuIcon />
           </Button>

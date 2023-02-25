@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 
 const Customization = (): JSX.Element => {
   const theme = useTheme();
@@ -25,7 +26,7 @@ const Customization = (): JSX.Element => {
           color={"secondary"}
           align={"center"}
         >
-          CUSTOMIZATION
+          EXPERIENCE
         </Typography>
         <Typography
           variant="h4"
@@ -36,7 +37,7 @@ const Customization = (): JSX.Element => {
             fontWeight: 700,
           }}
         >
-          Customize your product
+          Future of Messaging
         </Typography>
         <Typography
           variant="h6"
@@ -44,12 +45,8 @@ const Customization = (): JSX.Element => {
           color={"text.secondary"}
           data-aos={"fade-up"}
         >
-          We aim to take care of you.
-          <br />
-          Need help with installation, find a bug, or just need a clarifiction
-          about our documentation?
-          <br />
-          We'll be there to lend a helping hand.
+          We aim to provide the best messaging experience for you with the help
+          of the latest technologies and a personal human touch.
         </Typography>
         <Box
           display="flex"
@@ -64,19 +61,16 @@ const Customization = (): JSX.Element => {
             size="large"
             fullWidth={isMd ? false : true}
           >
-            Start now
+            <Link
+              href="/chat"
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              Start now
+            </Link>
           </Button>
-          <Box
-            component={Button}
-            variant="outlined"
-            color="primary"
-            size="large"
-            marginTop={{ xs: 2, sm: 0 }}
-            marginLeft={{ sm: 2 }}
-            fullWidth={isMd ? false : true}
-          >
-            Learn more
-          </Box>
         </Box>
       </Box>
       <Grid container spacing={isMd ? 4 : 2}>

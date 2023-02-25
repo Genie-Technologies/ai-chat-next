@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,34 +8,26 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-export const mock = [
+export const integrations = [
   {
-    logo: "https://assets.maccarianagency.com/svg/logos/slack.svg",
-    name: "Slack",
+    logo: "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FTodoistColorLogo.png?alt=media&token=f965924e-a1ba-4df1-a04b-ab90730cf626",
+    name: "Todoist",
   },
   {
-    logo: "https://assets.maccarianagency.com/svg/logos/mailchimp.svg",
-    name: "Mailchimp",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg",
+    name: "Google Calendar",
   },
   {
-    logo: "https://assets.maccarianagency.com/svg/logos/dropbox.svg",
-    name: "Dropbox",
+    logo: "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FNetflix_Symbol_RGB.png?alt=media&token=02341764-552e-4b1f-9283-88ef7130c9c1",
+    name: "Netflix",
   },
   {
-    logo: "https://assets.maccarianagency.com/svg/logos/google-drive.svg",
-    name: "Google Drive",
-  },
-  {
-    logo: "https://assets.maccarianagency.com/svg/logos/google-ad-manager.svg",
-    name: "Google Ad Manager",
-  },
-  {
-    logo: "https://assets.maccarianagency.com/svg/logos/atlassian.svg",
-    name: "Atlassian",
+    logo: "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FGiphyLogo.png?alt=media&token=dd34757b-d28b-4160-9637-c07a4c633816",
+    name: "Giphy",
   },
 ];
 
-const Partners = (): JSX.Element => {
+const Integrations = (): JSX.Element => {
   const theme = useTheme();
 
   const isMd = useMediaQuery(theme.breakpoints.up("md"), {
@@ -57,15 +49,31 @@ const Partners = (): JSX.Element => {
             Integrations
           </Typography>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
-            We love to explore new ways to engage with brands and reach
+            Seamless Integrations for
+            <Typography
+              color={"primary"}
+              component={"span"}
+              variant={"inherit"}
+              sx={{
+                background: `linear-gradient(180deg, transparent 82%, ${alpha(
+                  theme.palette.secondary.light,
+                  0.3
+                )} 0%)`,
+              }}
+            >
+              Effortless Communication.
+            </Typography>
           </Typography>
           <Typography variant="h6" component="p" color="text.secondary">
-            Our mission is to help you to grow your design skills, meet and
-            connect with professional dsigners who share your passions.
+            From Productivity to Entertainment: Discover the Limitless
+            Possibilities with Our AI Integrations
           </Typography>
           <Box marginTop={2}>
             <Button
               size={"large"}
+              variant={"contained"}
+              color={"primary"}
+              disabled
               endIcon={
                 <Box
                   component={"svg"}
@@ -85,13 +93,13 @@ const Partners = (): JSX.Element => {
                 </Box>
               }
             >
-              View all plugins
+              Coming Soon
             </Button>
           </Box>
         </Box>
       </Grid>
       <Grid item container spacing={2} xs={12} md={6}>
-        {mock.map((item, i) => (
+        {integrations.map((item, i) => (
           <Grid
             item
             xs={4}
@@ -109,6 +117,12 @@ const Partners = (): JSX.Element => {
                 transition: "all .2s ease-in-out",
                 "&:hover": {
                   transform: `translateY(-${theme.spacing(1 / 2)})`,
+                  boxShadow: `10px 20px 40px 14px ${alpha(
+                    theme.palette.primary.main,
+                    0.25
+                  )}`,
+                  backgroundColor: theme.palette.primary.main,
+                  borderRadius: 2,
                 },
               }}
             >
@@ -119,6 +133,8 @@ const Partners = (): JSX.Element => {
                     justifyContent: "center",
                     alignItems: "center",
                     padding: 3,
+                    border: `1px solid ${theme.palette.primary.main}`,
+                    borderRadius: 2,
                   }}
                 >
                   <Box
@@ -139,4 +155,4 @@ const Partners = (): JSX.Element => {
   );
 };
 
-export default Partners;
+export default Integrations;

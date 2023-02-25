@@ -8,7 +8,7 @@ import {
   Download,
   Hero,
   Hub,
-  Partners,
+  Integrations,
   Pricings,
   ForWho,
   Support,
@@ -84,16 +84,16 @@ const Landing = (): JSX.Element => {
         </Box>
       </Box>
       <Container>
-        <Partners />
+        <Integrations />
       </Container>
       <Box bgcolor={"alternate.main"}>
         <Container>
           <Pricings />
         </Container>
       </Box>
-      <Container>
+      {/* <Container>
         <Download />
-      </Container>
+      </Container> */}
     </Main>
   );
 };
