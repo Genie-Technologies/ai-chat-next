@@ -53,6 +53,23 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
   }
   const formatteMessage = convertNewLines(message);
 
+  const getStyleForMessage = (forWho: "me" | "other") => {
+    // If it is a message from me, then align it to the right and style it differently
+    if (forWho === "me") {
+      return {
+        textAlign: "right",
+        color: "white",
+        backgroundColor: "#3f51b5",
+      };
+    }
+    // If it is a message from other, then align it to the left and style it differently
+    return {
+      textAlign: "left",
+      color: "black",
+      backgroundColor: "#e0e0e0",
+    };
+  };
+
   return (
     <List
       sx={{
@@ -69,7 +86,6 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
           style={{
             textAlign: who === "me" ? "right" : "left",
           }}
-          className={styles.lineMessageText}
         />
       </ListItem>
       <Divider variant="fullWidth" component="li" />

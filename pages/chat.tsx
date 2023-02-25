@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
-import { Chat } from "../components/Chat";
 import ChatCard from "../components/Chat/ChatCard";
+import Paper from "@mui/material/Paper";
 
 import styles from "../styles/ChatPage.module.scss";
 import { Main } from "../components/layouts";
@@ -10,11 +10,11 @@ export default function ChatPage() {
   return (
     <Main>
       <Head>
-        <title>Chat</title>
+        <title>Respon Chat</title>
       </Head>
-      <Container className={styles.container}>
+      <Paper>
         <ChatCard />
-      </Container>
+      </Paper>
     </Main>
   );
 }

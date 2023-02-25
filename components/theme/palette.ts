@@ -37,7 +37,7 @@ export const dark = {
     main: "#1a2138",
     dark: "#151a30",
   },
-  cardShadow: "rgba(0, 0, 0, .11)",
+  cardShadow: "#38ef7d 0px 4px 12px;",
   common: {
     black: "#000",
     white: "#fff",

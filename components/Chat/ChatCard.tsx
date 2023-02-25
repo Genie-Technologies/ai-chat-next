@@ -23,8 +23,9 @@ export default function ChatCard() {
     <Card
       sx={{
         minWidth: 275,
-        backgroundColor: theme.palette.background.paper,
+        borderRadius: "10px",
         minHeight: "70vh",
+        width: "100%",
       }}
     >
       <CardContent>
@@ -61,10 +62,11 @@ export default function ChatCard() {
           <Grid item xs={8}>
             <Item
               style={{
-                borderRadius: "10px",
                 boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
                 minHeight: "70vh",
+                height: "100%",
                 backgroundColor: theme.palette.background.paper,
+                width: "100%",
               }}
             >
               <Chat />

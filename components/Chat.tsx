@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import InputMessage from "./Chat/InputMessage";
 import { type Message, ChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
-import { Grid, List, Paper, Typography } from "@mui/material";
+import { Grid, List, Paper, Typography, useTheme } from "@mui/material";
+import Card from "@mui/material/Card";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -16,6 +17,7 @@ export const initialMessages: Message[] = [
 ];
 
 export function Chat() {
+  const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,23 +64,37 @@ export function Chat() {
   };
 
   return (
-    <div>
-      <List>
-        {messages.map(({ message, who }, index) => (
-          <ChatLine customKey={index} who={who} message={message} key={index} />
+    <Card
+      elevation={0}
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        backgroundColor: "black",
+        borderRadius: 10,
+      }}
+    >
+      <Typography variant="h5" sx={{ p: 2 }}>
+        Chat with AI
+      </Typography>
+      <List sx={{ overflow: "auto", p: 2 }}>
+        {messages.map((message, index) => (
+          <ChatLine
+            key={index}
+            message={message.message}
+            who={message.who}
+            customKey={index}
+          />
         ))}
-        {/* {loading && <LoadingChatLine />} */}
       </List>
-      {messages.length < 2 && (
-        <Typography variant="subtitle1" gutterBottom>
-          Type a message to start the conversation
-        </Typography>
-      )}
       <InputMessage
         input={input}
         setInput={setInput}
         sendMessage={sendMessage}
+        loading={loading}
       />
-    </div>
+    </Card>
   );
 }
