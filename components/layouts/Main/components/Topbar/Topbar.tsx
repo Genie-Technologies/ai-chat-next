@@ -2,10 +2,11 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { alpha, useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import { NavItem } from "./components";
-import { PageItem } from "../../../../utils";
+import { PageItem, croppedLogoSrc } from "../../../../utils";
 import Link from "next/link";
 
 interface Props {
@@ -48,22 +49,25 @@ const Topbar = ({
         display={"flex"}
         component="a"
         href="/"
-        title="theFront"
+        title="ResponAi"
         width={{ xs: 100, md: 120 }}
       >
-        <Box
-          component={"img"}
-          src={
-            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FResponai-logos_transparent-cropped.png?alt=media&token=cbdc78be-1540-4c98-b82f-24416ffa114e"
-          }
-          height={1}
-          width={200}
-        />
+        <Box component={"img"} src={croppedLogoSrc} height={1} width={200} />
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
         <Box marginLeft={4}>
           <Button variant="contained" color="primary" size="large">
-            <Link href="/chat">Try Now</Link>
+            <Link
+              href="/chat"
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <Typography variant="subtitle1" color="text.primary">
+                Try Now
+              </Typography>
+            </Link>
           </Button>
         </Box>
       </Box>

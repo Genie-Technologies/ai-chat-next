@@ -75,7 +75,7 @@ const Fluid = ({
               display={"flex"}
               component="a"
               href="/"
-              title="theFront"
+              title="ResponAi"
               width={{ xs: 100, md: 120 }}
             >
               <Box

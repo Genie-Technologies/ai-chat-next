@@ -1,3 +1,5 @@
+export const croppedLogoSrc =
+  "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FResponai-logos_transparent-cropped.png?alt=media&token=cbdc78be-1540-4c98-b82f-24416ffa114e";
 export interface PageItem {
   isNew?: boolean;
   title: string;

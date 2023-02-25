@@ -1,42 +1,16 @@
 import * as React from "react";
-import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import PersonIcon from "@mui/icons-material/Person2Rounded";
-
-import styles from "../styles/ChatLine.module.scss";
+import { useTheme } from "@mui/material";
+import * as materialColors from "@mui/material/colors";
 
 export type Message = {
   who: "me" | "other" | undefined;
   message?: string;
   customKey: number;
 };
-
-// loading placeholder animation for the chat line
-export const LoadingChatLine = () => (
-  <div className="flex min-w-full animate-pulse px-4 py-5 sm:px-6">
-    <div className="flex flex-grow space-x-3">
-      <div className="min-w-0 flex-1">
-        <p className="font-large text-xxl text-gray-900">
-          <a href="#" className="hover:underline">
-            AI
-          </a>
-        </p>
-        <div className="space-y-4 pt-4">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2 h-2 rounded bg-zinc-500"></div>
-            <div className="col-span-1 h-2 rounded bg-zinc-500"></div>
-          </div>
-          <div className="h-2 rounded bg-zinc-500"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
 
 // util helper to convert new lines to <br /> tags
 const convertNewLines = (text: string) =>
@@ -48,47 +22,47 @@ const convertNewLines = (text: string) =>
   ));
 
 export function ChatLine({ who = "other", message, customKey }: Message) {
+  const theme = useTheme();
+
   if (!message) {
     return null;
   }
   const formatteMessage = convertNewLines(message);
 
-  const getStyleForMessage = (forWho: "me" | "other") => {
-    // If it is a message from me, then align it to the right and style it differently
-    if (forWho === "me") {
-      return {
-        textAlign: "right",
-        color: "white",
-        backgroundColor: "#3f51b5",
-      };
-    }
-    // If it is a message from other, then align it to the left and style it differently
-    return {
-      textAlign: "left",
-      color: "black",
-      backgroundColor: "#e0e0e0",
-    };
-  };
+  const loopThroughColors = Object.keys(materialColors);
+  const randomColor =
+    loopThroughColors[Math.floor(Math.random() * loopThroughColors.length)];
 
   return (
-    <List
-      sx={{
-        width: "100%",
-        bgcolor: "background.paper",
+    <ListItem
+      key={customKey}
+      style={{
+        display: "flex",
+        justifyContent: who === "me" ? "flex-end" : "flex-start",
       }}
     >
-      <ListItem alignItems="flex-start" className={styles.listMessage}>
-        <ListItemAvatar style={{ display: who === "me" ? "none" : "block" }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+      {who === "me" && (
+        <ListItemAvatar>
+          <Avatar
+            alt="me"
+            sx={{
+              backgroundColor: materialColors.red[500],
+            }}
+          ></Avatar>
         </ListItemAvatar>
-        <ListItemText
-          primary={message}
-          style={{
-            textAlign: who === "me" ? "right" : "left",
-          }}
-        />
-      </ListItem>
-      <Divider variant="fullWidth" component="li" />
-    </List>
+      )}
+      <ListItemText
+        primary={message}
+        style={{
+          backgroundColor:
+            who === "me"
+              ? theme.palette.primary.main
+              : theme.palette.primary.light,
+          borderRadius: "20px",
+          padding: "8px 16px",
+          maxWidth: "70%",
+        }}
+      />
+    </ListItem>
   );
 }
