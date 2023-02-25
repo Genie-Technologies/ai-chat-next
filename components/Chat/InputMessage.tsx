@@ -8,9 +8,15 @@ type InputMessageType = {
   input: string;
   setInput: Function;
   sendMessage: Function;
+  loading: boolean;
 };
 
-function InputMessage({ input, setInput, sendMessage }: InputMessageType) {
+function InputMessage({
+  input,
+  setInput,
+  sendMessage,
+  loading,
+}: InputMessageType) {
   return (
     <div>
       <Paper
@@ -23,6 +29,7 @@ function InputMessage({ input, setInput, sendMessage }: InputMessageType) {
         }}
       >
         <InputBase
+          color="primary"
           sx={{ ml: 1, flex: 1 }}
           placeholder="Type Message"
           inputProps={{ "aria-label": "type message" }}
@@ -41,7 +48,7 @@ function InputMessage({ input, setInput, sendMessage }: InputMessageType) {
 
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
-          color="primary"
+          color="secondary"
           sx={{ p: "10px" }}
           aria-label="directions"
           onClick={() => {

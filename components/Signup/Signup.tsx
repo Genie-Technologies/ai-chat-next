@@ -5,6 +5,7 @@ import {
   Container,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -12,6 +13,8 @@ import styles from "../../styles/Signup.module.scss";
 import { Stack } from "@mui/system";
 
 export function SignUpForm() {
+  const theme = useTheme();
+
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -48,14 +51,17 @@ export function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className={styles.signUpCard}>
+      <Card
+        className={styles.signUpCard}
+        sx={{ backgroundColor: theme.palette.background.paper }}
+      >
         <CardContent className={styles.signUpContainer}>
           <Typography
-            variant="h4"
+            variant="h5"
             className={styles.signUpHeader}
-            color="secondary"
+            color="primary"
           >
-            Sign Up
+            Sign up for Early Access to ResponAi
           </Typography>
           <Stack spacing={2}>
             <TextField
@@ -70,9 +76,8 @@ export function SignUpForm() {
             <Button
               type="submit"
               className={styles.signUpButton}
-              color="primary"
+              color="secondary"
               variant="contained"
-              disabled={error ? true : false}
             >
               Sign Up
             </Button>

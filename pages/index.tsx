@@ -1,10 +1,6 @@
-import { Hero } from "../components/Landing/Hero";
-import { Layout, Page } from "@vercel/examples-ui";
-import Container from "@mui/material/Container";
-import FeaturesList from "../components/Features";
+import { Layout } from "@vercel/examples-ui";
 import Head from "next/head";
-import SignUpForm from "../components/Signup/Signup";
-import ForWho from "../components/Landing/ForWho";
+import Landing from "../components/views/DesktopApp/Landing";
 
 function Home() {
   return (
@@ -12,13 +8,14 @@ function Home() {
       <Head>
         <title>Cosmic Chat</title>
       </Head>
-      <Hero />
+      <Landing />
+      {/* <Hero />
       <ForWho />
 
       <Container maxWidth="lg" style={{ marginTop: "10%" }}>
         <FeaturesList />
         <SignUpForm />
-      </Container>
+      </Container> */}
     </div>
   );
 }

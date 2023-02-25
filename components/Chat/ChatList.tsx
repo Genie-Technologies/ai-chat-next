@@ -1,80 +1,124 @@
 import * as React from "react";
+
+import { chatListItems } from "../utils";
+import { useTheme } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
+import ListItemText from "@mui/material/ListItemText";
+import Paper from "@mui/material/Paper";
+import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 
 export default function ChatsList() {
+  const theme = useTheme();
   return (
-    <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Brunch this weekend?"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                User Name
-              </Typography>
-              {"Random Message Here"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Summer BBQ"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                to Scott, Alex, Jennifer
-              </Typography>
-              {" — Wish I could come, but I'm out of town this…"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Oui Oui"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Sandra Adams
-              </Typography>
-              {" — Do you have Paris recommendations? Have you ever…"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-    </List>
+    <Paper
+      elevation={0}
+      sx={{
+        width: "100%",
+        maxWidth: 360,
+        borderRight: `1px solid ${theme.palette.secondary.main}`,
+        minHeight: "100vh",
+        backgroundColor: theme.palette.background.paper,
+        padding: "20px 0 0 0",
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid
+          item
+          xs={8}
+          style={{
+            boxShadow: "none",
+          }}
+        >
+          <InputBase
+            sx={{
+              ml: 1,
+              flex: 1,
+              borderBottom: `1px solid ${theme.palette.secondary.main}`,
+              borderRadius: "0",
+            }}
+            placeholder="Search Chats"
+            inputProps={{ "aria-label": "Search Chats" }}
+          />
+          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon color="secondary" />
+          </IconButton>
+        </Grid>
+        <Grid
+          item
+          xs={4}
+          style={{
+            boxShadow: "none",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="success"
+            sx={{
+              color: theme.palette.text.primary,
+              borderRadius: "10px",
+              "&:hover": {
+                backgroundColor: theme.palette.primary.main,
+                transition: "all 0.5s ease",
+              },
+            }}
+          >
+            <AddIcon />
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        sx={{
+          width: "100%",
+          maxWidth: 360,
+          borderRadius: "10px",
+        }}
+      >
+        {chatListItems.map((item, idx) => {
+          return (
+            <ListItem
+              alignItems="flex-start"
+              sx={{
+                color: theme.palette.secondary.main,
+                borderRadius: "10px",
+                "&:hover": {
+                  backgroundColor: theme.palette.background.paper,
+                  transition: "all 0.5s ease",
+                },
+              }}
+              key={idx}
+            >
+              <ListItemAvatar>
+                <Avatar alt={item.sender} src="/static/images/avatar/2.jpg" />
+              </ListItemAvatar>
+              <ListItemText
+                primary={item.threadName}
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      sx={{ display: "inline" }}
+                      component="span"
+                      variant="body2"
+                      color="#38ef7d"
+                    >
+                      {item.recievers.join(", ")}
+                    </Typography>
+                    {" — " + item.previewMessage}
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    </Paper>
   );
 }

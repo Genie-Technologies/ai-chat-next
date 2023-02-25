@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { initialMessages } from "../../components/Chat";
-import { type Message } from "../../components/ChatLine";
+import { initialMessages } from "../../components/Chat/Chat";
+import { type Message } from "../../components/Chat/ChatLine";
 
 // break the app if the API key is missing
 if (!process.env.OPENAI_API_KEY) {
@@ -42,7 +42,7 @@ export default async function handler(req: NextRequest) {
 
   // const messages = req.body.messages
   const messagesPrompt = generatePromptFromMessages(body.messages);
-  const defaultPrompt = `I am Friendly AI Assistant. \n\nThis is the conversation between AI Bot and a news reporter.\n\n${botName}: ${firstMessge}\n${userName}: ${messagesPrompt}\n${botName}: `;
+  const defaultPrompt = `Act like you are my closest friend and respond to this:\n\n${botName}: ${firstMessge}\n${userName}: ${messagesPrompt}\n${botName}: `;
   const finalPrompt = process.env.AI_PROMPT
     ? `${process.env.AI_PROMPT}${messagesPrompt}\n${botName}: `
     : defaultPrompt;
