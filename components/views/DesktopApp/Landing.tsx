@@ -14,6 +14,8 @@ import {
   Support,
 } from "./components";
 
+import styles from "../../../styles/Landing.module.scss";
+
 const Landing = (): JSX.Element => {
   const theme = useTheme();
   return (
@@ -56,7 +58,7 @@ const Landing = (): JSX.Element => {
       {/* <Container>
         <Support />
       </Container> */}
-      <Box bgcolor={"alternate.main"} position={"relative"}>
+      <Box position={"relative"} className={styles.customizationSection}>
         <Container position="relative" zIndex={2}>
           <Customization />
         </Container>

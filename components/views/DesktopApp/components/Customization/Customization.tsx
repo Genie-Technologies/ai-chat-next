@@ -23,7 +23,7 @@ const Customization = (): JSX.Element => {
             fontWeight: "medium",
           }}
           gutterBottom
-          color={"secondary"}
+          color={"primar"}
           align={"center"}
         >
           EXPERIENCE
@@ -42,7 +42,7 @@ const Customization = (): JSX.Element => {
         <Typography
           variant="h6"
           align={"center"}
-          color={"text.secondary"}
+          color={"text.primary"}
           data-aos={"fade-up"}
         >
           We aim to provide the best messaging experience for you with the help
@@ -57,7 +57,7 @@ const Customization = (): JSX.Element => {
         >
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             size="large"
             fullWidth={isMd ? false : true}
           >

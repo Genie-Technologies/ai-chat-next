@@ -17,6 +17,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import { featuresForPricing } from "../../../../utils";
 
+import styles from "../../../../../styles/Pricings.module.scss";
+
 const Pricing = (): JSX.Element => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up("md"), {
@@ -73,8 +75,8 @@ const Pricing = (): JSX.Element => {
             data-aos={isMd ? "fade-right" : "fade-up"}
             sx={{
               boxShadow: 0,
-              backgroundColor: theme.palette.primary.main,
             }}
+            className={styles.pricingCard}
           >
             <CardContent sx={{ padding: { sm: 4 } }}>
               <Box marginBottom={4}>
@@ -136,11 +138,10 @@ const Pricing = (): JSX.Element => {
             </CardActions>
           </Card>
         </Grid>
-        <Grid item container xs={12} md={6} alignItems={"center"}>
+        {/* <Grid item container xs={12} md={6} alignItems={"center"}>
           <Box
             component={Card}
             bgcolor={theme.palette.background.paper}
-            minWidth={500}
             color={theme.palette.secondary.main}
           >
             <CardContent
@@ -176,7 +177,7 @@ const Pricing = (): JSX.Element => {
               </Button>
             </CardActions>
           </Box>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

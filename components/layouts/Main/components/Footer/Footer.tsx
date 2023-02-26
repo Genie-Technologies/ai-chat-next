@@ -2,11 +2,11 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { croppedLogoSrc } from "../../../../utils";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = (): JSX.Element => {
   const theme = useTheme();
@@ -22,53 +22,39 @@ const Footer = (): JSX.Element => {
           width={1}
           flexDirection={{ xs: "column", sm: "row" }}
         >
-          <Box
-            display={"flex"}
-            component="a"
-            href="/"
-            title="ResponAi"
-            width={80}
-          >
+          <Box display={"flex"} title="ResponAi" width={80}>
+            {/* <Link href={"/"} style={{ textDecoration: "none" }}> */}
             <Image
               src={croppedLogoSrc}
               alt="Respon.Ai"
               width={200}
               height={50}
             />
+            {/* </Link> */}
           </Box>
           <Box display="flex" flexWrap={"wrap"} alignItems={"center"}>
             <Box marginTop={1} marginRight={2}>
               <Link
-                underline="none"
-                component="a"
-                href="/"
-                color="text.primary"
-                variant={"subtitle2"}
+                href={"/"}
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.primary,
+                }}
               >
                 Home
               </Link>
             </Box>
-            <Box marginTop={1} marginRight={2}>
-              <Link
-                underline="none"
-                component="a"
-                href="/docs/introduction"
-                color="text.primary"
-                variant={"subtitle2"}
-              >
-                Documentation
-              </Link>
-            </Box>
             <Box marginTop={1}>
-              <Button
-                variant="outlined"
-                color="primary"
-                component="a"
-                target="blank"
-                href="https://mui.com/store/items/the-front-landing-page/"
-                size="small"
-              >
-                Purchase now
+              <Button variant="contained" color="primary" size="small">
+                <Link
+                  href="/chat"
+                  style={{
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  Try Now
+                </Link>
               </Button>
             </Box>
           </Box>
