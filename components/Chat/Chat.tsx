@@ -81,10 +81,13 @@ export function Chat() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "black",
+        backgroundColor: theme.palette.background.paper,
         padding: 2,
         overflow: "scroll",
-        border: `1px solid ${theme.palette.secondary.main}`,
+        border:
+          theme.palette.mode === "dark"
+            ? `1px solid ${theme.palette.info.main}`
+            : "none",
         borderRadius: "0",
       }}
     >

@@ -67,7 +67,7 @@ const Footer = (): JSX.Element => {
           color="text.secondary"
           gutterBottom
         >
-          &copy; ResponAi. 2021, United States. All rights reserved
+          &copy; ResponAi. 2023, United States. All rights reserved
         </Typography>
         <Typography
           align={"center"}

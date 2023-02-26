@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import ToggleButton from "@mui/material/ToggleButton";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+import SignUpForm from "../../../../Signup/Signup";
+import Dialog from "../../../../GeneralDialog/Dialog";
+
 import { featuresForPricing } from "../../../../utils";
 
 import styles from "../../../../../styles/Pricings.module.scss";
@@ -25,13 +27,11 @@ const Pricing = (): JSX.Element => {
     defaultMatches: true,
   });
 
-  const [pricingOption, setPricingOption] = useState("annual");
+  const [signUpDialogOpen, setSignUpDialogOpen] = useState(false);
 
-  const handleClick = (
-    event: any,
-    newPricingOption: React.SetStateAction<string>
-  ) => {
-    setPricingOption(newPricingOption);
+  const openSignUpModal = () => {
+    console.log("Open sign up modal");
+    setSignUpDialogOpen(true);
   };
 
   return (
@@ -132,12 +132,24 @@ const Pricing = (): JSX.Element => {
             </CardContent>
             <Divider />
             <CardActions sx={{ justifyContent: "center" }}>
-              <Button size={"large"} variant={"contained"} color={"secondary"}>
+              <Button
+                size={"large"}
+                variant={"contained"}
+                color={"secondary"}
+                onClick={() => setSignUpDialogOpen(true)}
+              >
                 GET STARTED
               </Button>
             </CardActions>
           </Card>
         </Grid>
+        <Dialog
+          open={signUpDialogOpen}
+          handleClose={() => setSignUpDialogOpen(false)}
+          showActions={false}
+        >
+          <SignUpForm />
+        </Dialog>
         {/* <Grid item container xs={12} md={6} alignItems={"center"}>
           <Box
             component={Card}

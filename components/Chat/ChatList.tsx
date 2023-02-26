@@ -16,6 +16,8 @@ import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 
+import styles from "../../styles/ChatList.module.scss";
+
 export default function ChatsList() {
   const theme = useTheme();
   return (
@@ -24,11 +26,17 @@ export default function ChatsList() {
       sx={{
         width: "100%",
         maxWidth: 360,
-        border: `1px solid ${theme.palette.secondary.main}`,
+        border:
+          theme.palette.mode === "dark"
+            ? `1px solid ${theme.palette.secondary.main}`
+            : "none",
         minHeight: "100vh",
         backgroundColor: theme.palette.background.paper,
-        padding: "20px 0 0 0",
-        borderRadius: "10px 0 0 10px",
+        padding: "10px",
+        borderRadius: "10px",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+        marginRight: "10px",
       }}
     >
       <Grid container spacing={2}>
@@ -89,13 +97,19 @@ export default function ChatsList() {
               alignItems="flex-start"
               sx={{
                 color: theme.palette.secondary.main,
-                borderRadius: "10px",
+                borderRadius: "0",
+                boxShadow:
+                  "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+                margin: "10px 0 10px 0",
                 "&:hover": {
-                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
+                  borderRadius: "10px",
                   transition: "all 0.5s ease",
+                  cursor: "pointer",
                 },
               }}
               key={idx}
+              className={styles.chatListItem}
             >
               <ListItemAvatar>
                 <Avatar alt={item.sender} src="/static/images/avatar/2.jpg" />
@@ -108,11 +122,23 @@ export default function ChatsList() {
                       sx={{ display: "inline" }}
                       component="span"
                       variant="body2"
-                      color="#38ef7d"
+                      color={theme.palette.primary.main}
                     >
                       {item.recievers.join(", ")}
                     </Typography>
-                    {" — " + item.previewMessage}
+                    {" — "}
+                    <Typography
+                      sx={{ display: "inline" }}
+                      component="span"
+                      variant="body2"
+                      color={
+                        theme.palette.mode === "dark"
+                          ? theme.palette.text.primary
+                          : theme.palette.primary.dark
+                      }
+                    >
+                      {item.previewMessage}
+                    </Typography>
                   </React.Fragment>
                 }
               />
