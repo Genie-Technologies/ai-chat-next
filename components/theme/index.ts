@@ -5,12 +5,11 @@ import { light, dark } from "./palette";
 
 const getTheme = (
   mode: string = "dark",
-  themeToggler: () => void = () => {}
+  themeToggler: Function = () => {}
 ): Theme =>
   responsiveFontSizes(
     createTheme({
-      // palette: mode === "light" ? light : dark,
-      palette: dark,
+      palette: mode === "light" ? light : dark,
       shadows: shadows(mode),
       typography: {
         fontFamily: '"Inter", sans-serif',
@@ -60,6 +59,8 @@ const getTheme = (
           } as ComponentsOverrides["MuiCard"],
         },
       },
+      // @ts-ignore
+      themeToggler,
     })
   );
 

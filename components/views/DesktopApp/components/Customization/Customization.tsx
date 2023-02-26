@@ -23,7 +23,7 @@ const Customization = (): JSX.Element => {
             fontWeight: "medium",
           }}
           gutterBottom
-          color={"primar"}
+          color={"secondary"}
           align={"center"}
         >
           EXPERIENCE
@@ -36,13 +36,14 @@ const Customization = (): JSX.Element => {
           sx={{
             fontWeight: 700,
           }}
+          color={"secondary"}
         >
           Future of Messaging
         </Typography>
         <Typography
           variant="h6"
           align={"center"}
-          color={"text.primary"}
+          color={"text.secondary"}
           data-aos={"fade-up"}
         >
           We aim to provide the best messaging experience for you with the help

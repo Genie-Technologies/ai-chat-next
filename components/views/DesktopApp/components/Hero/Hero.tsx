@@ -32,12 +32,12 @@ const Hero = (): JSX.Element => {
             >
               Communicate smarter{" "}
               <Typography
-                color={"primary"}
+                color={"secondary"}
                 component={"span"}
                 variant={"inherit"}
                 sx={{
                   background: `linear-gradient(180deg, transparent 82%, ${alpha(
-                    theme.palette.secondary.main,
+                    theme.palette.text.secondary,
                     0.3
                   )} 0%)`,
                 }}

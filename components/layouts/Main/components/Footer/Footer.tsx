@@ -45,7 +45,7 @@ const Footer = (): JSX.Element => {
               </Link>
             </Box>
             <Box marginTop={1}>
-              <Button variant="contained" color="primary" size="small">
+              <Button variant="contained" color="secondary" size="small">
                 <Link
                   href="/chat"
                   style={{

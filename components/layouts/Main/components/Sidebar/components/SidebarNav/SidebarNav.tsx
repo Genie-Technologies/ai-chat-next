@@ -49,7 +49,7 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
       </Box>
       <Box paddingX={2} paddingY={2}>
         <Box marginTop={1}>
-          <Button variant="contained" color="primary" size="large">
+          <Button variant="contained" color="secondary" size="large">
             <Link
               href="/chat"
               style={{

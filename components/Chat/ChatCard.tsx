@@ -54,7 +54,7 @@ export default function ChatCard() {
             </Item>
           </Grid>
         </Grid>
-        <Grid container spacing={2} justifyContent={"center"}>
+        <Grid container spacing={0} justifyContent={"center"} marginTop={5}>
           <Grid item>
             <ChatsList />
           </Grid>

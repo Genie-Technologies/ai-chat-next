@@ -84,6 +84,8 @@ export function Chat() {
         backgroundColor: "black",
         padding: 2,
         overflow: "scroll",
+        border: `1px solid ${theme.palette.secondary.main}`,
+        borderRadius: "0",
       }}
     >
       <Grid container spacing={0}>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import CssBaseline from "@mui/material/CssBaseline";
 import getTheme from "./theme";
 import AOS from "aos";
 
+const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+
 export const useDarkMode = (): [string, () => void, boolean] => {
-  const [themeMode, setTheme] = useState("light");
+  const [themeMode, setTheme] = useState("dark");
   const [mountedComponent, setMountedComponent] = useState(false);
 
   const setMode = (mode: string) => {
@@ -26,9 +28,9 @@ export const useDarkMode = (): [string, () => void, boolean] => {
   useEffect(() => {
     try {
       const localTheme = window.localStorage.getItem("themeMode");
-      localTheme ? setTheme(localTheme) : setMode("light");
+      localTheme ? setTheme(localTheme) : setMode("dark");
     } catch {
-      setMode("light");
+      setMode("dark");
     }
 
     setMountedComponent(true);
@@ -63,11 +65,29 @@ export default function Page({ children }: Props): JSX.Element {
     AOS.refresh();
   }, [mountedComponent, themeMode]);
 
+  const [mode, setMode] = React.useState<"light" | "dark">("light");
+  const colorMode = React.useMemo(
+    () => ({
+      toggleColorMode: () => {
+        themeToggler();
+        // setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+      },
+    }),
+    []
+  );
+
+  const theme = React.useMemo(() => {
+    console.log("Mode is: ", mode);
+    return createTheme(getTheme(mode));
+  }, [mode]);
+
   return (
+    // <ColorModeContext.Provider value={}>
     <ThemeProvider theme={getTheme(themeMode, themeToggler)}>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <Paper elevation={0}>{children}</Paper>
     </ThemeProvider>
+    // </ColorModeContext.Provider>
   );
 }
