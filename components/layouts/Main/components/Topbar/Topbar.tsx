@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { NavItem } from "./components";
 import { PageItem, croppedLogoSrc } from "../../../../utils";
 import Link from "next/link";
+import ThemeSwitcher from "../../../../ThemeSwitch/ThemeSwitch";
 
 interface Props {
   onSidebarOpen: () => void;
@@ -52,7 +53,7 @@ const Topbar = ({
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
         <Box marginLeft={4}>
-          <Button variant="contained" color="primary" size="large">
+          <Button variant="contained" color="secondary" size="large">
             <Link
               href="/chat"
               style={{
@@ -65,6 +66,9 @@ const Topbar = ({
               </Typography>
             </Link>
           </Button>
+        </Box>
+        <Box marginLeft={4}>
+          <ThemeSwitcher />
         </Box>
       </Box>
       <Box sx={{ display: { xs: "flex", md: "none" } }} alignItems={"center"}>

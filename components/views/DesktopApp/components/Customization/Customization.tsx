@@ -36,6 +36,7 @@ const Customization = (): JSX.Element => {
           sx={{
             fontWeight: 700,
           }}
+          color={"secondary"}
         >
           Future of Messaging
         </Typography>
@@ -57,7 +58,7 @@ const Customization = (): JSX.Element => {
         >
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             size="large"
             fullWidth={isMd ? false : true}
           >

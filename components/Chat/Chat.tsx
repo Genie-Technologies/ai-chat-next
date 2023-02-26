@@ -77,11 +77,15 @@ export function Chat() {
         width: "100%",
         height: "100%",
         minHeight: "100vh",
+        maxHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "black",
         padding: 2,
+        overflow: "scroll",
+        border: `1px solid ${theme.palette.secondary.main}`,
+        borderRadius: "0",
       }}
     >
       <Grid container spacing={0}>

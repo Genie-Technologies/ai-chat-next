@@ -1,0 +1,29 @@
+// import variables
+@import "../styles/variables";
+
+.pricingCard {
+  background: $greenish-gradient;
+  background: $greenish-gradient-linear;
+  background: $greenish-gradient-moz;
+  background: $greenish-gradient-webkit;
+  background-size: 400% 400%;
+
+  animation: gradient 2s ease infinite;
+  -webkit-animation: gradient 2s ease infinite;
+  -moz-animation: gradient 2s ease infinite;
+  -o-animation: gradient 2s ease infinite;
+  -ms-animation: gradient 2s ease infinite;
+}
+
+// Animate the gradient in a circular motion using keyframes
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

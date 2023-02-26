@@ -8,3 +8,21 @@ $section-angle-sin: 0.212;
 $mobile: 450px;
 $tablet: 768px;
 $laptop: 1024px;
+
+// Greenish Gradient
+$greenish-gradient: hsla(136, 82%, 72%, 1);
+$greenish-gradient-linear: linear-gradient(
+  90deg,
+  hsla(136, 82%, 72%, 1) 0%,
+  #133a94 100%
+);
+$greenish-gradient-moz: -moz-linear-gradient(
+  90deg,
+  hsla(136, 82%, 72%, 1) 0%,
+  #133a94 100%
+);
+$greenish-gradient-webkit: -webkit-linear-gradient(
+  90deg,
+  hsla(136, 82%, 72%, 1) 0%,
+  #133a94 100%
+);
