@@ -15,7 +15,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-
 import styles from "../../styles/ChatList.module.scss";
 
 export default function ChatsList() {
