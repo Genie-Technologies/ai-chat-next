@@ -58,6 +58,8 @@ export function Chat() {
         user: cookie[COOKIE_NAME],
       }),
     });
+
+    console.log("response", response);
     const data = await response.json();
 
     // strip out white spaces from the bot message

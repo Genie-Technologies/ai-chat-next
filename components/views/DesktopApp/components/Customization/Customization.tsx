@@ -50,7 +50,7 @@ const Customization = (): JSX.Element => {
           of the latest technologies and a personal human touch.
         </Typography>
         <Box
-          display="flex"
+          display={process.env.NODE_ENV === "development" ? "flex" : "none"}
           flexDirection={{ xs: "column", sm: "row" }}
           alignItems={{ xs: "stretched", sm: "flex-start" }}
           justifyContent={"center"}
@@ -69,7 +69,7 @@ const Customization = (): JSX.Element => {
                 color: theme.palette.text.primary,
               }}
             >
-              Start now
+              Try now
             </Link>
           </Button>
         </Box>
