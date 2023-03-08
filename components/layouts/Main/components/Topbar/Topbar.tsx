@@ -53,7 +53,15 @@ const Topbar = ({
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
         <Box marginLeft={4}>
-          <Button variant="contained" color="secondary" size="large">
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            sx={{
+              display:
+                process.env.NODE_ENV === "development" ? "block" : "none",
+            }}
+          >
             <Link
               href="/chat"
               style={{
@@ -61,13 +69,7 @@ const Topbar = ({
                 color: theme.palette.text.primary,
               }}
             >
-              <Typography
-                variant="subtitle1"
-                color="text.primary"
-                display={
-                  process.env.NODE_ENV === "development" ? "block" : "none"
-                }
-              >
+              <Typography variant="subtitle1" color="text.primary">
                 Try Now
               </Typography>
             </Link>

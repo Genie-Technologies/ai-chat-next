@@ -12,14 +12,16 @@ interface Props {
 const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
   return (
     <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
-      <Box marginRight={{ xs: 1, sm: 2 }}>
+      <Box
+        marginRight={{ xs: 1, sm: 2 }}
+        display={process.env.NODE_ENV === "development" ? "block" : "none"}
+      >
         <Link
           underline="none"
           component="a"
           href="/chat"
           color={colorInvert ? "common.white" : "text.primary"}
           sx={{
-            display: process.env.NODE_ENV === "development" ? "flex" : "none",
             alignItems: "center",
           }}
         >

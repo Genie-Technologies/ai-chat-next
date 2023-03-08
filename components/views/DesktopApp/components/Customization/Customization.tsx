@@ -61,14 +61,15 @@ const Customization = (): JSX.Element => {
             color="secondary"
             size="large"
             fullWidth={isMd ? false : true}
+            sx={{
+              display: process.env.NODE_ENV === "development" ? "flex" : "none",
+            }}
           >
             <Link
               href="/chat"
               style={{
                 textDecoration: "none",
                 color: theme.palette.text.primary,
-                display:
-                  process.env.NODE_ENV === "development" ? "flex" : "none",
               }}
             >
               Try now
