@@ -16,28 +16,43 @@ import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import styles from "../../styles/ChatList.module.scss";
+import PushPinIcon from "@mui/icons-material/PushPinRounded";
 
 export default function ChatsList() {
   const theme = useTheme();
+
+  const pinnedItemListStyle = {
+    border: `1px solid ${theme.palette.secondary.main}`,
+    borderRadius: "10px",
+    boxShadow:
+      "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+    margin: "10px 0 10px 0",
+    "&:hover": {
+      boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
+      borderRadius: "10px",
+      transition: "all 0.5s ease",
+      cursor: "pointer",
+    },
+  };
+
+  const basePaperStyle = {
+    width: "100%",
+    maxWidth: 360,
+    border:
+      theme.palette.mode === "dark"
+        ? `1px solid ${theme.palette.secondary.main}`
+        : "none",
+    minHeight: "100vh",
+    backgroundColor: theme.palette.background.paper,
+    padding: "10px",
+    borderRadius: "10px",
+    boxShadow:
+      "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+    marginRight: "10px",
+  };
+
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        width: "100%",
-        maxWidth: 360,
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${theme.palette.secondary.main}`
-            : "none",
-        minHeight: "100vh",
-        backgroundColor: theme.palette.background.paper,
-        padding: "10px",
-        borderRadius: "10px",
-        boxShadow:
-          "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
-        marginRight: "10px",
-      }}
-    >
+    <Paper elevation={0} sx={{ ...basePaperStyle }}>
       <Grid container spacing={2}>
         <Grid
           item
@@ -71,7 +86,7 @@ export default function ChatsList() {
             variant="contained"
             color="success"
             sx={{
-              color: theme.palette.text.primary,
+              color: theme.palette.primary.contrastText,
               borderRadius: "10px",
               "&:hover": {
                 backgroundColor: theme.palette.primary.main,
@@ -90,6 +105,29 @@ export default function ChatsList() {
           borderRadius: "10px",
         }}
       >
+        {/** Have a pinned chat item at the top for AI chat */}
+        <ListItem
+          alignItems="flex-start"
+          sx={{ ...pinnedItemListStyle }}
+          className={styles.chatListItem}
+        >
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+              <PushPinIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Talk to ResponAi"
+            primaryTypographyProps={{
+              sx: {
+                fontWeight: "bold",
+                color: theme.palette.primary.main,
+                fontSize: "1.2rem",
+              },
+            }}
+          />
+        </ListItem>
+
         {chatListItems.map((item, idx) => {
           return (
             <ListItem

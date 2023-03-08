@@ -68,17 +68,6 @@ export default function ChatCard() {
           <Grid
             item
             style={{
-              boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
-              minHeight: "70vh",
-              height: "100%",
-            }}
-          >
-            <Chat />
-          </Grid>
-          <Grid
-            item
-            style={{
-              boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
               minHeight: "70vh",
               height: "100%",
             }}

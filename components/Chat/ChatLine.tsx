@@ -45,7 +45,8 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
                 backgroundColor: theme.palette.primary.main,
                 borderRadius: "20px",
                 padding: "8px 16px",
-                maxWidth: "70%",
+                maxWidth: 300,
+                color: theme.palette.primary.contrastText,
               }}
             />
           )}
@@ -90,7 +91,9 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
               backgroundColor: theme.palette.primary.light,
               borderRadius: "20px",
               padding: "8px 16px",
-              maxWidth: "70%",
+              maxWidth: 300,
+              overflowWrap: "break-word",
+              color: theme.palette.primary.contrastText,
             }}
           />
         )}
