@@ -77,7 +77,9 @@ const Hero = (): JSX.Element => {
           loading="lazy"
           height={1}
           width={1}
-          src={"https://assets.maccarianagency.com/screenshots/dashboard1.jpg"}
+          src={
+            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fengineering.png?alt=media&token=925b5a4b-2f3f-40fd-9915-980435fa60a7"
+          }
           alt="..."
           boxShadow={3}
           borderRadius={2}

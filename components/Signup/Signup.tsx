@@ -11,6 +11,10 @@ import { useState } from "react";
 
 import styles from "../../styles/Signup.module.scss";
 import { Stack } from "@mui/system";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import { CircularLoader } from "../Shared/CircularLoader";
 
 export function SignUpForm() {
   const theme = useTheme();
@@ -18,8 +22,17 @@ export function SignUpForm() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
+    if (!e) {
+      e = {
+        preventDefault: () => {},
+      } as React.FormEvent<HTMLFormElement>;
+    }
+
     e.preventDefault();
     const res = await fetch("/api/signup", {
       method: "POST",
@@ -30,11 +43,17 @@ export function SignUpForm() {
         email,
       }),
     });
+
     const data = await res.json();
-    if (data.error) {
-      setError(data.error);
+
+    setIsLoading(false);
+    if (data.success) {
+      setSuccess("Success! You are now signed up for early access.");
+      setOpenSnackBar(true);
+      setError("");
+      setEmail("");
     } else {
-      setSuccess(data.success);
+      setError(data.error);
     }
   };
 
@@ -49,6 +68,29 @@ export function SignUpForm() {
     return re.test(email);
   };
 
+  const signUpUser = () => {
+    if (validateEmail(email)) {
+      handleSubmit();
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Container className={styles.signUpContainer} sx={{ height: "100%" }}>
+        <CircularLoader
+          color="secondary"
+          variant="indeterminate"
+          sx={{
+            position: "relative",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+      </Container>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <Card
@@ -61,7 +103,7 @@ export function SignUpForm() {
             className={styles.signUpHeader}
             color="primary"
           >
-            Sign up for Early Access to ResponAi
+            SIGN UP FOR EARLY ACCESS
           </Typography>
           <Stack spacing={2}>
             <TextField
@@ -78,12 +120,25 @@ export function SignUpForm() {
               className={styles.signUpButton}
               color="secondary"
               variant="contained"
+              onClick={() => signUpUser()}
             >
               Sign Up
             </Button>
           </Stack>
 
-          {success && <Typography variant="h6">{success}</Typography>}
+          {success && (
+            <Snackbar
+              open={openSnackBar}
+              autoHideDuration={6000}
+              onClose={() => setOpenSnackBar(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <Alert severity="success">
+                <AlertTitle>Successfully signed up!</AlertTitle>
+                {success}
+              </Alert>
+            </Snackbar>
+          )}
         </CardContent>
       </Card>
     </form>

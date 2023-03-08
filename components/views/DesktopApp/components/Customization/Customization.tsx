@@ -50,7 +50,7 @@ const Customization = (): JSX.Element => {
           of the latest technologies and a personal human touch.
         </Typography>
         <Box
-          display="flex"
+          display={process.env.NODE_ENV === "development" ? "flex" : "none"}
           flexDirection={{ xs: "column", sm: "row" }}
           alignItems={{ xs: "stretched", sm: "flex-start" }}
           justifyContent={"center"}
@@ -61,6 +61,9 @@ const Customization = (): JSX.Element => {
             color="secondary"
             size="large"
             fullWidth={isMd ? false : true}
+            sx={{
+              display: process.env.NODE_ENV === "development" ? "flex" : "none",
+            }}
           >
             <Link
               href="/chat"
@@ -69,12 +72,18 @@ const Customization = (): JSX.Element => {
                 color: theme.palette.text.primary,
               }}
             >
-              Start now
+              Try now
             </Link>
           </Button>
         </Box>
       </Box>
-      <Grid container spacing={isMd ? 4 : 2}>
+      <Grid
+        container
+        spacing={isMd ? 4 : 2}
+        sx={{
+          display: process.env.NODE_ENV === "development" ? "flex" : "none",
+        }}
+      >
         <Grid item xs={12} sm={6} data-aos={"fade-up"}>
           <Grid container alignItems="center">
             <Box
@@ -83,7 +92,7 @@ const Customization = (): JSX.Element => {
               height={1}
               width={1}
               src={
-                "https://assets.maccarianagency.com/screenshots/dashboard.png"
+                "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fphotosession.png?alt=media&token=1e0fa105-80d5-4413-b3ec-f3b0e2b1717d"
               }
               alt="..."
               boxShadow={3}
@@ -110,7 +119,7 @@ const Customization = (): JSX.Element => {
               height={1}
               width={1}
               src={
-                "https://assets.maccarianagency.com/screenshots/dashboard1.jpg"
+                "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fsignup.png?alt=media&token=3bc87305-4902-4e2f-aa91-5093e2c5b32a"
               }
               alt="..."
               boxShadow={3}

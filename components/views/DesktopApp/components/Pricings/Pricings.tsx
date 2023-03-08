@@ -58,7 +58,7 @@ const Pricing = (): JSX.Element => {
             marginTop: theme.spacing(1),
           }}
         >
-          It is Free!
+          Free!
         </Typography>
         <Typography
           variant="h6"
@@ -66,7 +66,7 @@ const Pricing = (): JSX.Element => {
           color={"text.secondary"}
           data-aos={"fade-up"}
         >
-          For a limited time only!
+          (For a Limited Time)
         </Typography>
       </Box>
       <Grid container spacing={isMd ? 0 : 2}>

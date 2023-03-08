@@ -2,7 +2,10 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import styles from "../../styles/ChatPage.module.scss";
 import SendIcon from "@mui/icons-material/Send";
-import { Divider, IconButton, InputBase, Paper } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+import { Divider, IconButton, InputBase, Paper, useTheme } from "@mui/material";
+import { aiGeneratedRepliesForDemo } from "../utils";
 
 type InputMessageType = {
   input: string;
@@ -17,8 +20,47 @@ function InputMessage({
   sendMessage,
   loading,
 }: InputMessageType) {
+  const theme = useTheme();
   return (
     <div>
+      <Stack
+        direction="column"
+        spacing={0}
+        className={styles.aiGeneratedOptions}
+        sx={{
+          // display: "flex",
+          flexWrap: "wrap",
+          display: process.env.NODE_ENV === "development" ? "none" : "flex",
+        }}
+      >
+        {aiGeneratedRepliesForDemo.map((reply, index) => {
+          return (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "auto",
+                height: "auto",
+                padding: "3px",
+              }}
+            >
+              <Chip
+                key={index}
+                label={reply}
+                onClick={() => {
+                  console.log(reply);
+                }}
+                color={theme.palette.mode === "dark" ? "secondary" : "primary"}
+                variant="outlined"
+              />
+            </div>
+          );
+        })}
+      </Stack>
+      <br />
       <Paper
         component="form"
         sx={{
@@ -43,6 +85,7 @@ function InputMessage({
           onChange={(e) => {
             setInput(e.target.value);
           }}
+          multiline
           required
         />
 

@@ -6,7 +6,6 @@ import CardContent from "@mui/material/CardContent";
 import ChatsList from "./ChatList";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
 import { Avatar } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -69,22 +68,11 @@ export default function ChatCard() {
           <Grid
             item
             style={{
-              boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
               minHeight: "70vh",
               height: "100%",
             }}
           >
             <Chat />
-          </Grid>
-          <Grid
-            item
-            style={{
-              boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
-              minHeight: "70vh",
-              height: "100%",
-            }}
-          >
-            <Chat /> {/** This is AI Chat */}
           </Grid>
         </Grid>
       </CardContent>

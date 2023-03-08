@@ -58,7 +58,10 @@ export function Chat() {
         user: cookie[COOKIE_NAME],
       }),
     });
+
+    console.log("response", response);
     const data = await response.json();
+    console.log("data", data);
 
     // strip out white spaces from the bot message
     const botNewMessage = data.text.trim();
@@ -88,7 +91,8 @@ export function Chat() {
           theme.palette.mode === "dark"
             ? `1px solid ${theme.palette.info.main}`
             : "none",
-        borderRadius: "0",
+        borderRadius: "10px",
+        boxShadow: `0px 0px 25px 0px ${theme.palette.info.main}`,
       }}
     >
       <Grid container spacing={0}>
