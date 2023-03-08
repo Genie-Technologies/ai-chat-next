@@ -90,7 +90,9 @@ const Hero = (): JSX.Element => {
           loading="lazy"
           height={1}
           width={1}
-          src={"https://assets.maccarianagency.com/screenshots/dashboard.png"}
+          src={
+            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fbuddies.png?alt=media&token=058d59e7-d3ee-44ee-965c-1bc59ffe272c"
+          }
           alt="..."
           boxShadow={3}
           borderRadius={2}

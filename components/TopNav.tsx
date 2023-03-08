@@ -18,7 +18,10 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
           component="a"
           href="/chat"
           color={colorInvert ? "common.white" : "text.primary"}
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{
+            display: process.env.NODE_ENV === "development" ? "flex" : "none",
+            alignItems: "center",
+          }}
         >
           Try Now
           <Box

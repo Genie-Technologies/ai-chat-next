@@ -51,6 +51,8 @@ const Footer = (): JSX.Element => {
                   style={{
                     textDecoration: "none",
                     color: theme.palette.text.primary,
+                    display:
+                      process.env.NODE_ENV === "development" ? "block" : "none",
                   }}
                 >
                   Try Now

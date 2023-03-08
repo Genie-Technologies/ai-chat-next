@@ -61,7 +61,13 @@ const Topbar = ({
                 color: theme.palette.text.primary,
               }}
             >
-              <Typography variant="subtitle1" color="text.primary">
+              <Typography
+                variant="subtitle1"
+                color="text.primary"
+                display={
+                  process.env.NODE_ENV === "development" ? "block" : "none"
+                }
+              >
                 Try Now
               </Typography>
             </Link>
