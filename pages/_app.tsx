@@ -4,6 +4,8 @@ import Page from "../components/Page";
 import type { AppProps } from "next/app";
 import { Analytics } from "@vercel/analytics/react";
 
+import { UserProvider } from "@auth0/nextjs-auth0/client";
+
 import "aos/dist/aos.css";
 
 function App({ Component, pageProps }: AppProps) {
@@ -17,8 +19,10 @@ function App({ Component, pageProps }: AppProps) {
         <title>Converso - Future of Messaging</title>
       </Head>
       <Page>
-        <Component {...pageProps} />
-        <Analytics />
+        <UserProvider>
+          <Component {...pageProps} />
+          <Analytics />
+        </UserProvider>
       </Page>
     </React.Fragment>
   );
