@@ -14,7 +14,7 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
     <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
       <Box
         marginRight={{ xs: 1, sm: 2 }}
-        display={process.env.NODE_ENV === "development" ? "block" : "none"}
+        display={process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none"}
       >
         <Link
           underline="none"

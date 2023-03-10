@@ -30,7 +30,8 @@ function InputMessage({
         sx={{
           // display: "flex",
           flexWrap: "wrap",
-          display: process.env.NODE_ENV === "development" ? "none" : "flex",
+          display:
+            process.env.CHAT_FEATURE_ENABLED === "true" ? "none" : "flex",
         }}
       >
         {aiGeneratedRepliesForDemo.map((reply, index) => {
