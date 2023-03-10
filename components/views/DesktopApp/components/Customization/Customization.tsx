@@ -50,7 +50,9 @@ const Customization = (): JSX.Element => {
           of the latest technologies and a personal human touch.
         </Typography>
         <Box
-          display={process.env.NODE_ENV === "development" ? "flex" : "none"}
+          display={
+            process.env.CHAT_FEATURE_ENABLED === "true" ? "flex" : "none"
+          }
           flexDirection={{ xs: "column", sm: "row" }}
           alignItems={{ xs: "stretched", sm: "flex-start" }}
           justifyContent={"center"}
@@ -62,7 +64,8 @@ const Customization = (): JSX.Element => {
             size="large"
             fullWidth={isMd ? false : true}
             sx={{
-              display: process.env.NODE_ENV === "development" ? "flex" : "none",
+              display:
+                process.env.CHAT_FEATURE_ENABLED === "true" ? "flex" : "none",
             }}
           >
             <Link
@@ -81,7 +84,8 @@ const Customization = (): JSX.Element => {
         container
         spacing={isMd ? 4 : 2}
         sx={{
-          display: process.env.NODE_ENV === "development" ? "flex" : "none",
+          display:
+            process.env.CHAT_FEATURE_ENABLED === "true" ? "flex" : "none",
         }}
       >
         <Grid item xs={12} sm={6} data-aos={"fade-up"}>

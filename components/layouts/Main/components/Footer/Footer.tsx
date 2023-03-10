@@ -51,7 +51,9 @@ const Footer = (): JSX.Element => {
                 size="small"
                 sx={{
                   display:
-                    process.env.NODE_ENV === "development" ? "block" : "none",
+                    process.env.CHAT_FEATURE_ENABLED === "true"
+                      ? "block"
+                      : "none",
                 }}
               >
                 <Link

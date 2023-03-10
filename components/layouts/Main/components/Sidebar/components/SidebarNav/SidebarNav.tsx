@@ -55,7 +55,7 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
             size="large"
             sx={{
               display:
-                process.env.NODE_ENV === "development" ? "block" : "none",
+                process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none",
             }}
           >
             <Link
@@ -69,7 +69,7 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
                 variant="subtitle1"
                 color="text.primary"
                 display={
-                  process.env.NODE_ENV === "development" ? "block" : "none"
+                  process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none"
                 }
               >
                 Try Now
