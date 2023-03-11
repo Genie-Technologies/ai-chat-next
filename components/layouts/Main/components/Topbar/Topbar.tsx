@@ -58,6 +58,28 @@ const Topbar = ({
             color="secondary"
             size="large"
             sx={{
+              display: process.env.NODE_ENV === "production" ? "none" : "block",
+            }}
+          >
+            <Link
+              href="/api/auth/login"
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <Typography variant="subtitle1" color="text.primary">
+                Sign In
+              </Typography>
+            </Link>
+          </Button>
+        </Box>
+        <Box marginLeft={4}>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            sx={{
               display:
                 process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none",
             }}

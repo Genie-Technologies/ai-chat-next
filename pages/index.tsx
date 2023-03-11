@@ -6,7 +6,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Cosmic Chat</title>
+        <title>ResponAi</title>
       </Head>
       <Landing />
       {/* <Hero />

@@ -62,7 +62,7 @@ function ResponsiveAppBar() {
               color="primary"
               fontWeight={700}
             >
-              CosmicChat
+              ResponAi
             </Typography>
           </Box>
 

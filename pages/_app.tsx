@@ -16,7 +16,7 @@ function App({ Component, pageProps }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title>Converso - Future of Messaging</title>
+        <title>ResponAi - Future of Messaging</title>
       </Head>
       <Page>
         <UserProvider>
