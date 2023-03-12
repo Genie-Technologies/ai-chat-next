@@ -117,10 +117,8 @@ const Form = (): JSX.Element => {
           marginBottom={4}
           display={caption ? "block" : "none"}
           sx={{
-            // have a gradient background
             backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
             color: theme.palette.background.paper,
-            // Animate the gradient
             backgroundSize: "400% 400%",
             animation: "gradient 15s ease infinite",
 
