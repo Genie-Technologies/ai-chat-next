@@ -8,6 +8,12 @@ import Grid from "@mui/material/Grid";
 import { Images } from "../Shared/Illustrations";
 import Container from "../Container";
 import CaptionRTrial from "./CaptionRUpload/CaptionRDemo";
+import Stack from "@mui/material/Stack";
+
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const CaptionRCard = (): JSX.Element => {
   const theme = useTheme();
@@ -50,8 +56,8 @@ const CaptionRCard = (): JSX.Element => {
             </Box>
             <Box marginBottom={3}>
               <Typography variant="h6" component="p" color="text.secondary">
-                Transform your photos into powerful posts with our image caption
-                generator.
+                Transform Your Photos Into Powerful Posts With Our Image Caption
+                Generator.
               </Typography>
             </Box>
           </Box>
@@ -64,6 +70,23 @@ const CaptionRCard = (): JSX.Element => {
           </Box>
         </Grid>
       </Grid>
+      <Stack
+        spacing={2}
+        alignItems="center"
+        maxWidth={700}
+        direction={isMd ? "row" : "column"}
+      >
+        <FacebookOutlinedIcon
+          sx={{
+            color: "#3b5998",
+            fontSize: "4rem",
+          }}
+        />
+        <InstagramIcon sx={{ color: "#e1306c", fontSize: "4rem" }} />
+        <TwitterIcon sx={{ color: "#1da1f2", fontSize: "4rem" }} />
+        <LinkedInIcon sx={{ color: "#0e76a8", fontSize: "4rem" }} />
+      </Stack>
+
       <CaptionRTrial />
     </Container>
   );
