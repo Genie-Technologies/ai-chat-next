@@ -6,13 +6,15 @@ import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import Image from "next/image";
 
 const FileUploadAndPreview = ({
-  setFile,
+  _setFile,
 }: {
-  setFile: (file: string | ArrayBuffer | null) => void;
+  _setFile: (file: string | ArrayBuffer | null) => void;
 }): JSX.Element => {
   const theme = useTheme();
+  const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
 
   const uploadFile = (e: any) => {
     console.log(e.target.files);
@@ -24,6 +26,7 @@ const FileUploadAndPreview = ({
       reader.onload = () => {
         console.log(reader.result);
         setFile(reader.result);
+        _setFile(reader.result);
       };
     }
   };
@@ -53,7 +56,30 @@ const FileUploadAndPreview = ({
           </Typography>
         </Box>
       </Box>
-      <Box marginY={3}>
+      {false && (
+        <Box marginBottom={2}>
+          {/** Preview of the image file uploaded */}
+          <Box
+            sx={{
+              height: 300,
+              width: 300,
+              borderRadius: 2,
+              backgroundColor: theme.palette.background.paper,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              src={file as string}
+              alt="Uploaded Image"
+              width={300}
+              height={300}
+            />
+          </Box>
+        </Box>
+      )}
+      {/* <Box marginY={3}>
         <Button
           variant="contained"
           component="label"
@@ -64,7 +90,7 @@ const FileUploadAndPreview = ({
           Upload File
           <input type="file" hidden accept="image/png, image/jpeg" />
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

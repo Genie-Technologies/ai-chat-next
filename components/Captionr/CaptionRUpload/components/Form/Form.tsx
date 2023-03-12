@@ -14,6 +14,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { Skeleton } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import FileUploadAndPreview from "../FileUploadAndPreview/FileUploadAndPreview";
 
 const SocialMedias = [
   { value: "facebook", label: "Facebook" },
@@ -23,15 +24,6 @@ const SocialMedias = [
   { value: "all", label: "All" },
 ];
 
-/**
- * "food"
-      | "travel"
-      | "nature"
-      | "people"
-      | "animals"
-      | "motivation"
-      | "funny";
- */
 const categories = [
   { value: "food", label: "Food" },
   { value: "travel", label: "Travel" },
@@ -42,11 +34,12 @@ const categories = [
   { value: "funny", label: "Funny" },
 ];
 
-const Form = ({ file }: { file: string | ArrayBuffer | null }): JSX.Element => {
+const Form = (): JSX.Element => {
   const theme = useTheme();
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [caption, setCaption] = React.useState<string>("");
+  const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
 
   const createCaption = (e: any) => {
     setLoading(true);
@@ -105,12 +98,53 @@ const Form = ({ file }: { file: string | ArrayBuffer | null }): JSX.Element => {
         alignItems: "center",
         height: "100%",
         width: "100%",
-        borderRadius: 2,
+        borderRadius: 10,
         padding: 2,
         backgroundColor: theme.palette.background.paper,
+        boxShadow: `0 0 50px 50px ${theme.palette.primary.main} inset`,
+        minWidth: 300,
       }}
     >
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack spacing={2} alignItems="center" maxWidth={700}>
+        <Box width={1} component={Card} boxShadow={1} padding={2}>
+          <FileUploadAndPreview _setFile={setFile} />
+        </Box>
+        <Box
+          padding={{ xs: 3, sm: 6 }}
+          width={1}
+          component={Card}
+          boxShadow={caption ? 1 : 0}
+          marginBottom={4}
+          display={caption ? "block" : "none"}
+          sx={{
+            // have a gradient background
+            backgroundImage: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+            color: theme.palette.background.paper,
+            // Animate the gradient
+            backgroundSize: "400% 400%",
+            animation: "gradient 15s ease infinite",
+
+            "@keyframes gradient": {
+              "0%": {
+                backgroundPosition: "0% 50%",
+              },
+              "50%": {
+                backgroundPosition: "100% 50%",
+              },
+              "100%": {
+                backgroundPosition: "0% 50%",
+              },
+            },
+          }}
+        >
+          <Typography variant="subtitle1" component="h2" gutterBottom>
+            {loading ? (
+              <Skeleton variant="text" height={100} width={"100%"} />
+            ) : (
+              caption
+            )}
+          </Typography>
+        </Box>
         <Box
           padding={{ xs: 3, sm: 6 }}
           width={1}
@@ -125,8 +159,8 @@ const Form = ({ file }: { file: string | ArrayBuffer | null }): JSX.Element => {
                   <Skeleton
                     variant="text"
                     height={54}
+                    width={"100%"}
                     sx={{
-                      width: "100%",
                       backgroundColor: theme.palette.primary.main,
                     }}
                   />
@@ -207,25 +241,6 @@ const Form = ({ file }: { file: string | ArrayBuffer | null }): JSX.Element => {
               </Grid>
             </Grid>
           </form>
-        </Box>
-
-        <Box
-          padding={{ xs: 3, sm: 6 }}
-          width={1}
-          component={Card}
-          boxShadow={caption ? 1 : 0}
-          marginBottom={4}
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ mb: 2 }}
-          >
-            <Typography variant="subtitle1" component="h2" gutterBottom>
-              {loading ? <Skeleton variant="text" height={54} /> : caption}
-            </Typography>
-          </Box>
         </Box>
       </Stack>
     </Box>

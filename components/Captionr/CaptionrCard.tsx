@@ -27,7 +27,25 @@ const CaptionRCard = (): JSX.Element => {
                   fontWeight: 700,
                 }}
               >
-                Captions that capture the moment: powered by AI
+                Captions That Capture The Moment:
+                <Typography
+                  variant="h4"
+                  component="span"
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    display: "inline-block",
+                    marginLeft: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "primary",
+                    textDecorationThickness: "2px",
+                    textDecorationStyle: "solid",
+                    textDecorationSkipInk: "none",
+                  }}
+                >
+                  {" "}
+                  Powered By ResponAi
+                </Typography>
               </Typography>
             </Box>
             <Box marginBottom={3}>
@@ -46,7 +64,6 @@ const CaptionRCard = (): JSX.Element => {
           </Box>
         </Grid>
       </Grid>
-
       <CaptionRTrial />
     </Container>
   );

@@ -10,10 +10,10 @@ interface IllustrationProps {
 export const Images = ({
   width = 200,
   height = 98,
-  fillColor = "currentColor",
 }: IllustrationProps): JSX.Element => {
   const theme = useTheme();
   const colorPrimaryMain = theme.palette.primary.main;
+  const fillColor = theme.palette.secondary.main;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
