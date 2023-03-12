@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/cognitiveservices-computervision": "^8.2.0",
+    "@azure/ms-rest-js": "^2.6.4",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
@@ -17,6 +19,7 @@
     "@vercel/examples-ui": "^1.0.4",
     "aos": "^2.3.4",
     "next": "latest",
+    "openai": "^3.2.1",
     "react": "latest",
     "react-cookie": "^4.1.1",
     "react-countup": "^6.4.1",

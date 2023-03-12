@@ -1,21 +1,16 @@
 import { Layout } from "@vercel/examples-ui";
 import Head from "next/head";
 import Landing from "../components/views/DesktopApp/Landing";
+import { croppedLogoSrc } from "../components/utils";
 
 function Home() {
   return (
     <div>
       <Head>
-        <title>Cosmic Chat</title>
+        <title>ResponAi - Future of Messaging </title>
+        <link rel="icon" href={croppedLogoSrc} />
       </Head>
       <Landing />
-      {/* <Hero />
-      <ForWho />
-
-      <Container maxWidth="lg" style={{ marginTop: "10%" }}>
-        <FeaturesList />
-        <SignUpForm />
-      </Container> */}
     </div>
   );
 }
