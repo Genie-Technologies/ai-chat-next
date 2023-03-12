@@ -78,9 +78,15 @@ const Form = (): JSX.Element => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(" RESULT: ", data);
+          if (data.success) {
+            setCaption(data.message);
+          } else {
+            setCaption(
+              "Something went wrong! Please make sure the image url is valid."
+            );
+          }
+
           setLoading(false);
-          setCaption(data.message);
         })
         .catch((err) => {
           console.log(err);
