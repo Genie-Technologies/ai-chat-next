@@ -56,8 +56,10 @@ const CaptionRCard = (): JSX.Element => {
             </Box>
             <Box marginBottom={3}>
               <Typography variant="h6" component="p" color="text.secondary">
-                Transform Your Photos Into Powerful Posts With Our Image Caption
-                Generator.
+                Elevate Your Social Media Game with AI-generated Captions{" "}
+                <Typography variant="h6" component="span" color="secondary">
+                  and Effortlessly Create Captivating Captions For Your Images.
+                </Typography>
               </Typography>
             </Box>
           </Box>
