@@ -42,7 +42,6 @@ const Form = (): JSX.Element => {
   const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
 
   const createCaption = (e: any) => {
-    setLoading(true);
     e.preventDefault();
     console.log("create caption");
     let imageUrl: any = document.querySelector(
@@ -67,9 +66,9 @@ const Form = (): JSX.Element => {
       category: category.value,
     };
 
-    console.log(data);
-
     if (imageUrl && socialMedia && category) {
+      setLoading(true);
+
       fetch("/api/captionr", {
         method: "POST",
         headers: {
@@ -87,6 +86,8 @@ const Form = (): JSX.Element => {
           console.log(err);
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   };
 
