@@ -1,5 +1,5 @@
 const path = require("path");
-console.log("Path: ", process.env);
+
 module.exports = {
   images: {
     domains: ["firebasestorage.googleapis.com", "googleapis.com"],

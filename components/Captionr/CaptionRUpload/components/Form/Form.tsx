@@ -38,7 +38,7 @@ const categories = [
   { value: "funny", label: "Funny" },
 ];
 
-// firebase();
+firebase();
 
 const Form = (): JSX.Element => {
   const theme = useTheme();
@@ -109,6 +109,15 @@ const Form = (): JSX.Element => {
     }
   };
 
+  const setUrlInInput = (fileUrlFromFirebase: string) => {
+    setFileUrl(fileUrlFromFirebase);
+    // set the url in the input field
+    let imageUrl: any = document.querySelector(
+      'input[name="imageUrl"]'
+    ) as HTMLInputElement;
+    imageUrl.value = fileUrlFromFirebase;
+  };
+
   return (
     <Box
       sx={{
@@ -128,7 +137,7 @@ const Form = (): JSX.Element => {
         <Box width={1} component={Card} boxShadow={1} padding={2}>
           <FileUploadAndPreview
             _setFile={setFile}
-            setFileUrl={setFileUrl}
+            setFileUrl={setUrlInInput}
             setSnackBarMessage={setSnackBarMessage}
             setSnackBarOpen={setSnackBarOpen}
           />
@@ -169,8 +178,8 @@ const Form = (): JSX.Element => {
           {caption && !loading && (
             <Button
               variant="contained"
-              color="secondary"
-              size="large"
+              color="primary"
+              size="medium"
               onClick={() => {
                 navigator.clipboard.writeText(caption);
                 setSnackBarMessage("Copied to clipboard!");

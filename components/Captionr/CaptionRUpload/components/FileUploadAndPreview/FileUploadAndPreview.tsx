@@ -44,23 +44,23 @@ const FileUploadAndPreview = ({
         uploadBytes(storageRef, file)
           .then((snapshot) => {
             console.log("Uploaded a blob or file! ", snapshot);
+
+            // get the url of the uploaded file
+            getDownloadURL(storageRef)
+              .then((url) => {
+                setFileUrl(url);
+                setSnackBarMessage("File uploaded successfully");
+                setSnackBarOpen(true);
+              })
+              .catch((error) => {
+                console.log(error);
+                setSnackBarMessage("Error getting file url");
+                setSnackBarOpen(true);
+              });
           })
           .catch((error) => {
             console.log(error);
             setSnackBarMessage("Error uploading file");
-            setSnackBarOpen(true);
-          });
-
-        // get the url of the uploaded file
-        getDownloadURL(storageRef)
-          .then((url) => {
-            setFileUrl(url);
-            setSnackBarMessage("File uploaded successfully");
-            setSnackBarOpen(true);
-          })
-          .catch((error) => {
-            console.log(error);
-            setSnackBarMessage("Error getting file url");
             setSnackBarOpen(true);
           });
       };
