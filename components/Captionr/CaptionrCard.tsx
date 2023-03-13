@@ -72,12 +72,7 @@ const CaptionRCard = (): JSX.Element => {
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        spacing={2}
-        alignItems="center"
-        maxWidth={700}
-        direction={isMd ? "row" : "column"}
-      >
+      <Stack spacing={2} alignItems="center" maxWidth={700} direction="row">
         <FacebookOutlinedIcon
           sx={{
             color: "#3b5998",
