@@ -58,7 +58,11 @@ export default async function handler(
 
     const imageDesc = description.captions[0].text;
 
-    const prompt = `Write a ${category} caption for ${socialMedia} for a picture that is about ${imageDesc}.`;
+    let prompt = `Write a ${category} caption for ${socialMedia} for a picture that is about ${imageDesc}.`;
+
+    if (socialMedia === "all") {
+      prompt = `Write a caption for ${socialMedia} for a picture that is about ${imageDesc}. This is for Instagram, Facebook, Twitter, and LinkedIn.`;
+    }
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",

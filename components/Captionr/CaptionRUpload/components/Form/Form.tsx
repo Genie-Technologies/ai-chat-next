@@ -90,6 +90,13 @@ const Form = (): JSX.Element => {
         .then((data) => {
           if (data.success) {
             setCaption(data.message);
+            setSnackBarMessage("Caption created successfully!");
+            setSnackBarOpen(true);
+            // Make the user scroll to the caption section
+            let captionSection: any = document.querySelector(
+              "#file-section"
+            ) as HTMLInputElement;
+            captionSection.scrollIntoView({ behavior: "smooth" });
           } else {
             setCaption("");
             setSnackBarMessage("Something went wrong! Please try again later.");
@@ -133,7 +140,7 @@ const Form = (): JSX.Element => {
         minWidth: 300,
       }}
     >
-      <Stack spacing={2} alignItems="center" maxWidth={700}>
+      <Stack spacing={2} alignItems="center" maxWidth={700} id="file-section">
         <Box width={1} component={Card} boxShadow={1} padding={2}>
           <FileUploadAndPreview
             _setFile={setFile}
@@ -168,7 +175,12 @@ const Form = (): JSX.Element => {
             },
           }}
         >
-          <Typography variant="subtitle1" component="h2" gutterBottom>
+          <Typography
+            variant="subtitle1"
+            component="h2"
+            gutterBottom
+            color={"white"}
+          >
             {loading ? (
               <Skeleton variant="text" height={100} width={"100%"} />
             ) : (
@@ -273,17 +285,28 @@ const Form = (): JSX.Element => {
               </Grid>
 
               <Grid item container justifyContent={"center"} xs={12}>
-                <Button
-                  sx={{ height: 54, minWidth: 150 }}
-                  variant="contained"
-                  color="primary"
-                  size="medium"
-                  type="submit"
-                  fullWidth
-                  onClick={createCaption}
-                >
-                  Create Caption
-                </Button>
+                {loading ? (
+                  <Skeleton
+                    variant="rectangular"
+                    height={54}
+                    width={"100%"}
+                    sx={{
+                      backgroundColor: theme.palette.secondary.main,
+                    }}
+                  />
+                ) : (
+                  <Button
+                    sx={{ height: 54, minWidth: 150 }}
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    type="submit"
+                    fullWidth
+                    onClick={createCaption}
+                  >
+                    Create Caption
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </form>
@@ -293,6 +316,7 @@ const Form = (): JSX.Element => {
         open={snackBarOpen}
         autoHideDuration={6000}
         onClose={() => setSnackBarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert severity="success">{snackBarMessage}</Alert>
       </Snackbar>
