@@ -132,16 +132,18 @@ const Form = (): JSX.Element => {
           setFileUrl("");
 
           // Delete the image from firebase storage
-          let storage = getStorage();
-          let storageRef = ref(storage, storageRefName);
+          if (storageRefName !== "") {
+            let storage = getStorage();
+            let storageRef = ref(storage, storageRefName);
 
-          deleteObject(storageRef)
-            .then(() => {
-              console.log("File deleted");
-            })
-            .catch((error) => {
-              console.log("File deletion error: ");
-            });
+            deleteObject(storageRef)
+              .then(() => {
+                console.log("File deleted");
+              })
+              .catch((error) => {
+                console.log("File deletion error: ");
+              });
+          }
         });
     } else {
       setLoading(false);
@@ -221,7 +223,7 @@ const Form = (): JSX.Element => {
             )}
 
             {hashtags && !loading && (
-              <Typography variant="subtitle1" component="h2" gutterBottom>
+              <Typography variant="subtitle1" component="text" gutterBottom>
                 {hashtags.map((hashtag: string) => (
                   <Chip
                     label={hashtag}

@@ -36,11 +36,14 @@ export default async function handler(
         "Ocp-Apim-Subscription-Key": process.env.AZURE_COMPUTER_VISION_API_KEY,
       },
     });
+
+    console.log("Sending request to OpenAI API...");
     const client = new ComputerVisionClient(
       credentials,
       process.env.AZURE_COMPUTER_VISION_API_ENDPOINT || ""
     );
 
+    console.log("Getting image description from Azure Computer Vision API...");
     const description = await client.describeImage(imageFile, {
       maxCandidates: 1,
     });
@@ -70,6 +73,7 @@ export default async function handler(
       prompt += `As this is for LinkedIn, please write a couple paragraphs based on the image and the category.`;
     }
 
+    console.log("Sending request to OpenAI API...", prompt);
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
