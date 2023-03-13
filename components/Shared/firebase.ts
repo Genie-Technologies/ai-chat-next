@@ -3,8 +3,6 @@ import * as firebaseAnalytics from "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
-console.log("process env: ", process.env.DEVELOPMENT_ENV_FIREBASE_AUTH_DOMAIN);
-
 // initialize firebase app
 const firebaseConfig = {
   apiKey: process.env.DEVELOPMENT_ENV_FIREBASE_API_KEY,
@@ -18,7 +16,6 @@ const firebaseConfig = {
 
 export default function initFirebase() {
   console.log("--- Firebase init ---");
-  console.log("Firebase: ", firebaseConfig);
   if (!firebase?.getApps().length) {
     const app = firebase.initializeApp(firebaseConfig);
 
