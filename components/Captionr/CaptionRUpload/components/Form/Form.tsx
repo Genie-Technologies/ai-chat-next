@@ -12,9 +12,13 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Skeleton } from "@mui/material";
+import { Alert, Skeleton } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import FileUploadAndPreview from "../FileUploadAndPreview/FileUploadAndPreview";
+import firebase from "../../../../Shared/firebase";
+
+import Snackbar from "@mui/material/Snackbar";
+import { CopyAllOutlined } from "@mui/icons-material";
 
 const SocialMedias = [
   { value: "facebook", label: "Facebook" },
@@ -34,12 +38,18 @@ const categories = [
   { value: "funny", label: "Funny" },
 ];
 
+firebase();
+
 const Form = (): JSX.Element => {
   const theme = useTheme();
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [caption, setCaption] = React.useState<string>("");
   const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
+
+  const [fileUrl, setFileUrl] = React.useState<string>("");
+  const [snackBarMessage, setSnackBarMessage] = React.useState<string>("");
+  const [snackBarOpen, setSnackBarOpen] = React.useState<boolean>(false);
 
   const createCaption = (e: any) => {
     e.preventDefault();
@@ -81,9 +91,9 @@ const Form = (): JSX.Element => {
           if (data.success) {
             setCaption(data.message);
           } else {
-            setCaption(
-              "Something went wrong! Please make sure the image url is valid."
-            );
+            setCaption("");
+            setSnackBarMessage("Something went wrong! Please try again later.");
+            setSnackBarOpen(true);
           }
 
           setLoading(false);
@@ -91,10 +101,21 @@ const Form = (): JSX.Element => {
         .catch((err) => {
           console.log(err);
           setLoading(false);
+          setSnackBarMessage("Something went wrong!");
+          setSnackBarOpen(true);
         });
     } else {
       setLoading(false);
     }
+  };
+
+  const setUrlInInput = (fileUrlFromFirebase: string) => {
+    setFileUrl(fileUrlFromFirebase);
+    // set the url in the input field
+    let imageUrl: any = document.querySelector(
+      'input[name="imageUrl"]'
+    ) as HTMLInputElement;
+    imageUrl.value = fileUrlFromFirebase;
   };
 
   return (
@@ -114,7 +135,12 @@ const Form = (): JSX.Element => {
     >
       <Stack spacing={2} alignItems="center" maxWidth={700}>
         <Box width={1} component={Card} boxShadow={1} padding={2}>
-          <FileUploadAndPreview _setFile={setFile} />
+          <FileUploadAndPreview
+            _setFile={setFile}
+            setFileUrl={setUrlInInput}
+            setSnackBarMessage={setSnackBarMessage}
+            setSnackBarOpen={setSnackBarOpen}
+          />
         </Box>
         <Box
           padding={{ xs: 3, sm: 6 }}
@@ -149,6 +175,21 @@ const Form = (): JSX.Element => {
               caption
             )}
           </Typography>
+          {caption && !loading && (
+            <Button
+              variant="contained"
+              color="primary"
+              size="medium"
+              onClick={() => {
+                navigator.clipboard.writeText(caption);
+                setSnackBarMessage("Copied to clipboard!");
+                setSnackBarOpen(true);
+              }}
+              startIcon={<CopyAllOutlined />}
+            >
+              Copy
+            </Button>
+          )}
         </Box>
         <Box
           padding={{ xs: 3, sm: 6 }}
@@ -248,6 +289,13 @@ const Form = (): JSX.Element => {
           </form>
         </Box>
       </Stack>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackBarOpen(false)}
+      >
+        <Alert severity="success">{snackBarMessage}</Alert>
+      </Snackbar>
     </Box>
   );
 };

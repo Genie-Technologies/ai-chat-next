@@ -7,11 +7,21 @@ import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import Image from "next/image";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import firebase from "../../../../Shared/firebase";
+
+firebase();
 
 const FileUploadAndPreview = ({
   _setFile,
+  setFileUrl,
+  setSnackBarMessage,
+  setSnackBarOpen,
 }: {
   _setFile: (file: string | ArrayBuffer | null) => void;
+  setFileUrl: (fileUrl: string) => void;
+  setSnackBarMessage: (snackBarMessage: string) => void;
+  setSnackBarOpen: (snackBarOpen: boolean) => void;
 }): JSX.Element => {
   const theme = useTheme();
   const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
@@ -27,6 +37,32 @@ const FileUploadAndPreview = ({
         console.log(reader.result);
         setFile(reader.result);
         _setFile(reader.result);
+
+        // upload the file to firebase
+        const storage = getStorage();
+        const storageRef = ref(storage, "captionr/" + file.name);
+        uploadBytes(storageRef, file)
+          .then((snapshot) => {
+            console.log("Uploaded a blob or file! ", snapshot);
+
+            // get the url of the uploaded file
+            getDownloadURL(storageRef)
+              .then((url) => {
+                setFileUrl(url);
+                setSnackBarMessage("File uploaded successfully");
+                setSnackBarOpen(true);
+              })
+              .catch((error) => {
+                console.log(error);
+                setSnackBarMessage("Error getting file url");
+                setSnackBarOpen(true);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+            setSnackBarMessage("Error uploading file");
+            setSnackBarOpen(true);
+          });
       };
     }
   };
@@ -56,9 +92,8 @@ const FileUploadAndPreview = ({
           </Typography>
         </Box>
       </Box>
-      {false && (
+      {!!file && (
         <Box marginBottom={2}>
-          {/** Preview of the image file uploaded */}
           <Box
             sx={{
               height: 300,
@@ -79,7 +114,7 @@ const FileUploadAndPreview = ({
           </Box>
         </Box>
       )}
-      {/* <Box marginY={3}>
+      <Box marginY={3}>
         <Button
           variant="contained"
           component="label"
@@ -90,7 +125,7 @@ const FileUploadAndPreview = ({
           Upload File
           <input type="file" hidden accept="image/png, image/jpeg" />
         </Button>
-      </Box> */}
+      </Box>
     </Box>
   );
 };
