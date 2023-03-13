@@ -83,7 +83,7 @@ const Topbar = ({
         <Button
           onClick={() => onSidebarOpen()}
           aria-label="Menu"
-          variant={"outlined"}
+          variant="outlined"
           sx={{
             borderRadius: 2,
             minWidth: "auto",

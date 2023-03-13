@@ -17,11 +17,13 @@ const FileUploadAndPreview = ({
   setFileUrl,
   setSnackBarMessage,
   setSnackBarOpen,
+  setStorageRefName,
 }: {
   _setFile: (file: string | ArrayBuffer | null) => void;
   setFileUrl: (fileUrl: string) => void;
   setSnackBarMessage: (snackBarMessage: string) => void;
   setSnackBarOpen: (snackBarOpen: boolean) => void;
+  setStorageRefName: (storageRefName: string) => void;
 }): JSX.Element => {
   const theme = useTheme();
   const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
@@ -40,7 +42,9 @@ const FileUploadAndPreview = ({
 
         // upload the file to firebase
         const storage = getStorage();
-        const storageRef = ref(storage, "captionr/" + file.name);
+        const storageRefName = "captionr/" + file.name;
+        const storageRef = ref(storage, storageRefName);
+
         uploadBytes(storageRef, file)
           .then((snapshot) => {
             console.log("Uploaded a blob or file! ", snapshot);
@@ -57,6 +61,8 @@ const FileUploadAndPreview = ({
                 setSnackBarMessage("Error getting file url");
                 setSnackBarOpen(true);
               });
+
+            setStorageRefName(storageRefName);
           })
           .catch((error) => {
             console.log(error);
@@ -92,28 +98,6 @@ const FileUploadAndPreview = ({
           </Typography>
         </Box>
       </Box>
-      {!!file && (
-        <Box marginBottom={2}>
-          <Box
-            sx={{
-              height: 300,
-              width: 300,
-              borderRadius: 2,
-              backgroundColor: theme.palette.background.paper,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              src={file as string}
-              alt="Uploaded Image"
-              width={300}
-              height={300}
-            />
-          </Box>
-        </Box>
-      )}
       <Box marginY={3}>
         <Button
           variant="contained"

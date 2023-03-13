@@ -12,13 +12,14 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Alert, Skeleton } from "@mui/material";
+import { Alert, Chip, Skeleton } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import FileUploadAndPreview from "../FileUploadAndPreview/FileUploadAndPreview";
 import firebase from "../../../../Shared/firebase";
 
 import Snackbar from "@mui/material/Snackbar";
 import { CopyAllOutlined } from "@mui/icons-material";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 
 const SocialMedias = [
   { value: "facebook", label: "Facebook" },
@@ -50,10 +51,11 @@ const Form = (): JSX.Element => {
   const [fileUrl, setFileUrl] = React.useState<string>("");
   const [snackBarMessage, setSnackBarMessage] = React.useState<string>("");
   const [snackBarOpen, setSnackBarOpen] = React.useState<boolean>(false);
+  const [storageRefName, setStorageRefName] = React.useState<string>("");
+  const [hashtags, setHashtags] = React.useState<string[]>([]);
 
   const createCaption = (e: any) => {
     e.preventDefault();
-    console.log("create caption");
     let imageUrl: any = document.querySelector(
       'input[name="imageUrl"]'
     ) as HTMLInputElement;
@@ -89,7 +91,21 @@ const Form = (): JSX.Element => {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            setCaption(data.message);
+            // Format the caption
+            let formattedCaption = data.message.replace(/'/g, "\\'");
+            // if there are hashtags in the caption, put them in an array
+            let hashtags = formattedCaption.match(/#[a-zA-Z0-9]+/g);
+
+            // If there are hashtags, remove them from the caption
+            if (hashtags) {
+              formattedCaption = formattedCaption.replace(/#[a-zA-Z0-9]+/g, "");
+            }
+
+            // Set the caption in the state
+            setCaption(formattedCaption);
+            // Set the hashtags in the state
+            setHashtags(hashtags);
+
             setSnackBarMessage("Caption created successfully!");
             setSnackBarOpen(true);
             // Make the user scroll to the caption section
@@ -110,6 +126,22 @@ const Form = (): JSX.Element => {
           setLoading(false);
           setSnackBarMessage("Something went wrong!");
           setSnackBarOpen(true);
+        })
+        .finally(() => {
+          setFile(null);
+          setFileUrl("");
+
+          // Delete the image from firebase storage
+          let storage = getStorage();
+          let storageRef = ref(storage, storageRefName);
+
+          deleteObject(storageRef)
+            .then(() => {
+              console.log("File deleted");
+            })
+            .catch((error) => {
+              console.log("File deletion error: ");
+            });
         });
     } else {
       setLoading(false);
@@ -147,6 +179,7 @@ const Form = (): JSX.Element => {
             setFileUrl={setUrlInInput}
             setSnackBarMessage={setSnackBarMessage}
             setSnackBarOpen={setSnackBarOpen}
+            setStorageRefName={setStorageRefName}
           />
         </Box>
         <Box
@@ -186,6 +219,28 @@ const Form = (): JSX.Element => {
             ) : (
               caption
             )}
+
+            {hashtags && !loading && (
+              <Typography variant="subtitle1" component="h2" gutterBottom>
+                {hashtags.map((hashtag: string) => (
+                  <Chip
+                    label={hashtag}
+                    color="secondary"
+                    key={hashtag + Math.random()}
+                    sx={{
+                      margin: 1,
+                      backgroundColor: theme.palette.background.paper,
+                      color: theme.palette.primary.main,
+                      "&:hover": {
+                        // Have a hover effect on the hashtags
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.background.default,
+                      },
+                    }}
+                  />
+                ))}
+              </Typography>
+            )}
           </Typography>
           {caption && !loading && (
             <Button
@@ -193,7 +248,9 @@ const Form = (): JSX.Element => {
               color="primary"
               size="medium"
               onClick={() => {
-                navigator.clipboard.writeText(caption);
+                // COmbine the caption and hashtags
+                let _caption = `${caption} ${hashtags.join(" ")}`;
+                navigator.clipboard.writeText(_caption);
                 setSnackBarMessage("Copied to clipboard!");
                 setSnackBarOpen(true);
               }}

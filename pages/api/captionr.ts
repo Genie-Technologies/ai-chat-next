@@ -15,7 +15,7 @@ type NextApiRequest = NextRequest & {
       | "animals"
       | "motivation"
       | "funny";
-    socialMedia?: "twitter" | "instagram" | "facebook" | "tiktok";
+    socialMedia?: "twitter" | "instagram" | "facebook" | "linkedin" | "all";
   };
 };
 
@@ -58,10 +58,16 @@ export default async function handler(
 
     const imageDesc = description.captions[0].text;
 
-    let prompt = `Write a ${category} caption for ${socialMedia} for a picture that is about ${imageDesc}.`;
+    let prompt = "Act as my Social Media Manager. ";
+
+    prompt += `Write a ${category} caption for ${socialMedia} for a picture that is of ${imageDesc}. Please include 10 or more useful hashtags too on a separate line. `;
 
     if (socialMedia === "all") {
-      prompt = `Write a caption for ${socialMedia} for a picture that is about ${imageDesc}. This is for Instagram, Facebook, Twitter, and LinkedIn.`;
+      prompt = `Write a caption for ${socialMedia} for a picture that is about ${imageDesc}. This is for Instagram, Facebook, Twitter, and LinkedIn. Please format the caption for each platform. `;
+    }
+
+    if (socialMedia === "linkedin") {
+      prompt += `As this is for LinkedIn, please write a couple paragraphs based on the image and the category.`;
     }
 
     const response = await openai.createChatCompletion({
