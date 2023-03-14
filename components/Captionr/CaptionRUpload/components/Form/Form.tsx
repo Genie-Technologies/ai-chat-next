@@ -20,6 +20,7 @@ import firebase from "../../../../Shared/firebase";
 import Snackbar from "@mui/material/Snackbar";
 import { CopyAllOutlined } from "@mui/icons-material";
 import { deleteObject, getStorage, ref } from "firebase/storage";
+import { CircularLoader } from "../../../../Shared/CircularLoader";
 
 const SocialMedias = [
   { value: "facebook", label: "Facebook" },
@@ -90,20 +91,18 @@ const Form = (): JSX.Element => {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.success) {
-            // Format the caption
+          if (data.success && data.message) {
             let formattedCaption = data.message.replace(/'/g, "\\'");
-            // if there are hashtags in the caption, put them in an array
             let hashtags = formattedCaption.match(/#[a-zA-Z0-9]+/g);
 
-            // If there are hashtags, remove them from the caption
+            formattedCaption = formattedCaption.replace(/\\/g, "");
+
             if (hashtags) {
               formattedCaption = formattedCaption.replace(/#[a-zA-Z0-9]+/g, "");
+              formattedCaption = formattedCaption.replace(/-/g, "");
             }
 
-            // Set the caption in the state
             setCaption(formattedCaption);
-            // Set the hashtags in the state
             setHashtags(hashtags);
 
             setSnackBarMessage("Caption created successfully!");
@@ -223,11 +222,11 @@ const Form = (): JSX.Element => {
             )}
 
             {hashtags && !loading && (
-              <Typography variant="subtitle1" component="text" gutterBottom>
+              <Typography variant="subtitle1" component="p" gutterBottom>
                 {hashtags.map((hashtag: string) => (
                   <Chip
                     label={hashtag}
-                    color="secondary"
+                    color="primary"
                     key={hashtag + Math.random()}
                     sx={{
                       margin: 1,
@@ -345,14 +344,7 @@ const Form = (): JSX.Element => {
 
               <Grid item container justifyContent={"center"} xs={12}>
                 {loading ? (
-                  <Skeleton
-                    variant="rectangular"
-                    height={54}
-                    width={"100%"}
-                    sx={{
-                      backgroundColor: theme.palette.secondary.main,
-                    }}
-                  />
+                  <CircularLoader color="primary" variant="indeterminate" />
                 ) : (
                   <Button
                     sx={{ height: 54, minWidth: 150 }}
