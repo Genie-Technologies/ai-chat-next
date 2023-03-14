@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -18,15 +18,22 @@ const FileUploadAndPreview = ({
   setSnackBarMessage,
   setSnackBarOpen,
   setStorageRefName,
+  generationDone,
 }: {
   _setFile: (file: string | ArrayBuffer | null) => void;
   setFileUrl: (fileUrl: string) => void;
   setSnackBarMessage: (snackBarMessage: string) => void;
   setSnackBarOpen: (snackBarOpen: boolean) => void;
   setStorageRefName: (storageRefName: string) => void;
+  generationDone: boolean;
 }): JSX.Element => {
   const theme = useTheme();
   const [file, setFile] = React.useState<string | ArrayBuffer | null>(null);
+
+  const handleError = () => {
+    setSnackBarMessage("Error getting file url");
+    setSnackBarOpen(true);
+  };
 
   const uploadFile = (e: any) => {
     console.log(e.target.files);
@@ -58,20 +65,25 @@ const FileUploadAndPreview = ({
               })
               .catch((error) => {
                 console.log(error);
-                setSnackBarMessage("Error getting file url");
-                setSnackBarOpen(true);
+                handleError();
               });
 
             setStorageRefName(storageRefName);
           })
           .catch((error) => {
             console.log(error);
-            setSnackBarMessage("Error uploading file");
-            setSnackBarOpen(true);
+            handleError();
           });
       };
     }
   };
+
+  useEffect(() => {
+    if (generationDone) {
+      setFile(null);
+      _setFile(null);
+    }
+  }, [generationDone]);
 
   return (
     <Box
@@ -89,13 +101,39 @@ const FileUploadAndPreview = ({
       <Box>
         <Box marginBottom={1}>
           <Typography
-            variant="h4"
+            variant="h6"
             sx={{
               fontWeight: 700,
             }}
           >
-            Try For Free
+            Upload an Image or Paste an Image URL to Get Started
           </Typography>
+        </Box>
+        <Box marginBottom={1}>
+          {file && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%",
+                borderRadius: 2,
+                padding: 2,
+              }}
+            >
+              <Image
+                src={file as string}
+                width={300}
+                height={300}
+                alt="Uploaded Image"
+                style={{
+                  borderRadius: 10,
+                }}
+              />
+            </Box>
+          )}
         </Box>
       </Box>
       <Box marginY={3}>

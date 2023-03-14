@@ -181,6 +181,7 @@ const Form = (): JSX.Element => {
             setSnackBarMessage={setSnackBarMessage}
             setSnackBarOpen={setSnackBarOpen}
             setStorageRefName={setStorageRefName}
+            generationDone={loading ? false : true}
           />
         </Box>
         <Box
@@ -296,12 +297,12 @@ const Form = (): JSX.Element => {
               <Grid item xs={12}>
                 <FormControl>
                   <Typography variant="h6" color="secondary">
-                    Social Media
+                    Which Social Media are you posting to?
                   </Typography>
                   <RadioGroup
                     aria-labelledby="social-media-radio-select"
-                    defaultValue={SocialMedias[0].value}
                     name="social-media-radio-buttons-group"
+                    defaultValue={SocialMedias[0].value}
                   >
                     {SocialMedias.map((socialMedia) => (
                       <FormControlLabel
@@ -317,12 +318,12 @@ const Form = (): JSX.Element => {
               <Grid item xs={12}>
                 <FormControl>
                   <Typography variant="h6" color="secondary">
-                    Category
+                    What category is this post?
                   </Typography>
                   <RadioGroup
                     aria-labelledby="category-radio-select"
-                    defaultValue={categories[0].value}
                     name="category-radio-buttons-group"
+                    defaultValue={categories[0].value}
                   >
                     {categories.map((category) => (
                       <FormControlLabel
