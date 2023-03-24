@@ -92,7 +92,10 @@ export function Chat() {
             ? `1px solid ${theme.palette.info.main}`
             : "none",
         borderRadius: "10px",
-        boxShadow: `0px 0px 25px 0px ${theme.palette.info.main}`,
+        boxShadow:
+          theme.palette.mode === "dark"
+            ? `0px 0px 25px 0px ${theme.palette.info.main}`
+            : `0px 0px 25px 0px ${theme.palette.grey[300]}`,
       }}
     >
       <Grid container spacing={0}>

@@ -20,5 +20,9 @@ module.exports = {
     DEVELOPMENT_ENV_FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     DEVELOPMENT_ENV_FIREBASE_MEASUREMENT_ID:
       process.env.FIREBASE_MEASUREMENT_ID,
+    NEXT_PUBLIC_API_URL:
+      process.env.NODE_ENV === "production"
+        ? "https://responai-api.azurewebsites.net"
+        : "http://localhost:3001",
   },
 };

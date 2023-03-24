@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 import "aos/dist/aos.css";
+import { croppedLogoSrc } from "../components/utils";
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -17,6 +18,7 @@ function App({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <title>ResponAi - Future of Messaging</title>
+        <link rel="icon" href={croppedLogoSrc} />
       </Head>
       <Page>
         <UserProvider>

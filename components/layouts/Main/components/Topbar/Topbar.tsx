@@ -9,6 +9,8 @@ import { NavItem } from "./components";
 import { PageItem, croppedLogoSrc } from "../../../../utils";
 import Link from "next/link";
 import ThemeSwitcher from "../../../../ThemeSwitch/ThemeSwitch";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { Skeleton } from "@mui/material";
 
 interface Props {
   onSidebarOpen: () => void;
@@ -30,14 +32,9 @@ const Topbar = ({
 }: Props): JSX.Element => {
   const theme = useTheme();
   const { mode } = theme.palette;
-  const {
-    landings: landingPages,
-    secondary: secondaryPages,
-    company: companyPages,
-    account: accountPages,
-    portfolio: portfolioPages,
-    blog: blogPages,
-  } = pages;
+
+  const { user, error, isLoading } = useUser();
+  console.log("Loading: ", isLoading);
 
   return (
     <Box
@@ -51,56 +48,67 @@ const Topbar = ({
           <Box component={"img"} src={croppedLogoSrc} height={1} width={200} />
         </Link>
       </Box>
-      <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
-        <Box marginLeft={4}>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            sx={{
-              display: process.env.NODE_ENV === "production" ? "none" : "block",
-            }}
-          >
-            <Link
-              href="/api/auth/login"
-              style={{
-                textDecoration: "none",
-                color: theme.palette.text.primary,
+
+      {isLoading ? (
+        <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
+          <Skeleton variant="rectangular" width={100} height={40} />
+        </Box>
+      ) : (
+        <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
+          <Box marginLeft={4}>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              sx={{
+                display:
+                  process.env.NODE_ENV === "production" ? "none" : "block",
               }}
             >
-              <Typography variant="subtitle1" color="text.primary">
-                Sign In
-              </Typography>
-            </Link>
-          </Button>
-        </Box>
-        <Box marginLeft={4}>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            sx={{
-              display:
-                process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none",
-            }}
-          >
-            <Link
-              href="/chat"
-              style={{
-                textDecoration: "none",
-                color: theme.palette.text.primary,
+              <Link
+                href={user ? "/chat" : "/api/auth/login"}
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.primary,
+                }}
+              >
+                <Typography variant="subtitle1" color="text.primary">
+                  {user ? "Chat" : "Sign In"}
+                </Typography>
+              </Link>
+            </Button>
+          </Box>
+          <Box marginLeft={4}>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              sx={{
+                display:
+                  process.env.CHAT_FEATURE_ENABLED === "true"
+                    ? "block"
+                    : "none",
               }}
             >
-              <Typography variant="subtitle1" color="text.primary">
-                Try Now
-              </Typography>
-            </Link>
-          </Button>
+              <Link
+                href="/chat"
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.primary,
+                }}
+              >
+                <Typography variant="subtitle1" color="text.primary">
+                  Try Now
+                </Typography>
+              </Link>
+            </Button>
+          </Box>
+          <Box marginLeft={4}>
+            <ThemeSwitcher />
+          </Box>
         </Box>
-        <Box marginLeft={4}>
-          <ThemeSwitcher />
-        </Box>
-      </Box>
+      )}
+
       <Box sx={{ display: { xs: "flex", md: "none" } }} alignItems={"center"}>
         <Button
           onClick={() => onSidebarOpen()}

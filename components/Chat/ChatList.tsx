@@ -47,7 +47,9 @@ export default function ChatsList() {
     padding: "10px",
     borderRadius: "10px",
     boxShadow:
-      "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+      theme.palette.mode === "dark"
+        ? "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px"
+        : "none",
     marginRight: "10px",
   };
 
