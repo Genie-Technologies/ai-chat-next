@@ -40,6 +40,8 @@ export const getServerSideProps = withPageAuthRequired({
       const userService = new UserService();
       const userData = await userService.getUser(user.sid, user as AuthOUser);
 
+      console.log("User: ", userData);
+
       return {
         props: {
           user: userData,

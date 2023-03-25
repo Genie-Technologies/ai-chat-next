@@ -11,8 +11,9 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { User } from "../../services/UserService/User.service";
-import { handleLogout } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
+
+import io from "socket.io-client";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,6 +28,8 @@ export default function ChatCard({ user }: { user: User }) {
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [connectedWS, setConnectedWS] = React.useState<any>(null);
+
   const openUserMenu = Boolean(anchorEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +40,31 @@ export default function ChatCard({ user }: { user: User }) {
 
   const handleLogoutClick = () => {
     router.push("/api/auth/logout");
+  };
+
+  React.useEffect(() => {
+    // Initialize Websocket Connection
+    console.log("Initializing Websocket Connection");
+    const ws = io("http://localhost:3002", {
+      transports: ["websocket"],
+    });
+
+    ws.on("connect", () => {
+      console.log("Connected to Websocket");
+      setConnectedWS(ws);
+    });
+    ws.on("disconnect", () => {
+      console.log("Disconnected from Websocket");
+    });
+
+    ws.on("message", (data) => {
+      console.log("Message Received: ", data);
+    });
+  }, []);
+
+  const handleSendMessage = (message: string) => {
+    console.log("Sending Message: ", message);
+    connectedWS.emit("message", message);
   };
 
   return (
@@ -120,7 +148,7 @@ export default function ChatCard({ user }: { user: User }) {
               height: "100%",
             }}
           >
-            <Chat />
+            <Chat handleSendMessage={handleSendMessage} />
           </Grid>
         </Grid>
       </CardContent>

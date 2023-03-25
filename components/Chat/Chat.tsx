@@ -23,7 +23,7 @@ export const initialMessages: Message[] = [
   },
 ];
 
-export function Chat() {
+export function Chat({ handleSendMessage }: { handleSendMessage: Function }) {
   const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -48,28 +48,19 @@ export function Chat() {
     setMessages(newMessages);
     const last10messages = newMessages.slice(-10);
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: last10messages,
-        user: cookie[COOKIE_NAME],
-      }),
-    });
+    // const response = await fetch("/api/chat", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     messages: last10messages,
+    //     user: cookie[COOKIE_NAME],
+    //   }),
+    // });
 
-    console.log("response", response);
-    const data = await response.json();
-    console.log("data", data);
+    handleSendMessage(message);
 
-    // strip out white spaces from the bot message
-    const botNewMessage = data.text.trim();
-
-    setMessages([
-      ...newMessages,
-      { message: botNewMessage, who: "other" } as Message,
-    ]);
     setLoading(false);
   };
 
