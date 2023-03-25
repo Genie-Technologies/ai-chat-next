@@ -23,7 +23,13 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ChatCard({ user }: { user: User }) {
+export default function ChatCard({
+  user,
+  accessToken,
+}: {
+  user: User;
+  accessToken: string;
+}) {
   const theme = useTheme();
   const router = useRouter();
 
@@ -45,14 +51,27 @@ export default function ChatCard({ user }: { user: User }) {
   React.useEffect(() => {
     // Initialize Websocket Connection
     console.log("Initializing Websocket Connection");
+
+    // Check if a websocket connection already exists
+    if (connectedWS) {
+      console.log("Websocket Connection already exists");
+      return;
+    }
+
+    // Get user token from Auth0
+
     const ws = io("http://localhost:3002", {
       transports: ["websocket"],
+      auth: {
+        token: accessToken,
+      },
     });
 
     ws.on("connect", () => {
-      console.log("Connected to Websocket");
+      console.log("Connected to Websocket -->: ", ws.id);
       setConnectedWS(ws);
     });
+
     ws.on("disconnect", () => {
       console.log("Disconnected from Websocket");
     });

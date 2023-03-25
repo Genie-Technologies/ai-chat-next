@@ -7,7 +7,6 @@ module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
   },
-  reactStrictMode: true,
   env: {
     // FIREBASE VARIABLES HERE FOR INITIALIZATION
     DEVELOPMENT_ENV_FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,

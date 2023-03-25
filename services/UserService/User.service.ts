@@ -9,6 +9,7 @@ export interface User {
   picture: string;
   joined: Date;
   locale: string;
+  id?: string;
 }
 
 export interface AuthOUser {
