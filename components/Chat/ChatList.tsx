@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
 
-export default function ChatsList() {
+export default function ChatsList({ newChat }: { newChat: () => void }) {
   const theme = useTheme();
 
   const pinnedItemListStyle = {
@@ -95,6 +95,7 @@ export default function ChatsList() {
                 transition: "all 0.5s ease",
               },
             }}
+            onClick={() => newChat()}
           >
             <AddIcon />
           </Button>

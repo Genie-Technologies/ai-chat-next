@@ -10,7 +10,9 @@ import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useTheme } from "@mui/material/styles";
+import { TextField } from "@mui/material";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -23,7 +25,13 @@ export const initialMessages: Message[] = [
   },
 ];
 
-export function Chat({ handleSendMessage }: { handleSendMessage: Function }) {
+export function Chat({
+  handleSendMessage,
+  isNewChat,
+}: {
+  handleSendMessage: Function;
+  isNewChat: boolean;
+}) {
   const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -89,56 +97,77 @@ export function Chat({ handleSendMessage }: { handleSendMessage: Function }) {
             : `0px 0px 25px 0px ${theme.palette.grey[300]}`,
       }}
     >
-      <Grid container spacing={0}>
-        <Grid
-          item
-          xs={8}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            borderBottom: `1px solid ${theme.palette.divider}`,
-          }}
-        >
-          <AvatarGroup max={3}>
-            <Avatar
-              alt="Remy Sharp"
-              src="https://material-ui.com/static/images/avatar/1.jpg"
-            />
-            <Avatar
-              alt="Travis Howard"
-              src="https://material-ui.com/static/images/avatar/2.jpg"
-            />
-            <Avatar
-              alt="Cindy Baker"
-              src="https://material-ui.com/static/images/avatar/3.jpg"
-            />
-          </AvatarGroup>
-          <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-            Title of Chat here
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Button sx={{ float: "right" }} variant="contained">
-            <MenuIcon />
-          </Button>
-        </Grid>
-      </Grid>
-      <List sx={{ overflow: "auto", p: 2 }}>
-        {messages.map((message, index) => (
-          <ChatLine
-            key={index}
-            message={message.message}
-            who={message.who}
-            customKey={index}
+      {/* {isNewChat && (
+        // Show a search bar to look up a user to chat with
+        <Autocomplete
+          id="grouped-demo"
+          options={options.sort(
+            (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
+          )}
+          groupBy={(option) => option.firstLetter}
+          getOptionLabel={(option) => option.title}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="People" />}
+        />
+      )} */}
+
+      {!isNewChat && (
+        <>
+          <Grid container spacing={0}>
+            <Grid
+              item
+              xs={8}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                borderBottom: `1px solid ${theme.palette.divider}`,
+              }}
+            >
+              <AvatarGroup max={3}>
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://material-ui.com/static/images/avatar/1.jpg"
+                />
+                <Avatar
+                  alt="Travis Howard"
+                  src="https://material-ui.com/static/images/avatar/2.jpg"
+                />
+                <Avatar
+                  alt="Cindy Baker"
+                  src="https://material-ui.com/static/images/avatar/3.jpg"
+                />
+              </AvatarGroup>
+              <Typography
+                variant="h6"
+                sx={{ color: theme.palette.text.primary }}
+              >
+                Title of Chat here
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Button sx={{ float: "right" }} variant="contained">
+                <MenuIcon />
+              </Button>
+            </Grid>
+          </Grid>
+          <List sx={{ overflow: "auto", p: 2 }}>
+            {messages.map((message, index) => (
+              <ChatLine
+                key={index}
+                message={message.message}
+                who={message.who}
+                customKey={index}
+              />
+            ))}
+          </List>
+          <InputMessage
+            input={input}
+            setInput={setInput}
+            sendMessage={sendMessage}
+            loading={loading}
           />
-        ))}
-      </List>
-      <InputMessage
-        input={input}
-        setInput={setInput}
-        sendMessage={sendMessage}
-        loading={loading}
-      />
+        </>
+      )}
     </Card>
   );
 }

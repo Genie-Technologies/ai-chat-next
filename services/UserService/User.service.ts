@@ -56,7 +56,7 @@ export default class UserService {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${_token}`,
+            Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjY2RDBtWXNYSzdRRFl5UHF6ZWc4diJ9.eyJpc3MiOiJodHRwczovL2Rldi10NnNiMG0yZnN1eHVzZHVtLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJYSjNGVzBEellLSzZWeDQ5eGlFeEd5bUoxM3ppWUk0UUBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMC1qd3QtYXV0aG9yaXplciIsImlhdCI6MTY4MDExOTk5OCwiZXhwIjoxNjgwMjA2Mzk4LCJhenAiOiJYSjNGVzBEellLSzZWeDQ5eGlFeEd5bUoxM3ppWUk0USIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.YlpTeHIgt_dMndog2El5YFlpSbPZzs1NBFJcQvNI6ai9A10qdycWn2BbD6bxfnsgD7VaZA9psK6HnPVkQcV6fQMf_5_KH9PEYDPfx_rIR5s_z28IxMuCQHaQuVzm8EXVO_PYE6EBesZDxhx9o3S-Yr4461THylhNaYuM-YbqTdHWq3kViGEO5mYkjACH_OJWjerSnRk89aR1bVrvTXYHhdczRVDgQEahTv2DqXrvtmH8D5Ig8yhbk_3olp4Wa3YOaBLgZhgP_87WOKahH3WaO5IF9EJJSaRTsGlbwhkEvxLPdJqBg1XkvczxEu2uT9Ym8xBBzpXr8QzLclaTXleTPg`,
           },
         }
       );

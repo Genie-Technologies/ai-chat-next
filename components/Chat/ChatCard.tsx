@@ -35,6 +35,7 @@ export default function ChatCard({
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [connectedWS, setConnectedWS] = React.useState<any>(null);
+  const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
 
   const openUserMenu = Boolean(anchorEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,6 +85,10 @@ export default function ChatCard({
   const handleSendMessage = (message: string) => {
     console.log("Sending Message: ", message);
     connectedWS.emit("message", message);
+  };
+
+  const startNewChat = () => {
+    setIsNewChat(!isNewChat);
   };
 
   return (
@@ -158,7 +163,7 @@ export default function ChatCard({
         </Grid>
         <Grid container spacing={0} justifyContent={"center"} marginTop={5}>
           <Grid item>
-            <ChatsList />
+            <ChatsList newChat={startNewChat} />
           </Grid>
           <Grid
             item
@@ -167,7 +172,7 @@ export default function ChatCard({
               height: "100%",
             }}
           >
-            <Chat handleSendMessage={handleSendMessage} />
+            <Chat handleSendMessage={handleSendMessage} isNewChat={isNewChat} />
           </Grid>
         </Grid>
       </CardContent>
