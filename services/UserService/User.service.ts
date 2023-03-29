@@ -46,12 +46,22 @@ export default class UserService {
 
   public async getUser(
     userId: string,
-    _user?: AuthOUser
+    _user?: AuthOUser,
+    _token?: string
   ): Promise<User | null> {
     try {
+      console.log("userId: ", userId);
       const user = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${_token}`,
+          },
+        }
       );
+
+      console.log("Sending this token: ", _token);
 
       if (user && user.data) {
         const userData = user.data;
@@ -79,6 +89,7 @@ export default class UserService {
 
       return null;
     } catch (error: any) {
+      // console.error(error);
       return null;
     }
   }

@@ -43,13 +43,19 @@ export const getServerSideProps = withPageAuthRequired({
 
     if (session) {
       const user = session.user;
+      const accessToken = await getAccessToken(req, res);
+
+      console.log("Access Token ---> ", accessToken);
 
       // if session exists, then reach out to the API to get the user data
       const userService = new UserService();
-      const userData = await userService.getUser(user.sid, user as AuthOUser);
+      const userData = await userService.getUser(
+        user.sid,
+        user as AuthOUser,
+        accessToken.accessToken
+      );
 
       // Get user token from Auth0
-      const accessToken = await getAccessToken(req, res);
       console.log("Access Token: ", accessToken);
 
       console.log("User: ", userData);
