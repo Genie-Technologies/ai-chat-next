@@ -17,8 +17,18 @@ import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
+import { Threads } from "../../services/ThreadService/Threads.service";
 
-export default function ChatsList({ newChat }: { newChat: () => void }) {
+export default function ChatsList({
+  newChat,
+  threads,
+  currentThread,
+}: {
+  newChat: () => void;
+  threads: Threads[];
+  currentThread: any;
+}) {
+  console.log("threads", threads, currentThread);
   const theme = useTheme();
 
   const pinnedItemListStyle = {
@@ -131,7 +141,7 @@ export default function ChatsList({ newChat }: { newChat: () => void }) {
           />
         </ListItem>
 
-        {chatListItems.map((item, idx) => {
+        {threads.map((item, idx) => {
           return (
             <ListItem
               alignItems="flex-start"
@@ -152,7 +162,10 @@ export default function ChatsList({ newChat }: { newChat: () => void }) {
               className={styles.chatListItem}
             >
               <ListItemAvatar>
-                <Avatar alt={item.sender} src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={item.threadName}
+                  src="/static/images/avatar/2.jpg"
+                />
               </ListItemAvatar>
               <ListItemText
                 primary={item.threadName}
@@ -164,7 +177,17 @@ export default function ChatsList({ newChat }: { newChat: () => void }) {
                       variant="body2"
                       color={theme.palette.primary.main}
                     >
-                      {item.recievers.join(", ")}
+                      {
+                        // Besides the first item in the participants array, all other items are the other participants in the chat
+                        item.participants.slice(1).map((participant, idx) => {
+                          return (
+                            <span key={idx}>
+                              {participant}
+                              {idx !== item.participants.length - 2 ? ", " : ""}
+                            </span>
+                          );
+                        })
+                      }
                     </Typography>
                     {" — "}
                     <Typography
@@ -177,7 +200,7 @@ export default function ChatsList({ newChat }: { newChat: () => void }) {
                           : theme.palette.primary.dark
                       }
                     >
-                      {item.previewMessage}
+                      {item.lastMessage}
                     </Typography>
                   </React.Fragment>
                 }

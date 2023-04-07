@@ -99,3 +99,8 @@ export const conversationsSummaryForDemo = [
       "Felipe wants to go out for drinks after work. He needs you to follow up with him to see if you can make it.",
   },
 ];
+
+export const isMobileNumber = (number: string) => {
+  const re = /^\d{10}$/;
+  return re.test(number);
+};

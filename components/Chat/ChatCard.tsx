@@ -14,6 +14,10 @@ import { User } from "../../services/UserService/User.service";
 import { useRouter } from "next/router";
 
 import io from "socket.io-client";
+import {
+  Threads,
+  ThreadsResponseData,
+} from "../../services/ThreadService/Threads.service";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -30,7 +34,7 @@ export default function ChatCard({
 }: {
   user: User;
   accessToken: string;
-  threads: any;
+  threads: ThreadsResponseData;
 }) {
   const theme = useTheme();
   const router = useRouter();
@@ -38,6 +42,14 @@ export default function ChatCard({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [connectedWS, setConnectedWS] = React.useState<any>(null);
   const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
+  const [_threads, setThreads] = React.useState<Threads[]>(
+    threads ? threads[0] || [] : []
+  );
+  const [currentThread, setCurrentThread] = React.useState<any>(
+    threads ? threads[0][0] : null
+  );
+
+  console.log("MY threads", threads, currentThread);
 
   const openUserMenu = Boolean(anchorEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -163,9 +175,13 @@ export default function ChatCard({
             </Item>
           </Grid>
         </Grid>
-        <Grid container spacing={0} justifyContent={"center"} marginTop={5}>
+        <Grid container spacing={2} justifyContent={"center"} marginTop={5}>
           <Grid item>
-            <ChatsList newChat={startNewChat} />
+            <ChatsList
+              newChat={startNewChat}
+              threads={_threads}
+              currentThread={currentThread}
+            />
           </Grid>
           <Grid
             item
@@ -174,7 +190,20 @@ export default function ChatCard({
               height: "100%",
             }}
           >
-            <Chat handleSendMessage={handleSendMessage} isNewChat={isNewChat} />
+            <Chat
+              user={user}
+              handleSendMessage={handleSendMessage}
+              isNewChat={!currentThread || isNewChat}
+              currentThread={currentThread}
+              setCurrentThread={(thread: Threads) => {
+                setCurrentThread(thread);
+                // save it to the threads array if it doesn't exist
+                if (!_threads.find((t) => t.id === thread.id)) {
+                  setThreads([..._threads, thread]);
+                }
+                setIsNewChat(false);
+              }}
+            />
           </Grid>
         </Grid>
       </CardContent>

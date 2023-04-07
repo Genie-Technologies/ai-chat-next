@@ -1,17 +1,20 @@
 import axios from "axios";
 
-export interface Thread {
+export interface Threads {
   id: string;
   userId: string;
-  messageId: number;
-  user: string[];
-  message: string[];
-  createdAt: Date;
+  participants: string[];
+  messages: string[] | null;
+  createdAt: string;
   isActive: boolean;
+  lastMessage: string | null;
+  threadName: string;
 }
 
+export type ThreadsResponseData = [Threads[], number];
+
 export default class ThreadService {
-  public async createThread(thread: Thread) {
+  public async createThread(thread: Threads) {
     try {
       const newThread = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/create`,
@@ -28,7 +31,9 @@ export default class ThreadService {
     }
   }
 
-  public async getThread(threadId: string): Promise<Thread | null | undefined> {
+  public async getThread(
+    threadId: string
+  ): Promise<Threads | null | undefined> {
     try {
       const thread = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/${threadId}`,
@@ -46,7 +51,7 @@ export default class ThreadService {
 
   public async getThreads(
     userId: string
-  ): Promise<Thread[] | null | undefined> {
+  ): Promise<Threads[] | null | undefined> {
     try {
       console.log(
         "Reaching out to the API to get threads for this user: ",
@@ -67,7 +72,7 @@ export default class ThreadService {
     }
   }
 
-  public async updateThread(thread: Thread) {
+  public async updateThread(thread: Threads) {
     try {
       const updatedThread = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/update`,
@@ -95,6 +100,24 @@ export default class ThreadService {
         }
       );
       return deletedThread.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public async getMessagesForThread(
+    threadId: string
+  ): Promise<any | null | undefined> {
+    try {
+      const messages = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/messages/thread/${threadId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return messages.data;
     } catch (error) {
       console.error(error);
     }

@@ -10,6 +10,7 @@ export interface User {
   joined: Date;
   locale: string;
   id?: string;
+  friends?: string[];
 }
 
 export interface AuthOUser {
