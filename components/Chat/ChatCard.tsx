@@ -26,9 +26,11 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function ChatCard({
   user,
   accessToken,
+  threads,
 }: {
   user: User;
   accessToken: string;
+  threads: any;
 }) {
   const theme = useTheme();
   const router = useRouter();

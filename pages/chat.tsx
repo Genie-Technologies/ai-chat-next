@@ -11,8 +11,9 @@ import Head from "next/head";
 import { Typography } from "@mui/material";
 import UserService, { AuthOUser } from "../services/UserService/User.service";
 import { useEffect } from "react";
+import ThreadService from "../services/ThreadService/Threads.service";
 
-const ChatPage = ({ user, accessToken }: any) => {
+const ChatPage = ({ user, accessToken, threads }: any) => {
   useEffect(() => {
     console.log("--> User: ", user);
   }, []);
@@ -23,7 +24,7 @@ const ChatPage = ({ user, accessToken }: any) => {
       </Head>
       <Paper>
         {user ? (
-          <ChatCard user={user} accessToken={accessToken} />
+          <ChatCard user={user} accessToken={accessToken} threads={threads} />
         ) : (
           <Typography variant="h4" component="h4">
             You are not logged in.
@@ -49,11 +50,16 @@ export const getServerSideProps = withPageAuthRequired({
 
       // if session exists, then reach out to the API to get the user data
       const userService = new UserService();
+      const threadService = new ThreadService();
+
       const userData = await userService.getUser(
         user.sid,
         user as AuthOUser,
         accessToken.accessToken
       );
+
+      const threads = await threadService.getThreads(user.sid);
+      console.log("Threads: ", threads);
 
       // Get user token from Auth0
       console.log("Access Token: ", accessToken);
@@ -64,6 +70,7 @@ export const getServerSideProps = withPageAuthRequired({
         props: {
           user: userData,
           accessToken: accessToken,
+          threads,
         },
       };
     }
@@ -72,6 +79,7 @@ export const getServerSideProps = withPageAuthRequired({
       props: {
         user: null,
         accessToken: null,
+        threads: null,
       },
     };
   },
