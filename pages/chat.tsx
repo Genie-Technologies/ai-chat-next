@@ -1,18 +1,120 @@
+import {
+  getAccessToken,
+  getSession,
+  withPageAuthRequired,
+} from "@auth0/nextjs-auth0";
 import ChatCard from "../components/Chat/ChatCard";
 import Paper from "@mui/material/Paper";
 
 import { Main } from "../components/layouts";
 import Head from "next/head";
+import { Alert, Snackbar, Typography } from "@mui/material";
+import UserService, { AuthOUser } from "../services/UserService/User.service";
+import { useEffect, useState } from "react";
+import ThreadService, {
+  ThreadsResponseData,
+} from "../services/ThreadService/Threads.service";
 
-export default function ChatPage() {
+const ChatPage = ({
+  user,
+  accessToken,
+  threads,
+}: {
+  user: any;
+  accessToken: any;
+  threads: ThreadsResponseData;
+}) => {
+  useEffect(() => {
+    console.log("--> User: ", user);
+  }, []);
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState<
+    "error" | "warning" | "info" | "success"
+  >("success");
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("snackbar_message", (e) => {
+      console.log("snackbar_message", e);
+      const { detail } = e as CustomEvent;
+      setMessage(detail.message);
+      setSeverity(detail.severity);
+      setOpen(true);
+    });
+  }
+
   return (
     <Main>
       <Head>
         <title>Respon Chat</title>
       </Head>
       <Paper>
-        <ChatCard />
+        {user ? (
+          <ChatCard user={user} accessToken={accessToken} threads={threads} />
+        ) : (
+          <Typography variant="h4" component="h4">
+            You are not logged in.
+          </Typography>
+        )}
       </Paper>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Main>
   );
-}
+};
+
+export default ChatPage;
+
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(context): Promise<any> {
+    const { req, res } = context;
+    const session = await getSession(req, res);
+
+    if (session) {
+      const user = session.user;
+      const accessToken = await getAccessToken(req, res);
+
+      console.log("Access Token ---> ", accessToken);
+
+      // if session exists, then reach out to the API to get the user data
+      const userService = new UserService();
+      const threadService = new ThreadService();
+
+      const userData = await userService.getUser(
+        user.sid,
+        user as AuthOUser,
+        accessToken.accessToken
+      );
+
+      const threads = await threadService.getThreads(userData?.id ?? user.sid);
+      console.log("SERVER Threads: ", threads);
+      console.log("Og: ", user);
+      console.log("Access Token: ", accessToken);
+      console.log("User: ", userData);
+
+      return {
+        props: {
+          user: userData,
+          accessToken: accessToken,
+          threads,
+        },
+      };
+    }
+
+    return {
+      props: {
+        user: null,
+        accessToken: null,
+        threads: null,
+      },
+    };
+  },
+});

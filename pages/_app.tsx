@@ -4,7 +4,10 @@ import Page from "../components/Page";
 import type { AppProps } from "next/app";
 import { Analytics } from "@vercel/analytics/react";
 
+import { UserProvider } from "@auth0/nextjs-auth0/client";
+
 import "aos/dist/aos.css";
+import { croppedLogoSrc } from "../components/utils";
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,11 +17,14 @@ function App({ Component, pageProps }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title>Converso - Future of Messaging</title>
+        <title>ResponAi - Future of Messaging</title>
+        <link rel="icon" href={croppedLogoSrc} />
       </Head>
       <Page>
-        <Component {...pageProps} />
-        <Analytics />
+        <UserProvider>
+          <Component {...pageProps} />
+          <Analytics />
+        </UserProvider>
       </Page>
     </React.Fragment>
   );

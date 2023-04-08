@@ -6,7 +6,18 @@ import CardContent from "@mui/material/CardContent";
 import ChatsList from "./ChatList";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Avatar } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { User } from "../../services/UserService/User.service";
+import { useRouter } from "next/router";
+
+import io from "socket.io-client";
+import {
+  Threads,
+  ThreadsResponseData,
+} from "../../services/ThreadService/Threads.service";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -16,8 +27,83 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ChatCard() {
+export default function ChatCard({
+  user,
+  accessToken,
+  threads,
+}: {
+  user: User;
+  accessToken: string;
+  threads: ThreadsResponseData;
+}) {
   const theme = useTheme();
+  const router = useRouter();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [connectedWS, setConnectedWS] = React.useState<any>(null);
+  const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
+  const [_threads, setThreads] = React.useState<Threads[]>(
+    threads ? threads[0] || [] : []
+  );
+  const [currentThread, setCurrentThread] = React.useState<any>(
+    threads ? threads[0][0] : null
+  );
+
+  console.log("MY threads", threads, currentThread);
+
+  const openUserMenu = Boolean(anchorEl);
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogoutClick = () => {
+    router.push("/api/auth/logout");
+  };
+
+  React.useEffect(() => {
+    // Initialize Websocket Connection
+    console.log("Initializing Websocket Connection");
+
+    // Check if a websocket connection already exists
+    if (connectedWS) {
+      console.log("Websocket Connection already exists");
+      return;
+    }
+
+    // Get user token from Auth0
+
+    const ws = io("http://localhost:3002", {
+      transports: ["websocket"],
+      auth: {
+        token: accessToken,
+      },
+    });
+
+    ws.on("connect", () => {
+      console.log("Connected to Websocket -->: ", ws.id);
+      setConnectedWS(ws);
+    });
+
+    ws.on("disconnect", () => {
+      console.log("Disconnected from Websocket");
+    });
+
+    ws.on("message", (data) => {
+      console.log("Message Received: ", data);
+    });
+  }, []);
+
+  const handleSendMessage = (message: string) => {
+    console.log("Sending Message: ", message);
+    connectedWS.emit("message", message);
+  };
+
+  const startNewChat = () => {
+    setIsNewChat(!isNewChat);
+  };
 
   return (
     <Card
@@ -38,32 +124,64 @@ export default function ChatCard() {
                 backgroundColor: theme.palette.background.paper,
               }}
             >
-              <Avatar
+              <Button
+                onClick={handleUserMenuClick}
+                aria-controls={openUserMenu ? "user-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={openUserMenu ? "true" : undefined}
+                id="user-menu-button"
                 sx={{
-                  width: 56,
-                  height: 56,
-                  float: "right",
+                  backgroundColor: `${theme.palette.background.paper} !important`,
+                  boxShadow: "none",
+                  borderRadius: 10,
                   ":hover": {
-                    cursor: "pointer",
-                    boxShadow:
-                      "rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
-                    transition: "all 0.3s ease",
+                    backgroundColor: `${theme.palette.background.paper} !important`,
+                    boxShadow: "none",
                   },
-                  boxShadow:
-                    theme.palette.mode === "dark"
-                      ? "none"
-                      : "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
                 }}
-                alt="Shagun Mistry"
-                variant="circular"
-                src="https://avatars.githubusercontent.com/u/47032027?v=4"
-              ></Avatar>
+              >
+                <Avatar
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    float: "right",
+                    ":hover": {
+                      cursor: "pointer",
+                      boxShadow:
+                        "rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
+                      transition: "all 0.3s ease",
+                    },
+                    boxShadow:
+                      theme.palette.mode === "dark"
+                        ? "none"
+                        : "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+                  }}
+                  alt="Shagun Mistry"
+                  variant="circular"
+                  src={user.picture}
+                ></Avatar>
+              </Button>
+              <Menu
+                id="user-menu"
+                anchorEl={anchorEl}
+                open={openUserMenu}
+                onClose={handleUserMenuClose}
+                MenuListProps={{
+                  "aria-labelledby": "user-menu-button",
+                }}
+              >
+                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+              </Menu>
             </Item>
           </Grid>
         </Grid>
-        <Grid container spacing={0} justifyContent={"center"} marginTop={5}>
+        <Grid container spacing={2} justifyContent={"center"} marginTop={5}>
           <Grid item>
-            <ChatsList />
+            <ChatsList
+              newChat={startNewChat}
+              threads={_threads}
+              currentThread={currentThread}
+            />
           </Grid>
           <Grid
             item
@@ -72,7 +190,20 @@ export default function ChatCard() {
               height: "100%",
             }}
           >
-            <Chat />
+            <Chat
+              user={user}
+              handleSendMessage={handleSendMessage}
+              isNewChat={!currentThread || isNewChat}
+              currentThread={currentThread}
+              setCurrentThread={(thread: Threads) => {
+                setCurrentThread(thread);
+                // save it to the threads array if it doesn't exist
+                if (!_threads.find((t) => t.id === thread.id)) {
+                  setThreads([..._threads, thread]);
+                }
+                setIsNewChat(false);
+              }}
+            />
           </Grid>
         </Grid>
       </CardContent>
