@@ -18,6 +18,7 @@ import {
   Threads,
   ThreadsResponseData,
 } from "../../services/ThreadService/Threads.service";
+import { WebhookIncomingMessagePayload } from "../utils";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -42,11 +43,9 @@ export default function ChatCard({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [connectedWS, setConnectedWS] = React.useState<any>(null);
   const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
-  const [_threads, setThreads] = React.useState<Threads[]>(
-    threads ? threads[0] || [] : []
-  );
+  const [_threads, setThreads] = React.useState<ThreadsResponseData>(threads);
   const [currentThread, setCurrentThread] = React.useState<any>(
-    threads ? threads[0][0] : null
+    threads ? threads[0] : null
   );
 
   console.log("MY threads", threads, currentThread);
@@ -82,6 +81,10 @@ export default function ChatCard({
       },
     });
 
+    console.log("Current Thread: ", currentThread);
+
+    ws.emit("join", { room: currentThread.id });
+
     ws.on("connect", () => {
       console.log("Connected to Websocket -->: ", ws.id);
       setConnectedWS(ws);
@@ -91,14 +94,50 @@ export default function ChatCard({
       console.log("Disconnected from Websocket");
     });
 
-    ws.on("message", (data) => {
-      console.log("Message Received: ", data);
+    ws.on("received_message", (data: WebhookIncomingMessagePayload) => {
+      console.log("Message Received: ", data, currentThread);
+
+      setThreads(() => {
+        const newThreads = _threads.map((thread: Threads) => {
+          if (thread.id === data.threadId) {
+            return {
+              ...thread,
+              lastMessage: data.message,
+              timestamp: data.timestamp,
+            };
+          }
+          return thread;
+        });
+        return [...newThreads] as ThreadsResponseData;
+      });
+
+      // Update the current thread if the message is for the current thread
+      if (currentThread.id === data.threadId) {
+        setCurrentThread({
+          ...currentThread,
+          lastMessage: data.message,
+          timestamp: data.timestamp,
+        });
+      }
     });
   }, []);
 
   const handleSendMessage = (message: string) => {
-    console.log("Sending Message: ", message);
-    connectedWS.emit("message", message);
+    console.log(
+      "Sending Message: ",
+      message,
+      currentThread,
+      typeof connectedWS
+    );
+    connectedWS.emit("incoming_message", {
+      message,
+      threadId: currentThread.id,
+      lastMessage: message,
+      timestamp: new Date(),
+      to: currentThread.participants.filter(
+        (participant: any) => participant.id !== currentThread.userId
+      ),
+    });
   };
 
   const startNewChat = () => {
@@ -199,7 +238,11 @@ export default function ChatCard({
                 setCurrentThread(thread);
                 // save it to the threads array if it doesn't exist
                 if (!_threads.find((t) => t.id === thread.id)) {
-                  setThreads([..._threads, thread]);
+                  console.log(
+                    "adding new thread to threads array",
+                    thread,
+                    _threads
+                  );
                 }
                 setIsNewChat(false);
               }}

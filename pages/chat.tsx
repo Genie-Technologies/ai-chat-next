@@ -95,10 +95,10 @@ export const getServerSideProps = withPageAuthRequired({
       );
 
       const threads = await threadService.getThreads(userData?.id ?? user.sid);
-      console.log("SERVER Threads: ", threads);
-      console.log("Og: ", user);
-      console.log("Access Token: ", accessToken);
-      console.log("User: ", userData);
+      console.log("1. Threads: ", threads);
+      console.log("2. User: ", user);
+      console.log("3. Access Token: ", accessToken);
+      console.log("4. User Data: ", userData);
 
       return {
         props: {

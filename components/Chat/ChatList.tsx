@@ -17,7 +17,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
-import { Threads } from "../../services/ThreadService/Threads.service";
+import {
+  Threads,
+  ThreadsResponseData,
+} from "../../services/ThreadService/Threads.service";
 
 export default function ChatsList({
   newChat,
@@ -25,10 +28,10 @@ export default function ChatsList({
   currentThread,
 }: {
   newChat: () => void;
-  threads: Threads[];
+  threads: ThreadsResponseData;
   currentThread: any;
 }) {
-  console.log("threads", threads, currentThread);
+  console.log("ChatList threads", threads, currentThread);
   const theme = useTheme();
 
   const pinnedItemListStyle = {
@@ -179,17 +182,21 @@ export default function ChatsList({
                     >
                       {
                         // Besides the first item in the participants array, all other items are the other participants in the chat
-                        item.participants.slice(1).map((participant, idx) => {
-                          return (
-                            <span key={idx}>
-                              {participant}
-                              {idx !== item.participants.length - 2 ? ", " : ""}
-                            </span>
-                          );
-                        })
+                        item.participants &&
+                          item.participants.slice(1).map((participant, idx) => {
+                            return (
+                              <span key={idx}>
+                                {participant.userId}
+
+                                {item.participants &&
+                                idx !== item.participants.length - 2
+                                  ? ", "
+                                  : " "}
+                              </span>
+                            );
+                          })
                       }
                     </Typography>
-                    {" — "}
                     <Typography
                       sx={{ display: "inline" }}
                       component="span"
@@ -200,7 +207,7 @@ export default function ChatsList({
                           : theme.palette.primary.dark
                       }
                     >
-                      {item.lastMessage}
+                      {item.lastMessage ?? "No messages yet"}
                     </Typography>
                   </React.Fragment>
                 }

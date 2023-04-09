@@ -1,6 +1,6 @@
-import { type Message, ChatLine } from "./ChatLine";
+import { ChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Button from "@mui/material/Button";
@@ -12,24 +12,35 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
-import { TextField } from "@mui/material";
+import { TextField, useEventCallback } from "@mui/material";
 import { User } from "../../services/UserService/User.service";
 import { isMobileNumber } from "../utils";
 import ThreadService, {
   Threads,
+  ThreadsResponseData,
 } from "../../services/ThreadService/Threads.service";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 const snackbar_message = "snackbar_message";
 
 // default first message to display in UI (not necessary to define the prompt)
-export const initialMessages: Message[] = [
-  {
-    who: "other",
-    message: "Hi! I'm A friendly AI assistant. Ask me anything!",
-    customKey: 1,
-  },
-];
+// export const initialMessages: MessageBody[] = [
+//   {
+//     who: "other",
+//     message: "Hi! I'm A friendly AI assistant. Ask me anything!",
+//     customKey: 1,
+//   },
+// ];
+
+export interface MessageBody {
+  createdAt: string;
+  id: string;
+  message: string;
+  recieverId: string;
+  senderId: string;
+  threadId: string;
+  updatedAt: string;
+}
 
 export function Chat({
   user,
@@ -41,11 +52,11 @@ export function Chat({
   user: User;
   handleSendMessage: Function;
   isNewChat: boolean;
-  currentThread: Threads;
+  currentThread: ThreadsResponseData[0];
   setCurrentThread: Function;
 }) {
   const theme = useTheme();
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<MessageBody[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [cookie, setCookie] = useCookies([COOKIE_NAME]);
@@ -60,36 +71,41 @@ export function Chat({
     }
   }, [cookie, setCookie]);
 
-  useEffect(() => {
+  const getMessagesForThread = useCallback(async () => {
     if (currentThread) {
       // Call out to the API to get the messages for this thread
       const threadService = new ThreadService();
-      const newMessages = threadService.getMessagesForThread(currentThread.id);
+      console.log("Current Thread: ", currentThread);
+      const newMessages = await threadService.getMessagesForThread(
+        currentThread.id
+      );
       console.log("newMessages", newMessages);
-      // setMessages(newMessages);
+      setMessages(newMessages);
     }
   }, [currentThread]);
+
+  useEffect(() => {
+    getMessagesForThread();
+  }, [getMessagesForThread]);
 
   // send message to API /api/chat endpoint
   const sendMessage = async (message: string) => {
     setLoading(true);
-    const newMessages = [
-      ...messages,
-      { message: message, who: "me" } as Message,
-    ];
-    setMessages(newMessages);
-    const last10messages = newMessages.slice(-10);
 
-    // const response = await fetch("/api/chat", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     messages: last10messages,
-    //     user: cookie[COOKIE_NAME],
-    //   }),
-    // });
+    // add message to UI
+
+    setMessages([
+      ...messages,
+      {
+        createdAt: new Date().toISOString(),
+        id: "",
+        message,
+        recieverId: "",
+        senderId: "",
+        threadId: "",
+        updatedAt: new Date().toISOString(),
+      },
+    ]);
 
     handleSendMessage(message);
 
@@ -114,18 +130,19 @@ export function Chat({
         console.log("Start new chat with: ", numberEntered);
         const threadService = new ThreadService();
         console.log("User: ", user);
+        const requestBody = {} as any;
+
         const newThread: Threads = {
           id: "",
           userId: user.id ?? user.authOId,
-          participants: [user.id ?? user.authOId, numberEntered],
-          messages: [],
-          createdAt: new Date().toISOString(),
+          createdAt: new Date(),
           isActive: true,
-          lastMessage: null,
           threadName: numberEntered,
         };
+        requestBody.threads = newThread;
+        requestBody.participants = [user.id ?? user.authOId, numberEntered];
 
-        const newThreadResponse = await threadService.createThread(newThread);
+        const newThreadResponse = await threadService.createThread(requestBody);
         if (newThreadResponse) {
           console.log("New thread created: ", newThreadResponse);
           sendEventToWindowListener("New chat started!", "success");
@@ -151,6 +168,8 @@ export function Chat({
         height: "100%",
         minHeight: "100vh",
         maxHeight: "100vh",
+        minWidth: "50vw",
+        maxWidth: "50vw",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -231,7 +250,7 @@ export function Chat({
                 variant="h6"
                 sx={{ color: theme.palette.text.primary }}
               >
-                {currentThread?.participants[1]}
+                {currentThread.threadName}
               </Typography>
             </Grid>
             {/* <Grid item xs={4}>
@@ -241,11 +260,14 @@ export function Chat({
             </Grid> */}
           </Grid>
           <List sx={{ overflow: "auto", p: 2 }}>
-            {currentThread.messages
-              ? currentThread.messages.map((id, index) => (
-                  <ChatLine key={id} message={id} customKey={index} who="me" />
-                ))
-              : null}
+            {messages.map((message, index) => (
+              <ChatLine
+                key={index}
+                message={message.message}
+                who={message.recieverId === user.id ? "me" : "other"}
+                customKey={index}
+              />
+            ))}
           </List>
           <InputMessage
             input={input}

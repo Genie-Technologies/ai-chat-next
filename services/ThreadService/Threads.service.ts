@@ -1,24 +1,41 @@
 import axios from "axios";
 
+export interface Participant {
+  userId: string;
+  threadId: string;
+}
+
 export interface Threads {
   id: string;
   userId: string;
-  participants: string[];
-  messages: string[] | null;
-  createdAt: string;
+  createdAt: Date;
   isActive: boolean;
-  lastMessage: string | null;
-  threadName: string;
+  lastMessage?: string;
+  threadName?: string;
+  participants?: Participant[];
 }
 
-export type ThreadsResponseData = [Threads[], number];
+export type ThreadsResponseData = [
+  {
+    id: string;
+    userId: string;
+    createdAt: Date;
+    isActive: boolean;
+    lastMessage?: string;
+    threadName?: string;
+    participants: Participant[];
+  }
+];
 
 export default class ThreadService {
-  public async createThread(thread: Threads) {
+  public async createThread(requestBody: {
+    thread: Threads;
+    participants: string[];
+  }) {
     try {
       const newThread = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/create`,
-        thread,
+        requestBody,
         {
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +68,7 @@ export default class ThreadService {
 
   public async getThreads(
     userId: string
-  ): Promise<Threads[] | null | undefined> {
+  ): Promise<ThreadsResponseData | null | undefined> {
     try {
       console.log(
         "Reaching out to the API to get threads for this user: ",
@@ -59,7 +76,7 @@ export default class ThreadService {
       );
 
       const threads = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/threads/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/threads/user/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -110,7 +127,7 @@ export default class ThreadService {
   ): Promise<any | null | undefined> {
     try {
       const messages = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/messages/thread/${threadId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/threads/${threadId}`,
         {
           headers: {
             "Content-Type": "application/json",
