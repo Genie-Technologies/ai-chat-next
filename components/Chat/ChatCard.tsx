@@ -13,11 +13,12 @@ import MenuItem from "@mui/material/MenuItem";
 import { User } from "../../services/UserService/User.service";
 import { useRouter } from "next/router";
 
-import io from "socket.io-client";
-import {
+import io, { Socket } from "socket.io-client";
+import ThreadService, {
   Threads,
   ThreadsResponseData,
 } from "../../services/ThreadService/Threads.service";
+import { reverse } from "dns";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -34,7 +35,7 @@ export default function ChatCard({
 }: {
   user: User;
   accessToken: string;
-  threads: ThreadsResponseData;
+  threads: Threads[];
 }) {
   const theme = useTheme();
   const router = useRouter();
@@ -42,11 +43,13 @@ export default function ChatCard({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [connectedWS, setConnectedWS] = React.useState<any>(null);
   const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
+  const [webhook, setWebhook] = React.useState<any>(null);
+
   const [_threads, setThreads] = React.useState<Threads[]>(
-    threads ? threads[0] || [] : []
+    threads && threads.length > 0 ? threads : []
   );
-  const [currentThread, setCurrentThread] = React.useState<any>(
-    threads ? threads[0][0] : null
+  const [currentThread, setCurrentThread] = React.useState<Threads | null>(
+    threads && threads.length > 0 ? threads[0] : null
   );
 
   console.log("MY threads", threads, currentThread);
@@ -73,8 +76,6 @@ export default function ChatCard({
       return;
     }
 
-    // Get user token from Auth0
-
     const ws = io("http://localhost:3002", {
       transports: ["websocket"],
       auth: {
@@ -83,7 +84,7 @@ export default function ChatCard({
     });
 
     ws.on("connect", () => {
-      console.log("Connected to Websocket -->: ", ws.id);
+      console.log("Connected to Websocket -->: ", ws.id, "For User: ", user.id);
       setConnectedWS(ws);
     });
 
@@ -94,11 +95,80 @@ export default function ChatCard({
     ws.on("message", (data) => {
       console.log("Message Received: ", data);
     });
+
+    ws.on(`received_message_${user.id}`, (data) => {
+      console.log("Received Message for User: ", data);
+      if (data && data.thread_id) {
+        // Check if the thread already exists
+        const threadExists = _threads.find(
+          (thread) => thread.id === data.thread_id
+        );
+        console.log("Does Thread exist: ", threadExists);
+        if (threadExists) {
+          // If the thread exists, add the message to the thread
+          const newThreads = _threads.map((thread) => {
+            if (thread.id === data.thread_id) {
+              thread.messages.push(data);
+            }
+            return thread;
+          });
+          setThreads(newThreads);
+        } else {
+          const threadService = new ThreadService();
+          const newThread = {
+            id: data.thread_id,
+            messages: [data.message],
+            participants: [data.sender_id, data.receiver_id],
+            userId: user.id,
+            createdAt: new Date().toISOString(),
+            isActive: true,
+            lastMessage: data.message,
+            threadName: "New Message",
+          };
+          console.log("Creating new thread: ", newThread);
+          threadService
+            .createThread(newThread)
+            .then((res) => {
+              console.log("New Thread Created: ", res);
+              setThreads([..._threads, res]);
+              setCurrentThread(res);
+            })
+            .catch((err) => {
+              console.log("Error Creating Thread: ", err);
+            });
+        }
+      }
+    });
+
+    ws.emit("join_home", {
+      user_id: user.id,
+    });
+
+    ws.on(user.id, (data) => {
+      console.log("Received Message for User HOME: ", data);
+    });
+
+    if (currentThread) {
+      console.log("Current Thread: ", currentThread.id);
+      ws.emit("join", {
+        room: currentThread.id,
+      });
+    }
   }, []);
 
-  const handleSendMessage = (message: string) => {
-    console.log("Sending Message: ", message);
-    connectedWS.emit("message", message);
+  const handleSendMessage = (message: string, participantUserIds: string[]) => {
+    console.log("Sending Message to: ", participantUserIds);
+    if (connectedWS && currentThread) {
+      participantUserIds.forEach((participantUserId) => {
+        connectedWS.emit(`incoming_message`, {
+          message,
+          sender_id: user.id,
+          receiver_id: participantUserId,
+          thread_id: currentThread.id,
+          timestamp: new Date().toISOString(),
+        });
+      });
+    }
   };
 
   const startNewChat = () => {

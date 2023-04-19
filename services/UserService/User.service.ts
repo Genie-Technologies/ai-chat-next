@@ -5,11 +5,11 @@ export interface User {
   email: string;
   fullName: string;
   firstName: string;
-  familyName: string;
+  lastName: string;
   picture: string;
   joined: Date;
   locale: string;
-  id?: string;
+  id: string;
   friends?: string[];
 }
 
@@ -82,10 +82,11 @@ export default class UserService {
             email: _user.email,
             fullName: _user.name,
             firstName: _user.given_name,
-            familyName: _user.family_name,
+            lastName: _user.family_name,
             picture: _user.picture,
             joined: new Date(),
             locale: _user.locale,
+            id: userId,
           });
 
           return newUser;
@@ -103,6 +104,22 @@ export default class UserService {
 
   public async updateUser(id: string, updatedFields: Partial<User>) {
     try {
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public async searchUsers(query: string) {
+    try {
+      const users = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/search?${query}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return users.data;
     } catch (error) {
       console.error(error);
     }

@@ -12,7 +12,7 @@ import { Alert, Snackbar, Typography } from "@mui/material";
 import UserService, { AuthOUser } from "../services/UserService/User.service";
 import { useEffect, useState } from "react";
 import ThreadService, {
-  ThreadsResponseData,
+  Threads,
 } from "../services/ThreadService/Threads.service";
 
 const ChatPage = ({
@@ -22,7 +22,7 @@ const ChatPage = ({
 }: {
   user: any;
   accessToken: any;
-  threads: ThreadsResponseData;
+  threads: Threads[];
 }) => {
   useEffect(() => {
     console.log("--> User: ", user);
@@ -95,10 +95,11 @@ export const getServerSideProps = withPageAuthRequired({
       );
 
       const threads = await threadService.getThreads(userData?.id ?? user.sid);
+      console.log("Threads: ", threads);
       console.log("SERVER Threads: ", threads);
       console.log("Og: ", user);
       console.log("Access Token: ", accessToken);
-      console.log("User: ", userData);
+      console.log("-- User: ", userData);
 
       return {
         props: {

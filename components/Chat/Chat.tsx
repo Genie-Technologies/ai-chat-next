@@ -13,8 +13,8 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
-import { User } from "../../services/UserService/User.service";
-import { isMobileNumber } from "../utils";
+import UserService, { User } from "../../services/UserService/User.service";
+import { isEmail, isMobileNumber } from "../utils";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
@@ -41,7 +41,7 @@ export function Chat({
   user: User;
   handleSendMessage: Function;
   isNewChat: boolean;
-  currentThread: Threads;
+  currentThread: Threads | null;
   setCurrentThread: Function;
 }) {
   const theme = useTheme();
@@ -51,6 +51,7 @@ export function Chat({
   const [cookie, setCookie] = useCookies([COOKIE_NAME]);
 
   const [chatLoading, setChatLoading] = useState(false);
+  const [userFriends, setUserFriends] = useState<string[]>(user.friends ?? []);
 
   useEffect(() => {
     if (!cookie[COOKIE_NAME]) {
@@ -91,7 +92,15 @@ export function Chat({
     //   }),
     // });
 
-    handleSendMessage(message);
+    console.log("Current Thread: ", currentThread?.participants);
+
+    const listOfParticipants =
+      currentThread?.participants
+        .filter((participant) => participant.userid !== user.id)
+        .map((participant) => participant.userid) ?? [];
+
+    console.log("listOfParticipants", listOfParticipants);
+    handleSendMessage(message, listOfParticipants);
 
     setLoading(false);
   };
@@ -109,20 +118,84 @@ export function Chat({
       setChatLoading(true);
       e.preventDefault();
       const theElement = e.target as HTMLInputElement;
-      const numberEntered = theElement.value;
-      if (numberEntered && isMobileNumber(numberEntered)) {
-        console.log("Start new chat with: ", numberEntered);
+      const valueEntered = theElement.value;
+
+      if (!valueEntered) {
+        sendEventToWindowListener(
+          "Please enter a phone number to chat with.",
+          "error"
+        );
+        setChatLoading(false);
+        return;
+      }
+
+      if (valueEntered && isEmail(valueEntered)) {
+        // Search for the user by email
+        const userService = new UserService();
+        const userFound = await userService.searchUsers(
+          `email=${valueEntered}`
+        );
+
+        if (userFound && userFound.length > 0) {
+          // push the new user to the friends array if they are not already in there
+          userFound.forEach((_user: User) => {
+            const fullName = `${_user.firstName} ${_user.lastName}`;
+            if (
+              !userFriends.includes(fullName) &&
+              !userFriends.includes(_user.email)
+            ) {
+              userFriends.push(_user.email);
+            }
+          });
+        }
+
+        console.log("User found: ", userFound);
+        if (userFound && userFound.length === 1) {
+          // Start a new chat with the user
+          const selectedUser = userFound[0];
+          const threadService = new ThreadService();
+          const newThread: Threads = {
+            id: "",
+            userId: user.id,
+            participants: [selectedUser.id, user.id],
+            messages: [],
+            createdAt: new Date().toISOString(),
+            isActive: true,
+            lastMessage: null,
+            threadName: selectedUser.email,
+          };
+
+          console.log("About to create new thread: ", newThread);
+          const newThreadResponse = await threadService.createThread(newThread);
+
+          console.log("New thread response: ", newThreadResponse);
+          if (newThreadResponse) {
+            console.log("New thread created: ", newThreadResponse);
+            sendEventToWindowListener("New chat started!", "success");
+            setCurrentThread(newThreadResponse);
+          }
+        } else {
+          sendEventToWindowListener(
+            "No user found with that email address.",
+            "error"
+          );
+        }
+      }
+
+      // If a phone number was entered.
+      if (valueEntered && isMobileNumber(valueEntered)) {
+        console.log("Start new chat with: ", valueEntered);
         const threadService = new ThreadService();
-        console.log("User: ", user);
-        const newThread: Threads = {
+        console.log("[Chat Compoennt] User: ", user);
+        const newThread: any = {
           id: "",
           userId: user.id ?? user.authOId,
-          participants: [user.id ?? user.authOId, numberEntered],
-          messages: [],
           createdAt: new Date().toISOString(),
+          participants: [user.authOId, valueEntered],
+          messages: [],
           isActive: true,
           lastMessage: null,
-          threadName: numberEntered,
+          threadName: valueEntered,
         };
 
         const newThreadResponse = await threadService.createThread(newThread);
@@ -174,8 +247,8 @@ export function Chat({
           freeSolo
           id="grouped-demo"
           options={
-            user.friends
-              ? user.friends.sort(
+            userFriends.length > 0
+              ? userFriends.sort(
                   (a, b) => -b.substring(0, 1).localeCompare(a.substring(0, 1))
                 )
               : []
@@ -227,12 +300,17 @@ export function Chat({
                   src="https://material-ui.com/static/images/avatar/3.jpg"
                 />
               </AvatarGroup> */}
-              <Typography
-                variant="h6"
-                sx={{ color: theme.palette.text.primary }}
-              >
-                {currentThread?.participants[1]}
-              </Typography>
+              {currentThread?.participants.map((participant) => {
+                if (participant.userid !== user.email) {
+                  return (
+                    <Avatar
+                      key={participant.userid}
+                      alt={participant.firstName}
+                      sx={{ marginRight: 1 }}
+                    />
+                  );
+                }
+              })}
             </Grid>
             {/* <Grid item xs={4}>
               <Button sx={{ float: "right" }} variant="contained">
@@ -242,9 +320,16 @@ export function Chat({
           </Grid>
           <List sx={{ overflow: "auto", p: 2 }}>
             {currentThread.messages
-              ? currentThread.messages.map((id, index) => (
-                  <ChatLine key={id} message={id} customKey={index} who="me" />
-                ))
+              ? currentThread.messages.map((id, index) => {
+                  return (
+                    <ChatLine
+                      key={id.id}
+                      message={id.message}
+                      customKey={index}
+                      who="me"
+                    />
+                  );
+                })
               : null}
           </List>
           <InputMessage

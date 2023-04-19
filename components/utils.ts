@@ -104,3 +104,8 @@ export const isMobileNumber = (number: string) => {
   const re = /^\d{10}$/;
   return re.test(number);
 };
+
+export const isEmail = (email: string) => {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};

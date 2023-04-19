@@ -141,73 +141,76 @@ export default function ChatsList({
           />
         </ListItem>
 
-        {threads.map((item, idx) => {
-          return (
-            <ListItem
-              alignItems="flex-start"
-              sx={{
-                color: theme.palette.secondary.main,
-                borderRadius: "0",
-                boxShadow:
-                  "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
-                margin: "10px 0 10px 0",
-                "&:hover": {
-                  boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
-                  borderRadius: "10px",
-                  transition: "all 0.5s ease",
-                  cursor: "pointer",
-                },
-              }}
-              key={idx}
-              className={styles.chatListItem}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={item.threadName}
-                  src="/static/images/avatar/2.jpg"
+        {threads &&
+          threads.map((item, idx) => {
+            return (
+              <ListItem
+                alignItems="flex-start"
+                sx={{
+                  color: theme.palette.secondary.main,
+                  borderRadius: "0",
+                  boxShadow:
+                    "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+                  margin: "10px 0 10px 0",
+                  "&:hover": {
+                    boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
+                    borderRadius: "10px",
+                    transition: "all 0.5s ease",
+                    cursor: "pointer",
+                  },
+                }}
+                key={idx}
+                className={styles.chatListItem}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    alt={item.threadName}
+                    src="/static/images/avatar/2.jpg"
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={item.threadName}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color={theme.palette.primary.main}
+                      >
+                        {
+                          // Besides the first item in the participants array, all other items are the other participants in the chat
+                          item.participants.map((participant, idx) => {
+                            return (
+                              <span key={idx}>
+                                {participant.userId}
+                                {idx !== item.participants.length - 2
+                                  ? ", "
+                                  : ""}
+                              </span>
+                            );
+                          })
+                        }
+                      </Typography>
+                      {" — "}
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? theme.palette.text.primary
+                            : theme.palette.primary.dark
+                        }
+                      >
+                        {item.lastMessage}
+                      </Typography>
+                    </React.Fragment>
+                  }
                 />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.threadName}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color={theme.palette.primary.main}
-                    >
-                      {
-                        // Besides the first item in the participants array, all other items are the other participants in the chat
-                        item.participants.slice(1).map((participant, idx) => {
-                          return (
-                            <span key={idx}>
-                              {participant}
-                              {idx !== item.participants.length - 2 ? ", " : ""}
-                            </span>
-                          );
-                        })
-                      }
-                    </Typography>
-                    {" — "}
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color={
-                        theme.palette.mode === "dark"
-                          ? theme.palette.text.primary
-                          : theme.palette.primary.dark
-                      }
-                    >
-                      {item.lastMessage}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-          );
-        })}
+              </ListItem>
+            );
+          })}
       </List>
     </Paper>
   );

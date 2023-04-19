@@ -13,15 +13,6 @@ export type Message = {
   customKey: number;
 };
 
-// util helper to convert new lines to <br /> tags
-const convertNewLines = (text: string) =>
-  text.split("\n").map((line, i) => (
-    <span key={i}>
-      {line}
-      <br />
-    </span>
-  ));
-
 export function ChatLine({ who = "other", message, customKey }: Message) {
   const [loading, setLoading] = React.useState(false);
 
@@ -30,7 +21,6 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
   if (!message) {
     return null;
   }
-  const formatteMessage = convertNewLines(message);
 
   const getMessageBubble = () => {
     if (who === "me") {

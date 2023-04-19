@@ -3,8 +3,13 @@ import axios from "axios";
 export interface Threads {
   id: string;
   userId: string;
-  participants: string[];
-  messages: string[] | null;
+  participants: {
+    userid: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }[];
+  messages: any[];
   createdAt: string;
   isActive: boolean;
   lastMessage: string | null;
@@ -59,7 +64,7 @@ export default class ThreadService {
       );
 
       const threads = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/threads/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/threads/user/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
