@@ -33,9 +33,9 @@ const SupportPage = (): JSX.Element => {
 
       <Box marginBottom={isMd ? 8 : 4}>
         <Typography variant="body1" component="p">
-          If you have any questions or feedback, please don't hesitate to reach
-          out to us. We're happy to help with any issues you're experiencing,
-          and we're always looking for ways to improve our app.
+          If you have any questions or feedback, please do not hesitate to reach
+          out to us. We are happy to help with any issues you are experiencing,
+          and we are always looking for ways to improve our app.
         </Typography>
       </Box>
 
