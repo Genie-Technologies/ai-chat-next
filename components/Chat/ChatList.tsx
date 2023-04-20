@@ -18,15 +18,18 @@ import Typography from "@mui/material/Typography";
 import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
 import { Threads } from "../../services/ThreadService/Threads.service";
+import { User } from "../../services/UserService/User.service";
 
 export default function ChatsList({
   newChat,
   threads,
   currentThread,
+  user,
 }: {
   newChat: () => void;
   threads: Threads[];
   currentThread: any;
+  user: User;
 }) {
   console.log("threads", threads, currentThread);
   const theme = useTheme();
@@ -63,6 +66,11 @@ export default function ChatsList({
     marginRight: "10px",
   };
 
+  console.log(
+    "--------- Current Thread in ChatList.tsx ---------",
+    currentThread,
+    JSON.stringify(threads)
+  );
   return (
     <Paper elevation={0} sx={{ ...basePaperStyle }}>
       <Grid container spacing={2}>
@@ -143,6 +151,7 @@ export default function ChatsList({
 
         {threads &&
           threads.map((item, idx) => {
+            console.log("------- Processing Thread: ", item, "-------");
             return (
               <ListItem
                 alignItems="flex-start"
@@ -172,7 +181,7 @@ export default function ChatsList({
                   primary={item.threadName}
                   secondary={
                     <React.Fragment>
-                      <Typography
+                      {/* <Typography
                         sx={{ display: "inline" }}
                         component="span"
                         variant="body2"
@@ -180,18 +189,24 @@ export default function ChatsList({
                       >
                         {
                           // Besides the first item in the participants array, all other items are the other participants in the chat
-                          item.participants.map((participant, idx) => {
-                            return (
-                              <span key={idx}>
-                                {participant.userId}
-                                {idx !== item.participants.length - 2
-                                  ? ", "
-                                  : ""}
-                              </span>
-                            );
-                          })
+                          item.participants &&
+                            item.participants
+                              .filter(
+                                (participant) =>
+                                  participant.email !== user.email
+                              )
+                              .map((participant, idx) => {
+                                return (
+                                  <span key={idx}>
+                                    {participant.email ?? participant.firstName}
+                                    {idx !== item.participants.length - 2
+                                      ? ", "
+                                      : ""}
+                                  </span>
+                                );
+                              })
                         }
-                      </Typography>
+                      </Typography> */}
                       {" — "}
                       <Typography
                         sx={{ display: "inline" }}

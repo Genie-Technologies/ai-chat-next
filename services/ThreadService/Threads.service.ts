@@ -14,6 +14,7 @@ export interface Threads {
   isActive: boolean;
   lastMessage: string | null;
   threadName: string;
+  threadLinkId: string;
 }
 
 export type ThreadsResponseData = [Threads[], number];

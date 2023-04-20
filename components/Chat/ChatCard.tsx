@@ -10,7 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { User } from "../../services/UserService/User.service";
+import UserService, { User } from "../../services/UserService/User.service";
 import { useRouter } from "next/router";
 
 import io, { Socket } from "socket.io-client";
@@ -96,13 +96,19 @@ export default function ChatCard({
       console.log("Message Received: ", data);
     });
 
-    ws.on(`received_message_${user.id}`, (data) => {
-      console.log("Received Message for User: ", data);
+    ws.on(`received_message_${user.id}`, async (data) => {
+      console.log("Received Message for User: ", data, _threads);
       if (data && data.thread_id) {
         // Check if the thread already exists
-        const threadExists = _threads.find(
-          (thread) => thread.id === data.thread_id
-        );
+        const threadExists = _threads.find((thread) => {
+          console.log(
+            "Thread: ",
+            thread.threadLinkId,
+            "Data ---",
+            data.thread_link_id
+          );
+          return thread.threadLinkId === data.thread_link_id;
+        });
         console.log("Does Thread exist: ", threadExists);
         if (threadExists) {
           // If the thread exists, add the message to the thread
@@ -115,27 +121,39 @@ export default function ChatCard({
           setThreads(newThreads);
         } else {
           const threadService = new ThreadService();
-          const newThread = {
-            id: data.thread_id,
-            messages: [data.message],
-            participants: [data.sender_id, data.receiver_id],
-            userId: user.id,
-            createdAt: new Date().toISOString(),
-            isActive: true,
-            lastMessage: data.message,
-            threadName: "New Message",
-          };
-          console.log("Creating new thread: ", newThread);
-          threadService
-            .createThread(newThread)
-            .then((res) => {
-              console.log("New Thread Created: ", res);
-              setThreads([..._threads, res]);
-              setCurrentThread(res);
-            })
-            .catch((err) => {
-              console.log("Error Creating Thread: ", err);
-            });
+          const userService = new UserService();
+          // Reach out to the User Service to get the user details
+          const sender = await userService.getUser(data.sender_id);
+          console.log("--> Sender: ", sender);
+          if (!!sender) {
+            console.log("Sender Exists!");
+            const newThread = {
+              id: "",
+              messages: [data],
+              participants: [],
+              userId: user.id,
+              createdAt: new Date().toISOString(),
+              isActive: true,
+              lastMessage: data.message,
+              threadName: sender.firstName ?? sender.email,
+              threadLinkId: data.thread_link_id,
+            };
+            console.log("Creating new thread: ", newThread);
+            threadService
+              .createThread(newThread)
+              .then((res) => {
+                console.log("New Thread Created: ", res);
+                if (res && res.length > 0) {
+                  setThreads([..._threads, res[0]]);
+                  setCurrentThread(res[0]);
+                } else {
+                  console.log("Error Creating Thread", res);
+                }
+              })
+              .catch((err) => {
+                console.log("Error Creating Thread: ", err);
+              });
+          }
         }
       }
     });
@@ -166,6 +184,7 @@ export default function ChatCard({
           receiver_id: participantUserId,
           thread_id: currentThread.id,
           timestamp: new Date().toISOString(),
+          thread_link_id: currentThread.threadLinkId,
         });
       });
     }
@@ -251,6 +270,7 @@ export default function ChatCard({
               newChat={startNewChat}
               threads={_threads}
               currentThread={currentThread}
+              user={user}
             />
           </Grid>
           <Grid
@@ -266,6 +286,7 @@ export default function ChatCard({
               isNewChat={!currentThread || isNewChat}
               currentThread={currentThread}
               setCurrentThread={(thread: Threads) => {
+                console.log("ChatCard Setting Current Thread: ", thread);
                 setCurrentThread(thread);
                 // save it to the threads array if it doesn't exist
                 if (!_threads.find((t) => t.id === thread.id)) {

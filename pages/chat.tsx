@@ -76,11 +76,24 @@ export default ChatPage;
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
     const { req, res } = context;
+    console.log("Get Session...");
     const session = await getSession(req, res);
 
+    console.log("session: ", session);
     if (session) {
       const user = session.user;
-      const accessToken = await getAccessToken(req, res);
+      const accessToken = (await getAccessToken(req, res).catch((err) => {
+        console.log("Error: ", err);
+        if (err.code === "ERR_EXPIRED_ACCESS_TOKEN") {
+          // Clear the cookie and redirect to the login page
+          res.writeHead(302, {
+            Location: "/api/auth/logout",
+          });
+          res.end();
+
+          return null;
+        }
+      })) as any;
 
       console.log("Access Token ---> ", accessToken);
 
@@ -88,13 +101,33 @@ export const getServerSideProps = withPageAuthRequired({
       const userService = new UserService();
       const threadService = new ThreadService();
 
+      if (!accessToken || !user) {
+        return {
+          props: {
+            user: null,
+            accessToken: null,
+            threads: null,
+          },
+        };
+      }
+
       const userData = await userService.getUser(
-        user.sid,
+        user.email,
         user as AuthOUser,
         accessToken.accessToken
       );
 
-      const threads = await threadService.getThreads(userData?.id ?? user.sid);
+      if (!userData) {
+        return {
+          props: {
+            user: null,
+            accessToken: null,
+            threads: null,
+          },
+        };
+      }
+
+      const threads = await threadService.getThreads(userData.id);
       console.log("Threads: ", threads);
       console.log("SERVER Threads: ", threads);
       console.log("Og: ", user);

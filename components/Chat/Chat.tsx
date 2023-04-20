@@ -1,6 +1,6 @@
 import { type Message, ChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Button from "@mui/material/Button";
@@ -61,13 +61,19 @@ export function Chat({
     }
   }, [cookie, setCookie]);
 
-  useEffect(() => {
+  useCallback(async () => {
+    console.log("UseCallBack ---> ", currentThread);
+    // Get the latest messages from the API
     if (currentThread) {
-      // Call out to the API to get the messages for this thread
       const threadService = new ThreadService();
-      const newMessages = threadService.getMessagesForThread(currentThread.id);
-      console.log("newMessages", newMessages);
-      // setMessages(newMessages);
+      const messages = await threadService.getMessagesForThread(
+        currentThread.id
+      );
+
+      if (messages) {
+        console.log("Messages: ", messages);
+        setMessages(messages);
+      }
     }
   }, [currentThread]);
 
@@ -79,25 +85,12 @@ export function Chat({
       { message: message, who: "me" } as Message,
     ];
     setMessages(newMessages);
-    const last10messages = newMessages.slice(-10);
 
-    // const response = await fetch("/api/chat", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     messages: last10messages,
-    //     user: cookie[COOKIE_NAME],
-    //   }),
-    // });
+    console.log("Current Thread: ", currentThread);
 
-    console.log("Current Thread: ", currentThread?.participants);
-
-    const listOfParticipants =
-      currentThread?.participants
-        .filter((participant) => participant.userid !== user.id)
-        .map((participant) => participant.userid) ?? [];
+    const listOfParticipants = currentThread?.participants
+      .filter((participant) => participant.userid !== user.id)
+      .map((participant) => participant.userid);
 
     console.log("listOfParticipants", listOfParticipants);
     handleSendMessage(message, listOfParticipants);
@@ -163,6 +156,7 @@ export function Chat({
             isActive: true,
             lastMessage: null,
             threadName: selectedUser.email,
+            threadLinkId: "",
           };
 
           console.log("About to create new thread: ", newThread);
@@ -172,7 +166,7 @@ export function Chat({
           if (newThreadResponse) {
             console.log("New thread created: ", newThreadResponse);
             sendEventToWindowListener("New chat started!", "success");
-            setCurrentThread(newThreadResponse);
+            setCurrentThread(newThreadResponse[0]);
           }
         } else {
           sendEventToWindowListener(
@@ -215,6 +209,8 @@ export function Chat({
       setChatLoading(false);
     }
   };
+
+  console.log("------- Current Thread: ", currentThread, "-------");
 
   return (
     <Card
@@ -286,37 +282,20 @@ export function Chat({
                 borderBottom: `1px solid ${theme.palette.divider}`,
               }}
             >
-              {/* <AvatarGroup max={3}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-                <Avatar
-                  alt="Travis Howard"
-                  src="https://material-ui.com/static/images/avatar/2.jpg"
-                />
-                <Avatar
-                  alt="Cindy Baker"
-                  src="https://material-ui.com/static/images/avatar/3.jpg"
-                />
-              </AvatarGroup> */}
-              {currentThread?.participants.map((participant) => {
-                if (participant.userid !== user.email) {
-                  return (
-                    <Avatar
-                      key={participant.userid}
-                      alt={participant.firstName}
-                      sx={{ marginRight: 1 }}
-                    />
-                  );
-                }
-              })}
+              {currentThread?.participants
+                ?.filter((participant) => participant.userid !== user.email)
+                .map((participant) => {
+                  if (participant.userid !== user.id) {
+                    return (
+                      <Avatar
+                        key={participant.userid}
+                        alt={participant.firstName}
+                        sx={{ marginRight: 1 }}
+                      />
+                    );
+                  }
+                })}
             </Grid>
-            {/* <Grid item xs={4}>
-              <Button sx={{ float: "right" }} variant="contained">
-                <MenuIcon />
-              </Button>
-            </Grid> */}
           </Grid>
           <List sx={{ overflow: "auto", p: 2 }}>
             {currentThread.messages
