@@ -27,23 +27,18 @@ export default async function handler(
   const category = req.body.category || "funny";
   const socialMedia = req.body.socialMedia || "all";
 
-  console.log(`Received request to caption ${imageFile}.`);
-
   try {
-    console.log("Sending request to Micorsoft Azure Computer Vision API...");
     const credentials = new ApiKeyCredentials({
       inHeader: {
         "Ocp-Apim-Subscription-Key": process.env.AZURE_COMPUTER_VISION_API_KEY,
       },
     });
 
-    console.log("Sending request to OpenAI API...");
     const client = new ComputerVisionClient(
       credentials,
       process.env.AZURE_COMPUTER_VISION_API_ENDPOINT || ""
     );
 
-    console.log("Getting image description from Azure Computer Vision API...");
     const description = await client.describeImage(imageFile, {
       maxCandidates: 1,
     });
@@ -73,7 +68,6 @@ export default async function handler(
       prompt += `As this is for LinkedIn, please write a couple paragraphs based on the image and the category.`;
     }
 
-    console.log("Sending request to OpenAI API...", prompt);
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -86,8 +80,6 @@ export default async function handler(
       temperature: 0.7,
       top_p: 1,
     });
-
-    console.log("Response from OpenAI: ", response.data.choices);
 
     return res.status(200).json({
       success: true,

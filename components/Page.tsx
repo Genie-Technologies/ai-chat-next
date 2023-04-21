@@ -77,7 +77,6 @@ export default function Page({ children }: Props): JSX.Element {
   );
 
   const theme = React.useMemo(() => {
-    console.log("Mode is: ", mode);
     return createTheme(getTheme(mode));
   }, [mode]);
 

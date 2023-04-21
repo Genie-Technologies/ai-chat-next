@@ -1,4 +1,3 @@
-import ChatCard from "../components/Chat/ChatCard";
 import Paper from "@mui/material/Paper";
 
 import { Main } from "../components/layouts";

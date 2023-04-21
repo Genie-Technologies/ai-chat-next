@@ -9,8 +9,6 @@ import Link from "next/link";
 export default function Dashboard() {
   const { user, error, isLoading } = useUser();
 
-  console.log("User: ", user);
-
   if (isLoading) {
     return <CircularLoader color="primary" variant="indeterminate" />;
   }

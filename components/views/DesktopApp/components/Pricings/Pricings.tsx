@@ -30,7 +30,6 @@ const Pricing = (): JSX.Element => {
   const [signUpDialogOpen, setSignUpDialogOpen] = useState(false);
 
   const openSignUpModal = () => {
-    console.log("Open sign up modal");
     setSignUpDialogOpen(true);
   };
 

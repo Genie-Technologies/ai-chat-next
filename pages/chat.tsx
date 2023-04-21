@@ -24,9 +24,7 @@ const ChatPage = ({
   accessToken: any;
   threads: Threads[];
 }) => {
-  useEffect(() => {
-    console.log("--> User: ", user);
-  }, []);
+  useEffect(() => {}, []);
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -40,7 +38,6 @@ const ChatPage = ({
 
   if (typeof window !== "undefined") {
     window.addEventListener("snackbar_message", (e) => {
-      console.log("snackbar_message", e);
       const { detail } = e as CustomEvent;
       setMessage(detail.message);
       setSeverity(detail.severity);
@@ -76,14 +73,18 @@ export default ChatPage;
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
     const { req, res } = context;
-    console.log("Get Session...");
+
     const session = await getSession(req, res);
 
-    console.log("session: ", session);
+    const nullReturn = {
+      user: null,
+      accessToken: null,
+      threads: null,
+    };
+
     if (session) {
       const user = session.user;
       const accessToken = (await getAccessToken(req, res).catch((err) => {
-        console.log("Error: ", err);
         if (err.code === "ERR_EXPIRED_ACCESS_TOKEN") {
           // Clear the cookie and redirect to the login page
           res.writeHead(302, {
@@ -95,19 +96,12 @@ export const getServerSideProps = withPageAuthRequired({
         }
       })) as any;
 
-      console.log("Access Token ---> ", accessToken);
-
-      // if session exists, then reach out to the API to get the user data
       const userService = new UserService();
       const threadService = new ThreadService();
 
       if (!accessToken || !user) {
         return {
-          props: {
-            user: null,
-            accessToken: null,
-            threads: null,
-          },
+          props: nullReturn,
         };
       }
 
@@ -119,20 +113,11 @@ export const getServerSideProps = withPageAuthRequired({
 
       if (!userData) {
         return {
-          props: {
-            user: null,
-            accessToken: null,
-            threads: null,
-          },
+          props: nullReturn,
         };
       }
 
       const threads = await threadService.getThreads(userData.id);
-      console.log("Threads: ", threads);
-      console.log("SERVER Threads: ", threads);
-      console.log("Og: ", user);
-      console.log("Access Token: ", accessToken);
-      console.log("-- User: ", userData);
 
       return {
         props: {

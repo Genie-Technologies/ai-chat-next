@@ -51,11 +51,6 @@ export default class UserService {
     _token?: string
   ): Promise<User | null> {
     try {
-      console.log("userId: ", userId);
-      console.log(
-        "Reaching out to this API: ",
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`
-      );
       const user = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
         {
@@ -65,10 +60,6 @@ export default class UserService {
           },
         }
       );
-
-      console.log("-------> user: ", user);
-
-      console.log("Sending this token: ", _token);
 
       if (user && user.data) {
         const userData = user.data;

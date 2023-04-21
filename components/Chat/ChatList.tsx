@@ -31,7 +31,6 @@ export default function ChatsList({
   currentThread: any;
   user: User;
 }) {
-  console.log("threads", threads, currentThread);
   const theme = useTheme();
 
   const pinnedItemListStyle = {
@@ -66,11 +65,6 @@ export default function ChatsList({
     marginRight: "10px",
   };
 
-  console.log(
-    "--------- Current Thread in ChatList.tsx ---------",
-    currentThread,
-    JSON.stringify(threads)
-  );
   return (
     <Paper elevation={0} sx={{ ...basePaperStyle }}>
       <Grid container spacing={2}>
@@ -151,7 +145,6 @@ export default function ChatsList({
 
         {threads &&
           threads.map((item, idx) => {
-            console.log("------- Processing Thread: ", item, "-------");
             return (
               <ListItem
                 alignItems="flex-start"

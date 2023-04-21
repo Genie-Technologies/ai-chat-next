@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Message } from "../../components/utils";
 
 export interface Threads {
   id: string;
@@ -9,7 +10,7 @@ export interface Threads {
     lastName: string;
     email: string;
   }[];
-  messages: any[];
+  messages: Message[];
   createdAt: string;
   isActive: boolean;
   lastMessage: string | null;
@@ -59,11 +60,6 @@ export default class ThreadService {
     userId: string
   ): Promise<Threads[] | null | undefined> {
     try {
-      console.log(
-        "Reaching out to the API to get threads for this user: ",
-        userId
-      );
-
       const threads = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/user/${userId}`,
         {

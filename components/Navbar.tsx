@@ -47,7 +47,6 @@ function ResponsiveAppBar() {
   };
 
   const handleMenuItemClick = (page: string) => {
-    console.log("Hello World!", page);
     router.push(`/${page.toLowerCase()}`);
   };
 

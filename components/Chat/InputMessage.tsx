@@ -51,9 +51,7 @@ function InputMessage({
               <Chip
                 key={index}
                 label={reply}
-                onClick={() => {
-                  console.log(reply);
-                }}
+                onClick={() => {}}
                 color={theme.palette.mode === "dark" ? "secondary" : "primary"}
                 variant="outlined"
               />

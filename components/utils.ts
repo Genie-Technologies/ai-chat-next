@@ -16,6 +16,16 @@ export interface ChatListItem {
   recievers: string[];
 }
 
+export interface Message {
+  createdAt: string;
+  id: string;
+  message: string;
+  receiverId: string;
+  senderId: string;
+  threadId: string;
+  updatedAt: string;
+}
+
 export const chatListItems: ChatListItem[] = [
   {
     threadName: "Summer BBQ",
@@ -108,4 +118,15 @@ export const isMobileNumber = (number: string) => {
 export const isEmail = (email: string) => {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
+};
+
+export const sendEventToWindowListener = (
+  event_type: string,
+  message: string,
+  severity: string
+) => {
+  const event = new CustomEvent(event_type, {
+    detail: { message, severity },
+  });
+  window.dispatchEvent(event);
 };

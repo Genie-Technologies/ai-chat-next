@@ -34,7 +34,6 @@ const Topbar = ({
   const { mode } = theme.palette;
 
   const { user, error, isLoading } = useUser();
-  console.log("Loading: ", isLoading);
 
   return (
     <Box
