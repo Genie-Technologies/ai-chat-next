@@ -48,7 +48,7 @@ export const chatListItems: ChatListItem[] = [
   },
   {
     threadName: "Happy Hour",
-    previewMessage: "Who's in for drinks after work?",
+    previewMessage: "Who's in for drinks after work? Shagun is gay.",
     sender: "Tom Davis",
     senderAvatar: "https://example.com/avatars/tom-davis.jpg",
     recievers: ["John Doe", "Jane Smith", "Bob Johnson", "Mary Williams"],
