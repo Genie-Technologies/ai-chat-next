@@ -26,6 +26,7 @@ const Landing = (): JSX.Element => {
           backgroundColor: theme.palette.background.paper,
           marginTop: -13,
           paddingTop: 13,
+          scrollbarColor: "rebeccapurple green"
         }}
       >
         <Container>

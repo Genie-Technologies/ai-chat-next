@@ -35,7 +35,7 @@ const ChatPage = ({
   const handleClose = () => {
     setOpen(false);
   };
-
+  console.log('THREADS', threads);
   if (typeof window !== "undefined") {
     window.addEventListener("snackbar_message", (e) => {
       const { detail } = e as CustomEvent;
@@ -44,7 +44,7 @@ const ChatPage = ({
       setOpen(true);
     });
   }
-
+  // console.log('USER', user);
   return (
     <Main>
       <Head>
@@ -104,7 +104,7 @@ export const getServerSideProps = withPageAuthRequired({
           props: nullReturn,
         };
       }
-
+      
       const userData = await userService.getUser(
         user.email,
         user as AuthOUser,
@@ -117,7 +117,7 @@ export const getServerSideProps = withPageAuthRequired({
         };
       }
 
-      const threads = await threadService.getThreads(userData.id);
+      const threads = await threadService.getThreads(userData.id as string);
 
       return {
         props: {

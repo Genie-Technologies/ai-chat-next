@@ -163,6 +163,7 @@ export default function ChatsList({
                 }}
                 key={idx}
                 className={styles.chatListItem}
+                onClick={() => console.log('IMPLEMENT_SWITCHING_THREADS', idx)}
               >
                 <ListItemAvatar>
                   <Avatar

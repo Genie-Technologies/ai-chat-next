@@ -46,13 +46,13 @@ export default class UserService {
   }
 
   public async getUser(
-    userId: string,
+    userEmail: string,
     _user?: AuthOUser,
     _token?: string
   ): Promise<User | null> {
     try {
       const user = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userEmail}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -60,6 +60,8 @@ export default class UserService {
           },
         }
       );
+
+      console.log('USER_DATA', user.data);
 
       if (user && user.data) {
         const userData = user.data;
@@ -69,7 +71,7 @@ export default class UserService {
           _user
         ) {
           const newUser = await this.createUser({
-            authOId: userId,
+            authOId: userEmail,
             email: _user.email,
             fullName: _user.name,
             firstName: _user.given_name,
@@ -77,7 +79,7 @@ export default class UserService {
             picture: _user.picture,
             joined: new Date(),
             locale: _user.locale,
-            id: userId,
+            id: _user.sid
           });
 
           return newUser;

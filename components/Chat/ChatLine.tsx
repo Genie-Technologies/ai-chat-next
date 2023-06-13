@@ -6,14 +6,15 @@ import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/material";
 import * as materialColors from "@mui/material/colors";
 import Skeleton from "@mui/material/Skeleton";
+import { Message } from "../utils"
 
-export type Message = {
-  who: "me" | "other" | undefined;
-  message?: string;
+export type Props = {
+  who: "me" | "other";
+  message: string;
   customKey: number;
 };
 
-export function ChatLine({ who = "other", message, customKey }: Message) {
+export function ChatLine({ who, message, customKey }: Props) {
   const [loading, setLoading] = React.useState(false);
 
   const theme = useTheme();

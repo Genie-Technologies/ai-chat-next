@@ -26,6 +26,21 @@ export interface Message {
   updatedAt: string;
 }
 
+export interface Participant {
+  userId: string;
+  threadId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export type ReceivedMessageData = {
+  threadId: string;
+  threadName: string;
+  newMessage: Message;
+  participants: Participant[];
+}
+
 export const chatListItems: ChatListItem[] = [
   {
     threadName: "Summer BBQ",
@@ -129,4 +144,11 @@ export const sendEventToWindowListener = (
     detail: { message, severity },
   });
   window.dispatchEvent(event);
+};
+
+export const grabSubsetOfMessage = (message: string) => {
+  if (message.length < 100) return message;
+
+  // Grab first 100 characthers of message.
+  return message.substring(0, 100);
 };

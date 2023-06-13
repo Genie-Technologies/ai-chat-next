@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Chat } from "./Chat";
 import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
@@ -17,6 +18,8 @@ import io from "socket.io-client";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
+import { connectSocket } from "../socket";
+import { ReceivedMessageData, grabSubsetOfMessage } from "../utils";
 
 const threadService = new ThreadService();
 const userService = new UserService();
@@ -54,6 +57,8 @@ export default function ChatCard({
 
   const openUserMenu = Boolean(anchorEl);
 
+  const socket = connectSocket(accessToken);
+
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -66,99 +71,105 @@ export default function ChatCard({
     router.push("/api/auth/logout");
   };
 
-  React.useEffect(() => {
-    // Check if a websocket connection already exists
-    if (connectedWS) {
-      return;
+  useEffect(() => {
+    function onConnect() {
+      setConnectedWS(true);
     }
 
-    const ws = io("http://localhost:3002", {
-      transports: ["websocket"],
-      auth: {
-        token: accessToken,
-      },
-    });
+    function onDisconnect() {
+      setConnectedWS(false);
+    }
 
-    ws.on("connect", () => {
-      setConnectedWS(ws);
-    });
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
 
-    ws.on("disconnect", () => {});
+    // How to handle interrupted connections: https://socket.io/how-to/use-with-react#temporary-disconnections
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, [socket]); 
 
-    ws.on("message", (data) => {});
 
-    ws.on(`received_message_${user.id}`, async (data) => {
-      if (data && data.thread_id) {
+  // Listen for new messages
+  useEffect(() => {
+    if (!connectedWS) return 
+
+    function onReceivedMessage(messageData: ReceivedMessageData) {
+      console.log('RECEIVED MESSAGE');
+      const { threadId, newMessage, participants } = messageData;
+      if (threadId) {
         // Check if the thread already exists
         const threadExists = _threads.find((thread) => {
-          return thread.threadLinkId === data.thread_link_id;
+          return thread.id === messageData.threadId;
         });
 
         if (threadExists) {
-          const newThreads = _threads.map((thread) => {
-            if (thread.threadLinkId === data.thread_link_id) {
-              thread.messages.push(data);
-              thread.lastMessage = data.message;
-            }
-            return thread;
+          setThreads((prevThreads) => {
+            return prevThreads.map((thread) => {
+              if (thread.id === messageData.threadId) {
+                const updatedThread = { ...thread };
+                updatedThread.messages.push(newMessage);
+                updatedThread.lastMessage = grabSubsetOfMessage(newMessage.message);
+                return updatedThread;
+              }
+              return thread;
+            });
           });
-          setThreads(newThreads);
         } else {
-          const sender = await userService.getUser(data.sender_id);
+          const newThread = {
+            createdAt: newMessage.createdAt,
+            isActive: true,
+            lastMessage: grabSubsetOfMessage(newMessage.message),
+            messages: [newMessage],
+            participants: participants,
+            userId: newMessage.senderId,
+            threadName: messageData.threadName,
+            id: messageData.threadId
+          };
 
-          if (!!sender) {
-            const newThread = {
-              createdAt: new Date().toISOString(),
-              id: "",
-              isActive: true,
-              lastMessage: data.message,
-              messages: [data],
-              participants: [],
-              threadLinkId: data.thread_link_id,
-              threadName: sender.firstName ?? sender.email,
-              userId: user.id,
-            };
-
-            threadService
-              .createThread(newThread)
-              .then((res) => {
-                if (res && res.length > 0) {
-                  setThreads([..._threads, res[0]]);
-                  setCurrentThread(res[0]);
-                } else {
-                }
-              })
-              .catch((err) => {});
-          }
+          setThreads([..._threads, newThread])
         }
       }
-    });
+    }
 
-    ws.emit("join_home", {
-      user_id: user.id,
-    });
+    socket.on(`received_message`, onReceivedMessage);
 
-    // ws.on(user.id, (data) => {});
+    return () => {
+      socket.off(`received_message`, onReceivedMessage);
+    }
+  }, [connectedWS, socket, _threads, user.id]);
 
-    if (currentThread) {
-      ws.emit("join", {
+
+  // join the current thread to show online users for that thread. 
+  useEffect(() => {
+    if (connectedWS && currentThread?.id) {
+      socket.emit("join", {
         room: currentThread.id,
       });
     }
-  }, []);
+  }, [connectedWS, socket, currentThread?.id]);
+
+  // join home to show user is online in the home page
+  useEffect(() => {
+    if (connectedWS && user.id) {
+      socket.emit("join_home", {
+        user_id: user.id,
+      });
+    }
+  }, [connectedWS, socket, user.id]);
 
   const handleSendMessage = (message: string, participantUserIds: string[]) => {
     if (connectedWS && currentThread) {
-      participantUserIds.forEach((participantUserId) => {
         connectedWS.emit(`incoming_message`, {
           message,
           sender_id: user.id,
-          receiver_id: participantUserId,
+          receiver_id: "",
+          participants: participantUserIds,
           thread_id: currentThread.id,
+          thread_name: currentThread.threadName,
           timestamp: new Date().toISOString(),
-          thread_link_id: currentThread.threadLinkId,
         });
-      });
 
       // Add the message to the current thread
       const newThreads = _threads.map((thread) => {
@@ -168,7 +179,7 @@ export default function ChatCard({
             message,
             senderId: user.id,
             receiverId: participantUserIds[0],
-            threadId: currentThread.threadLinkId,
+            threadId: currentThread.id,
             updatedAt: newDate,
             createdAt: newDate,
             id: "",
@@ -221,6 +232,7 @@ export default function ChatCard({
                     boxShadow: "none",
                   },
                 }}
+                
               >
                 <Avatar
                   sx={{
@@ -242,6 +254,7 @@ export default function ChatCard({
                   variant="circular"
                   src={user.picture}
                 ></Avatar>
+                Hello
               </Button>
               <Menu
                 id="user-menu"
@@ -273,7 +286,7 @@ export default function ChatCard({
               height: "100%",
             }}
           >
-            <Chat
+            {currentThread?.messages && <Chat
               user={user}
               handleSendMessage={handleSendMessage}
               isNewChat={!currentThread || isNewChat}
@@ -286,7 +299,9 @@ export default function ChatCard({
                 }
                 setIsNewChat(false);
               }}
-            />
+              socket={socket}
+            />}
+            
           </Grid>
         </Grid>
       </CardContent>

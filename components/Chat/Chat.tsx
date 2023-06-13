@@ -1,4 +1,4 @@
-import { type Message, ChatLine } from "./ChatLine";
+import { ChatLine } from "./ChatLine";
 import { useEffect, useState, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
@@ -13,22 +13,17 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
 import UserService, { User } from "../../services/UserService/User.service";
-import { isEmail, isMobileNumber, sendEventToWindowListener } from "../utils";
+import { ReceivedMessageData, isEmail, isMobileNumber, sendEventToWindowListener } from "../utils";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
 import { snackbar_message } from "../constants";
+import { Message } from "../utils";
+import { Socket } from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 const threadService = new ThreadService();
 const userService = new UserService();
-
-export const initialMessages: Message[] = [
-  {
-    who: "other",
-    message: "Hi! I'm A friendly AI assistant. Ask me anything!",
-    customKey: 1,
-  },
-];
 
 export function Chat({
   user,
@@ -36,31 +31,52 @@ export function Chat({
   isNewChat,
   currentThread,
   setCurrentThread,
+  socket,
 }: {
   user: User;
   handleSendMessage: Function;
   isNewChat: boolean;
   currentThread: Threads | null;
   setCurrentThread: Function;
+  socket: Socket;
 }) {
   const theme = useTheme();
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(currentThread?.messages || []);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [userFriends, setUserFriends] = useState<string[]>(user.friends ?? []);
 
-  useCallback(async () => {
-    if (currentThread) {
-      const messages = await threadService.getMessagesForThread(
-        currentThread.id
-      );
-
-      if (messages) {
-        setMessages(messages);
+  useEffect(() => {
+    const getMessages = async () => {
+      if (currentThread) {
+        const messages = await threadService.getMessagesForThread(
+          currentThread.id
+        );
+  
+        if (messages) {
+          setMessages(messages);
+        }
       }
     }
+    getMessages();
   }, [currentThread]);
+
+  // handle new message from socket
+  useEffect(() => {
+    function onReceivedMessage(messageData: ReceivedMessageData) {
+      const { threadId, newMessage } = messageData;
+      if (threadId === currentThread?.id) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    }
+
+    socket.on(`received_message`, onReceivedMessage);
+
+    return () => {
+      socket.off(`received_message`, onReceivedMessage);
+    }
+  }, [socket, currentThread]);
 
   const updateFriendsList = (friends: []) => {
     if (friends && friends.length > 0) {
@@ -80,15 +96,22 @@ export function Chat({
   // send message to API /api/chat endpoint
   const sendMessage = async (message: string) => {
     setLoading(true);
+    // Handling adding the message optimistically could be complicated. 
     const newMessages = [
       ...messages,
-      { message: message, who: "me" } as Message,
+      {
+        message: message,
+        threadId: currentThread?.id,
+        createdAt: new Date().toISOString(),
+        senderId: user.id,
+        // generate a uuid for the message below using the uuid package
+        id: uuidv4(),
+      } as Message,
     ];
     setMessages(newMessages);
 
     const listOfParticipants = currentThread?.participants
-      .filter((participant) => participant.userid !== user.id)
-      .map((participant) => participant.userid);
+      .map((participant) => participant.userId);
 
     handleSendMessage(message, listOfParticipants);
     setLoading(false);
@@ -107,7 +130,6 @@ export function Chat({
       isActive: true,
       lastMessage: null,
       threadName: type === "email" ? selectedUser.email : selectedUser.phone,
-      threadLinkId: "",
     };
 
     const newThreadResponse = await threadService.createThread(newThread);
@@ -198,7 +220,7 @@ export function Chat({
         justifyContent: "space-between",
         backgroundColor: theme.palette.background.paper,
         padding: 2,
-        overflow: "scroll",
+        overflow: "hidden",
         border:
           theme.palette.mode === "dark"
             ? `1px solid ${theme.palette.info.main}`
@@ -254,12 +276,12 @@ export function Chat({
               }}
             >
               {currentThread?.participants
-                ?.filter((participant) => participant.userid !== user.email)
+                ?.filter((participant) => participant.userId !== user.email)
                 .map((participant) => {
-                  if (participant.userid !== user.id) {
+                  if (participant.userId !== user.id) {
                     return (
                       <Avatar
-                        key={participant.userid}
+                        key={participant.userId}
                         alt={participant.firstName}
                         sx={{ marginRight: 1 }}
                       />
@@ -269,18 +291,16 @@ export function Chat({
             </Grid>
           </Grid>
           <List sx={{ overflow: "auto", p: 2 }}>
-            {currentThread.messages
-              ? currentThread.messages.map((message, index) => {
-                  return (
-                    <ChatLine
-                      key={index}
-                      message={message.message}
-                      customKey={index}
-                      who={message.senderId === user.id ? "me" : "other"}
-                    />
-                  );
-                })
-              : null}
+            {messages.map((message, index) => {
+                return (
+                  <ChatLine
+                    key={index}
+                    message={message.message}
+                    customKey={index}
+                    who={message.senderId === user.id ? "me" : "other"}
+                  />
+                );
+              })}
           </List>
           <InputMessage
             input={input}

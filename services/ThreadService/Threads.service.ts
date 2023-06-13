@@ -1,21 +1,15 @@
 import axios from "axios";
-import { Message } from "../../components/utils";
+import { Message, Participant } from "../../components/utils";
 
 export interface Threads {
   id: string;
   userId: string;
-  participants: {
-    userid: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  }[];
+  participants: Participant[];
   messages: Message[];
   createdAt: string;
   isActive: boolean;
   lastMessage: string | null;
   threadName: string;
-  threadLinkId: string;
 }
 
 export type ThreadsResponseData = [Threads[], number];
@@ -68,6 +62,7 @@ export default class ThreadService {
           },
         }
       );
+      console.log('THREADS', threads);
       return threads.data;
     } catch (error) {
       console.error(error);

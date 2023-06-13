@@ -94,6 +94,7 @@ function InputMessage({
           sx={{ p: "10px" }}
           aria-label="directions"
           onClick={() => {
+            console.log("SENDING MESSAGE", input);
             sendMessage(input);
             setInput("");
           }}
