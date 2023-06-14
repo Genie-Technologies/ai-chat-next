@@ -160,6 +160,7 @@ export default function ChatsList({
                     transition: "all 0.5s ease",
                     cursor: "pointer",
                   },
+                  wordWrap: "break-word",
                 }}
                 key={idx}
                 className={styles.chatListItem}

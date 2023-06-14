@@ -14,7 +14,6 @@ import MenuItem from "@mui/material/MenuItem";
 import UserService, { User } from "../../services/UserService/User.service";
 import { useRouter } from "next/router";
 
-import io from "socket.io-client";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
@@ -94,7 +93,7 @@ export default function ChatCard({
   // Listen for new messages
   useEffect(() => {
     if (!connectedWS) return 
-
+    console.log('CONNECTED WS');
     function onReceivedMessage(messageData: ReceivedMessageData) {
       console.log('RECEIVED MESSAGE');
       const { threadId, newMessage, participants } = messageData;
@@ -161,7 +160,7 @@ export default function ChatCard({
 
   const handleSendMessage = (message: string, participantUserIds: string[]) => {
     if (connectedWS && currentThread) {
-        connectedWS.emit(`incoming_message`, {
+        socket.emit(`incoming_message`, {
           message,
           sender_id: user.id,
           receiver_id: "",

@@ -38,6 +38,7 @@ export function ChatLine({ who, message, customKey }: Props) {
                 padding: "8px 16px",
                 maxWidth: 300,
                 color: theme.palette.primary.contrastText,
+                overflowWrap: "break-word",
               }}
             />
           )}
