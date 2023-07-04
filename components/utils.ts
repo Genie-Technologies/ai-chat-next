@@ -147,8 +147,8 @@ export const sendEventToWindowListener = (
 };
 
 export const grabSubsetOfMessage = (message: string) => {
-  if (message.length < 100) return message;
+  if (message.length < 40) return message;
 
   // Grab first 100 characthers of message.
-  return message.substring(0, 100);
+  return message.substring(0, 40);
 };

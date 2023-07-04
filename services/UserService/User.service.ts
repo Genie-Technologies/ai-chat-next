@@ -61,8 +61,6 @@ export default class UserService {
         }
       );
 
-      console.log('USER_DATA', user.data);
-
       if (user && user.data) {
         const userData = user.data;
         if (

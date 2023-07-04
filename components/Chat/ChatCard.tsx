@@ -93,9 +93,7 @@ export default function ChatCard({
   // Listen for new messages
   useEffect(() => {
     if (!connectedWS) return 
-    console.log('CONNECTED WS');
     function onReceivedMessage(messageData: ReceivedMessageData) {
-      console.log('RECEIVED MESSAGE');
       const { threadId, newMessage, participants } = messageData;
       if (threadId) {
         // Check if the thread already exists

@@ -62,7 +62,7 @@ export default class ThreadService {
           },
         }
       );
-      console.log('THREADS', threads);
+
       return threads.data;
     } catch (error) {
       console.error(error);
