@@ -25,17 +25,28 @@ export default function ChatsList({
   threads,
   currentThread,
   user,
+  setCurrentThread
 }: {
   newChat: () => void;
   threads: Threads[];
   currentThread: any;
   user: User;
+  setCurrentThread: (threadId: string) => void;
 }) {
   const theme = useTheme();
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+
+  const onSetSelectedThread = (id: string) => {
+    setSelectedId(id);
+    setCurrentThread(id);
+  }
 
   const pinnedItemListStyle = {
     border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: "10px",
+  };
+
+  const ListItemStyles = {
     boxShadow:
       "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
     margin: "10px 0 10px 0",
@@ -45,7 +56,8 @@ export default function ChatsList({
       transition: "all 0.5s ease",
       cursor: "pointer",
     },
-  };
+    wordWrap: "break-word",
+  }
 
   const basePaperStyle = {
     width: "100%",
@@ -123,8 +135,9 @@ export default function ChatsList({
         {/** Have a pinned chat item at the top for AI chat */}
         <ListItem
           alignItems="flex-start"
-          sx={{ ...pinnedItemListStyle }}
+          sx={!selectedId ? { ...ListItemStyles, ...pinnedItemListStyle } : { ...ListItemStyles }}
           className={styles.chatListItem}
+          onClick={() => setSelectedId(null)}
         >
           <ListItemAvatar>
             <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
@@ -148,23 +161,10 @@ export default function ChatsList({
             return (
               <ListItem
                 alignItems="flex-start"
-                sx={{
-                  color: theme.palette.secondary.main,
-                  borderRadius: "0",
-                  boxShadow:
-                    "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
-                  margin: "10px 0 10px 0",
-                  "&:hover": {
-                    boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
-                    borderRadius: "10px",
-                    transition: "all 0.5s ease",
-                    cursor: "pointer",
-                  },
-                  wordWrap: "break-word",
-                }}
+                sx={selectedId == item.id ? { ...ListItemStyles, ...pinnedItemListStyle } : { ...ListItemStyles }}
                 key={idx}
                 className={styles.chatListItem}
-                onClick={() => console.log('IMPLEMENT_SWITCHING_THREADS', idx)}
+                onClick={() => onSetSelectedThread(item.id)}
               >
                 <ListItemAvatar>
                   <Avatar

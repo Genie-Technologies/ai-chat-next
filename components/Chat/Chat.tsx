@@ -41,7 +41,7 @@ export function Chat({
   socket: Socket;
 }) {
   const theme = useTheme();
-  const [messages, setMessages] = useState<Message[]>(currentThread?.messages || []);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,10 +49,13 @@ export function Chat({
 
   useEffect(() => {
     const getMessages = async () => {
+      console.log('CURRENT THREAD', currentThread)
       if (currentThread) {
         const messages = await threadService.getMessagesForThread(
           currentThread.id
         );
+        
+        console.log('MESSAGES', messages)
   
         if (messages) {
           setMessages(messages);
@@ -65,8 +68,9 @@ export function Chat({
   // handle new message from socket
   useEffect(() => {
     function onReceivedMessage(messageData: ReceivedMessageData) {
-      const { threadId, newMessage } = messageData;
-      if (threadId === currentThread?.id) {
+      const { threadId, newMessage, participants } = messageData;
+      console.log('NEW MESSAGE', newMessage, threadId, participants)
+      if (threadId === currentThread?.id && participants.includes(user.id)) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     }
@@ -76,7 +80,7 @@ export function Chat({
     return () => {
       socket.off(`received_message`, onReceivedMessage);
     }
-  }, [socket, currentThread]);
+  }, [socket, currentThread?.id]);
 
   const updateFriendsList = (friends: []) => {
     if (friends && friends.length > 0) {
@@ -111,7 +115,11 @@ export function Chat({
     setMessages(newMessages);
 
     const listOfParticipants = currentThread?.participants
-      .map((participant) => participant.userId);
+      .map((participant) => {
+        if (participant.userId !== user.id) {
+          return participant.userId
+        }
+      }).filter(Boolean);
 
     handleSendMessage(message, listOfParticipants);
     setLoading(false);
@@ -125,7 +133,7 @@ export function Chat({
       id: "",
       userId: user.id,
       participants: [selectedUser.id, user.id],
-      messages: [],
+      // messages: [],
       createdAt: new Date().toISOString(),
       isActive: true,
       lastMessage: null,

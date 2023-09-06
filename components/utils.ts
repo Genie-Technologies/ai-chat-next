@@ -38,7 +38,7 @@ export type ReceivedMessageData = {
   threadId: string;
   threadName: string;
   newMessage: Message;
-  participants: Participant[];
+  participants: string[];
 }
 
 export const chatListItems: ChatListItem[] = [

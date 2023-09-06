@@ -5,7 +5,7 @@ export interface Threads {
   id: string;
   userId: string;
   participants: Participant[];
-  messages: Message[];
+  // messages: Message[];
   createdAt: string;
   isActive: boolean;
   lastMessage: string | null;
@@ -34,7 +34,7 @@ export default class ThreadService {
 
   public async getThread(
     threadId: string
-  ): Promise<Threads | null | undefined> {
+  ): Promise<Threads | undefined> {
     try {
       const thread = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/threads/${threadId}`,
