@@ -25,7 +25,7 @@ export default function ChatsList({
   threads,
   currentThread,
   user,
-  setCurrentThread
+  setCurrentThread,
 }: {
   newChat: () => void;
   threads: Threads[];
@@ -39,7 +39,7 @@ export default function ChatsList({
   const onSetSelectedThread = (id: string) => {
     setSelectedId(id);
     setCurrentThread(id);
-  }
+  };
 
   const pinnedItemListStyle = {
     border: `1px solid ${theme.palette.secondary.main}`,
@@ -57,7 +57,7 @@ export default function ChatsList({
       cursor: "pointer",
     },
     wordWrap: "break-word",
-  }
+  };
 
   const basePaperStyle = {
     width: "100%",
@@ -135,9 +135,13 @@ export default function ChatsList({
         {/** Have a pinned chat item at the top for AI chat */}
         <ListItem
           alignItems="flex-start"
-          sx={!selectedId ? { ...ListItemStyles, ...pinnedItemListStyle } : { ...ListItemStyles }}
+          sx={
+            !selectedId
+              ? { ...ListItemStyles, ...pinnedItemListStyle }
+              : { ...ListItemStyles }
+          }
           className={styles.chatListItem}
-          onClick={() => setSelectedId(null)}
+          onClick={() => onSetSelectedThread(null)}
         >
           <ListItemAvatar>
             <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
@@ -161,7 +165,11 @@ export default function ChatsList({
             return (
               <ListItem
                 alignItems="flex-start"
-                sx={selectedId == item.id ? { ...ListItemStyles, ...pinnedItemListStyle } : { ...ListItemStyles }}
+                sx={
+                  selectedId == item.id
+                    ? { ...ListItemStyles, ...pinnedItemListStyle }
+                    : { ...ListItemStyles }
+                }
                 key={idx}
                 className={styles.chatListItem}
                 onClick={() => onSetSelectedThread(item.id)}

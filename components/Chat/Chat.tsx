@@ -13,14 +13,19 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
 import UserService, { User } from "../../services/UserService/User.service";
-import { ReceivedMessageData, isEmail, isMobileNumber, sendEventToWindowListener } from "../utils";
+import {
+  ReceivedMessageData,
+  isEmail,
+  isMobileNumber,
+  sendEventToWindowListener,
+} from "../utils";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
 import { snackbar_message } from "../constants";
 import { Message } from "../utils";
-import { Socket } from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid';
+import { Socket } from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 
 const threadService = new ThreadService();
 const userService = new UserService();
@@ -48,20 +53,22 @@ export function Chat({
   const [userFriends, setUserFriends] = useState<string[]>(user.friends ?? []);
 
   useEffect(() => {
+    console.log("CurrentThread", currentThread);
     const getMessages = async () => {
-      console.log('CURRENT THREAD', currentThread)
-      if (currentThread) {
-        const messages = await threadService.getMessagesForThread(
-          currentThread.id
-        );
-        
-        console.log('MESSAGES', messages)
-  
-        if (messages) {
-          setMessages(messages);
-        }
+      if (!currentThread) {
+        console.log("SET MESSAGES");
+        setMessages([]);
+        return;
       }
-    }
+
+      const messages = await threadService.getMessagesForThread(
+        currentThread.id
+      );
+
+      if (messages) {
+        setMessages(messages);
+      }
+    };
     getMessages();
   }, [currentThread]);
 
@@ -69,7 +76,7 @@ export function Chat({
   useEffect(() => {
     function onReceivedMessage(messageData: ReceivedMessageData) {
       const { threadId, newMessage, participants } = messageData;
-      console.log('NEW MESSAGE', newMessage, threadId, participants)
+
       if (threadId === currentThread?.id && participants.includes(user.id)) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
@@ -79,8 +86,8 @@ export function Chat({
 
     return () => {
       socket.off(`received_message`, onReceivedMessage);
-    }
-  }, [socket, currentThread?.id]);
+    };
+  }, [socket, currentThread?.id, user.id]);
 
   const updateFriendsList = (friends: []) => {
     if (friends && friends.length > 0) {
@@ -100,7 +107,7 @@ export function Chat({
   // send message to API /api/chat endpoint
   const sendMessage = async (message: string) => {
     setLoading(true);
-    // Handling adding the message optimistically could be complicated. 
+    // Handling adding the message optimistically could be complicated.
     const newMessages = [
       ...messages,
       {
@@ -117,11 +124,12 @@ export function Chat({
     const listOfParticipants = currentThread?.participants
       .map((participant) => {
         if (participant.userId !== user.id) {
-          return participant.userId
+          return participant.userId;
         }
-      }).filter(Boolean);
+      })
+      .filter(Boolean);
 
-    handleSendMessage(message, listOfParticipants);
+    if (currentThread) handleSendMessage(message, listOfParticipants);
     setLoading(false);
   };
 
@@ -240,7 +248,7 @@ export function Chat({
             : `0px 0px 25px 0px ${theme.palette.grey[300]}`,
       }}
     >
-      {isNewChat && (
+      {false && (
         <Autocomplete
           freeSolo
           id="grouped-demo"
@@ -271,53 +279,51 @@ export function Chat({
         />
       )}
 
-      {!isNewChat && currentThread && (
-        <>
-          <Grid container spacing={0}>
-            <Grid
-              item
-              xs={8}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                borderBottom: `1px solid ${theme.palette.divider}`,
-              }}
-            >
-              {currentThread?.participants
-                ?.filter((participant) => participant.userId !== user.email)
-                .map((participant) => {
-                  if (participant.userId !== user.id) {
-                    return (
-                      <Avatar
-                        key={participant.userId}
-                        alt={participant.firstName}
-                        sx={{ marginRight: 1 }}
-                      />
-                    );
-                  }
-                })}
-            </Grid>
-          </Grid>
-          <List sx={{ overflow: "auto", p: 2 }}>
-            {messages.map((message, index) => {
-                return (
-                  <ChatLine
-                    key={index}
-                    message={message.message}
-                    customKey={index}
-                    who={message.senderId === user.id ? "me" : "other"}
-                  />
-                );
+      <>
+        <Grid container spacing={0}>
+          <Grid
+            item
+            xs={8}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              borderBottom: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            {currentThread?.participants
+              ?.filter((participant) => participant.userId !== user.email)
+              .map((participant) => {
+                if (participant.userId !== user.id) {
+                  return (
+                    <Avatar
+                      key={participant.userId}
+                      alt={participant.firstName}
+                      sx={{ marginRight: 1 }}
+                    />
+                  );
+                }
               })}
-          </List>
-          <InputMessage
-            input={input}
-            setInput={setInput}
-            sendMessage={sendMessage}
-            loading={loading}
-          />
-        </>
-      )}
+          </Grid>
+        </Grid>
+        <List sx={{ overflow: "auto", p: 2 }}>
+          {messages.map((message, index) => {
+            return (
+              <ChatLine
+                key={index}
+                message={message.message}
+                customKey={index}
+                who={message.senderId === user.id ? "me" : "other"}
+              />
+            );
+          })}
+        </List>
+        <InputMessage
+          input={input}
+          setInput={setInput}
+          sendMessage={sendMessage}
+          loading={loading}
+        />
+      </>
     </Card>
   );
 }
