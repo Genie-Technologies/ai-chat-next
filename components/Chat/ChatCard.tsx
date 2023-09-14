@@ -46,18 +46,14 @@ export default function ChatCard({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [connectedWS, setConnectedWS] = React.useState<any>(null);
   const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
-
   const [_threads, setThreads] = React.useState<Threads[]>(
     threads && threads.length > 0 ? threads : []
   );
   const [currentThread, setCurrentThread] = React.useState<Threads | null>(
     null
   );
-  console.log("USER", user);
-  console.log("THREADS", threads);
 
   const openUserMenu = Boolean(anchorEl);
-
   const socket = connectSocket(accessToken);
 
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -95,7 +91,6 @@ export default function ChatCard({
   useEffect(() => {
     if (!connectedWS) return;
     function onReceivedMessage(messageData: ReceivedMessageData) {
-      console.log("RECEIVED MESSAGE for thread", messageData);
       const { threadId, newMessage, participants } = messageData;
       if (threadId) {
         // Check if the thread already exists
@@ -108,7 +103,6 @@ export default function ChatCard({
             return prevThreads.map((thread) => {
               if (thread.id === messageData.threadId) {
                 const updatedThread = { ...thread };
-                // updatedThread.messages.push(newMessage); I don't think we need this if we request messages when we click on a thread
                 updatedThread.lastMessage = grabSubsetOfMessage(
                   newMessage.message
                 );
@@ -191,9 +185,8 @@ export default function ChatCard({
     setIsNewChat(!isNewChat);
   };
 
-  const onSetCurrentThread = async (threadId: string) => {
+  const onSetCurrentThread = async (threadId: string | null) => {
     if (!threadId) {
-      console.log("setCurrentThread", threadId);
       setCurrentThread(null);
       return;
     }
@@ -202,7 +195,6 @@ export default function ChatCard({
     const res = await threadService.getThread(threadId);
 
     if (!res) {
-      console.log("res undefined");
       return;
     }
 
@@ -215,10 +207,9 @@ export default function ChatCard({
         return thread;
       });
     });
-    console.log("RES", res);
     setCurrentThread(res);
   };
-  console.log("CURRENT THREAD", currentThread);
+
   return (
     <Card
       sx={{
@@ -314,12 +305,13 @@ export default function ChatCard({
                 isNewChat={!currentThread || isNewChat}
                 currentThread={currentThread}
                 setCurrentThread={(thread: Threads) => {
-                  setCurrentThread(thread);
-                  // save it to the threads array if it doesn't exist
-                  if (!_threads.find((t) => t.id === thread.id)) {
-                    setThreads([..._threads, thread]);
-                  }
-                  setIsNewChat(false);
+                  // TODO: Can implement when we add creating new threads
+                  // setCurrentThread(thread);
+                  // // save it to the threads array if it doesn't exist
+                  // if (!_threads.find((t) => t.id === thread.id)) {
+                  //   setThreads([..._threads, thread]);
+                  // }
+                  // setIsNewChat(false);
                 }}
                 socket={socket}
               />

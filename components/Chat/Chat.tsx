@@ -1,14 +1,10 @@
 import { ChatLine } from "./ChatLine";
 import { useEffect, useState, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
-import MenuIcon from "@mui/icons-material/Menu";
-import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
@@ -53,10 +49,8 @@ export function Chat({
   const [userFriends, setUserFriends] = useState<string[]>(user.friends ?? []);
 
   useEffect(() => {
-    console.log("CurrentThread", currentThread);
     const getMessages = async () => {
       if (!currentThread) {
-        console.log("SET MESSAGES");
         setMessages([]);
         return;
       }
@@ -141,7 +135,6 @@ export function Chat({
       id: "",
       userId: user.id,
       participants: [selectedUser.id, user.id],
-      // messages: [],
       createdAt: new Date().toISOString(),
       isActive: true,
       lastMessage: null,
@@ -290,19 +283,24 @@ export function Chat({
               borderBottom: `1px solid ${theme.palette.divider}`,
             }}
           >
-            {currentThread?.participants
-              ?.filter((participant) => participant.userId !== user.email)
-              .map((participant) => {
-                if (participant.userId !== user.id) {
-                  return (
-                    <Avatar
-                      key={participant.userId}
-                      alt={participant.firstName}
-                      sx={{ marginRight: 1 }}
-                    />
-                  );
-                }
-              })}
+            {currentThread?.participants &&
+            currentThread?.participants?.length > 0 ? (
+              currentThread.participants
+                .filter((participant) => participant.userId !== user.email)
+                .map((participant) => {
+                  if (participant.userId !== user.id) {
+                    return (
+                      <Avatar
+                        key={participant.userId}
+                        alt={participant.firstName}
+                        sx={{ marginRight: 1 }}
+                      />
+                    );
+                  }
+                })
+            ) : (
+              <Avatar alt="responAI" sx={{ marginRight: 1 }} />
+            )}
           </Grid>
         </Grid>
         <List sx={{ overflow: "auto", p: 2 }}>

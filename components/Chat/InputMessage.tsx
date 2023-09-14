@@ -1,5 +1,3 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import styles from "../../styles/ChatPage.module.scss";
 import SendIcon from "@mui/icons-material/Send";
 import Stack from "@mui/material/Stack";
@@ -14,13 +12,9 @@ type InputMessageType = {
   loading: boolean;
 };
 
-function InputMessage({
-  input,
-  setInput,
-  sendMessage,
-  loading,
-}: InputMessageType) {
+function InputMessage({ input, setInput, sendMessage }: InputMessageType) {
   const theme = useTheme();
+
   return (
     <div>
       <Stack
@@ -28,7 +22,6 @@ function InputMessage({
         spacing={0}
         className={styles.aiGeneratedOptions}
         sx={{
-          // display: "flex",
           flexWrap: "wrap",
           display:
             process.env.CHAT_FEATURE_ENABLED === "true" ? "none" : "flex",
@@ -82,7 +75,7 @@ function InputMessage({
             }
           }}
           onChange={(e) => {
-            setInput(e.target.value);
+            if (e.target.value !== "\n") setInput(e.target.value);
           }}
           multiline
           required

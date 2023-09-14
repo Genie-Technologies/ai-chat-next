@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { chatListItems } from "../utils";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Avatar from "@mui/material/Avatar";
@@ -23,20 +22,18 @@ import { User } from "../../services/UserService/User.service";
 export default function ChatsList({
   newChat,
   threads,
-  currentThread,
-  user,
   setCurrentThread,
 }: {
   newChat: () => void;
   threads: Threads[];
   currentThread: any;
   user: User;
-  setCurrentThread: (threadId: string) => void;
+  setCurrentThread: (threadId: string | null) => void;
 }) {
   const theme = useTheme();
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
 
-  const onSetSelectedThread = (id: string) => {
+  const onSetSelectedThread = (id: string | null) => {
     setSelectedId(id);
     setCurrentThread(id);
   };

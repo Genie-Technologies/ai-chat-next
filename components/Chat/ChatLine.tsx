@@ -6,7 +6,6 @@ import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/material";
 import * as materialColors from "@mui/material/colors";
 import Skeleton from "@mui/material/Skeleton";
-import { Message } from "../utils"
 
 export type Props = {
   who: "me" | "other";
