@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import ThreadService, {
   Threads,
 } from "../services/ThreadService/Threads.service";
+import { connectSocket } from "../components/socket";
 
 const ChatPage = ({
   user,
@@ -24,13 +25,14 @@ const ChatPage = ({
   accessToken: any;
   threads: Threads[];
 }) => {
-  useEffect(() => {}, []);
-
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<
     "error" | "warning" | "info" | "success"
   >("success");
+  // TODO: This could potentially cause a bug if this component rerenders. Had
+  // bug previosly when in child component and rerendering. 
+  let socket = connectSocket(accessToken);
 
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +54,7 @@ const ChatPage = ({
       </Head>
       <Paper>
         {user ? (
-          <ChatCard user={user} accessToken={accessToken} threads={threads} />
+          <ChatCard user={user} accessToken={accessToken} threads={threads} socket={socket} />
         ) : (
           <Typography variant="h4" component="h4">
             You are not logged in.

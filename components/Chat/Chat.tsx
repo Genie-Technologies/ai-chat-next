@@ -32,7 +32,7 @@ export function Chat({
   isNewChat,
   currentThread,
   setCurrentThread,
-  socket,
+  socket  
 }: {
   user: User;
   handleSendMessage: Function;

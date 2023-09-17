@@ -35,10 +35,12 @@ export default function ChatCard({
   user,
   accessToken,
   threads,
+  socket
 }: {
   user: User;
   accessToken: string;
   threads: Threads[];
+  socket: any
 }) {
   const theme = useTheme();
   const router = useRouter();
@@ -54,7 +56,6 @@ export default function ChatCard({
   );
 
   const openUserMenu = Boolean(anchorEl);
-  const socket = connectSocket(accessToken);
 
   const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -167,7 +168,7 @@ export default function ChatCard({
         timestamp: new Date().toISOString(),
       });
 
-      // Add the message to the current thread
+      // Set last message of thread
       const newThreads = _threads.map((thread) => {
         if (thread.id === currentThread.id) {
           const newDate = new Date().toISOString();
