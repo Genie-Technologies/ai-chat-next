@@ -1,7 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { initialMessages } from "../../components/Chat/Chat";
-import { type Message } from "../../components/Chat/ChatLine";
-import { conversationsSummaryForDemo } from "../../components/utils";
+import { Message, conversationsSummaryForDemo } from "../../components/utils";
 
 // break the app if the API key is missing
 if (!process.env.OPENAI_API_KEY) {
@@ -10,7 +8,6 @@ if (!process.env.OPENAI_API_KEY) {
 
 const botName = "AI";
 const userName = "News reporter"; // TODO: move to ENV var
-const firstMessge = initialMessages[0].message;
 
 // @TODO: unit test this. good case for unit testing
 const generatePromptFromMessages = (messages: Message[]) => {
@@ -28,7 +25,7 @@ const generatePromptFromMessages = (messages: Message[]) => {
   }
 
   messagesWithoutFirstConvo.forEach((message: Message) => {
-    const name = message.who === "other" ? userName : botName;
+    const name = message.senderId === "other" ? userName : botName;
     prompt += `\n${name}: ${message.message}`;
   });
   return prompt;
