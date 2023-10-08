@@ -7,13 +7,14 @@ import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
-import { TextField } from "@mui/material";
+import { AvatarGroup, Paper, TextField } from "@mui/material";
 import UserService, { User } from "../../services/UserService/User.service";
 import {
   ReceivedMessageData,
   isEmail,
   isMobileNumber,
   sendEventToWindowListener,
+  stringAvatar,
 } from "../utils";
 import ThreadService, {
   Threads,
@@ -32,7 +33,7 @@ export function Chat({
   isNewChat,
   currentThread,
   setCurrentThread,
-  socket  
+  socket,
 }: {
   user: User;
   handleSendMessage: Function;
@@ -220,25 +221,17 @@ export function Chat({
     <Card
       elevation={0}
       sx={{
-        width: "100%",
+        maxWidth: "40rem",
         height: "100%",
         minHeight: "100vh",
         maxHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        backgroundColor: theme.palette.background.paper,
         padding: 2,
         overflow: "hidden",
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${theme.palette.info.main}`
-            : "none",
         borderRadius: "10px",
-        boxShadow:
-          theme.palette.mode === "dark"
-            ? `0px 0px 25px 0px ${theme.palette.info.main}`
-            : `0px 0px 25px 0px ${theme.palette.grey[300]}`,
+        margin: "auto",
+        boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
       }}
     >
       {false && (
@@ -273,19 +266,19 @@ export function Chat({
       )}
 
       <>
-        <Grid container spacing={0}>
-          <Grid
-            item
-            xs={8}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              borderBottom: `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            {currentThread?.participants &&
-            currentThread?.participants?.length > 0 ? (
-              currentThread.participants
+        <Paper
+          elevation={1}
+          sx={{
+            padding: 1,
+            borderRadius: "10px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {currentThread?.participants &&
+          currentThread?.participants?.length > 0 ? (
+            <AvatarGroup>
+              {currentThread.participants
                 .filter((participant) => participant.userId !== user.email)
                 .map((participant) => {
                   if (participant.userId !== user.id) {
@@ -293,16 +286,16 @@ export function Chat({
                       <Avatar
                         key={participant.userId}
                         alt={participant.firstName}
-                        sx={{ marginRight: 1 }}
+                        {...stringAvatar(participant.userId)}
                       />
                     );
                   }
-                })
-            ) : (
-              <Avatar alt="responAI" sx={{ marginRight: 1 }} />
-            )}
-          </Grid>
-        </Grid>
+                })}
+            </AvatarGroup>
+          ) : (
+            <Avatar alt="responAI" sx={{ marginRight: 1 }} />
+          )}
+        </Paper>
         <List sx={{ overflow: "auto", p: 2 }}>
           {messages.map((message, index) => {
             return (

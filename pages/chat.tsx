@@ -3,18 +3,21 @@ import {
   getSession,
   withPageAuthRequired,
 } from "@auth0/nextjs-auth0";
-import ChatCard from "../components/Chat/ChatCard";
-import Paper from "@mui/material/Paper";
 
 import { Main } from "../components/layouts";
+import { useState } from "react";
+import Alert from "@mui/material/Alert";
+import ChatCard from "../components/Chat/ChatCard";
 import Head from "next/head";
-import { Alert, Snackbar, Typography } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
 import UserService, { AuthOUser } from "../services/UserService/User.service";
-import { useEffect, useState } from "react";
 import ThreadService, {
   Threads,
 } from "../services/ThreadService/Threads.service";
 import { connectSocket } from "../components/socket";
+import { styled, Theme, CSSObject } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const ChatPage = ({
   user,
@@ -25,17 +28,17 @@ const ChatPage = ({
   accessToken: any;
   threads: Threads[];
 }) => {
-  const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<
     "error" | "warning" | "info" | "success"
   >("success");
   // TODO: This could potentially cause a bug if this component rerenders. Had
-  // bug previosly when in child component and rerendering. 
+  // bug previosly when in child component and rerendering.
   let socket = connectSocket(accessToken);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   if (typeof window !== "undefined") {
@@ -43,30 +46,43 @@ const ChatPage = ({
       const { detail } = e as CustomEvent;
       setMessage(detail.message);
       setSeverity(detail.severity);
-      setOpen(true);
+      setSnackbarOpen(true);
     });
   }
 
   return (
-    <Main>
+    <>
       <Head>
         <title>Respon Chat</title>
       </Head>
-      <Paper>
+      <Box sx={{ flexGrow: 1, p: 2 }}>
         {user ? (
-          <ChatCard user={user} accessToken={accessToken} threads={threads} socket={socket} />
+          <ChatCard
+            user={user}
+            accessToken={accessToken}
+            threads={threads}
+            socket={socket}
+          />
         ) : (
           <Typography variant="h4" component="h4">
             You are not logged in.
           </Typography>
         )}
-      </Paper>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={severity}
+          sx={{ width: "100%" }}
+        >
           {message}
         </Alert>
       </Snackbar>
-    </Main>
+    </>
   );
 };
 
@@ -106,7 +122,7 @@ export const getServerSideProps = withPageAuthRequired({
           props: nullReturn,
         };
       }
-      
+
       const userData = await userService.getUser(
         user.email,
         user as AuthOUser,

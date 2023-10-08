@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/material";
 import * as materialColors from "@mui/material/colors";
 import Skeleton from "@mui/material/Skeleton";
+import { stringAvatar } from "../utils";
 
 export type Props = {
   who: "me" | "other";
@@ -22,6 +23,20 @@ export function ChatLine({ who, message, customKey }: Props) {
     return null;
   }
 
+  const messageStyle = {
+    borderRadius: "10px",
+    background:
+      who === "me"
+        ? theme.palette.secondary.light
+        : theme.palette.secondary.dark,
+    color: theme.palette.secondary.contrastText,
+    boxShadow:
+      "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+    maxWidth: "300px",
+    minWidth: "50px",
+    padding: "8px 16px",
+  };
+
   const getMessageBubble = () => {
     if (who === "me") {
       return (
@@ -32,11 +47,7 @@ export function ChatLine({ who, message, customKey }: Props) {
             <ListItemText
               primary={message}
               style={{
-                backgroundColor: theme.palette.primary.main,
-                borderRadius: "20px",
-                padding: "8px 16px",
-                maxWidth: 300,
-                color: theme.palette.primary.contrastText,
+                ...messageStyle,
                 overflowWrap: "break-word",
               }}
             />
@@ -48,6 +59,8 @@ export function ChatLine({ who, message, customKey }: Props) {
                 sx={{
                   backgroundColor: materialColors.red[500],
                   marginLeft: "8px",
+                  boxShadow:
+                    "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
                 }}
               ></Avatar>
             </ListItemAvatar>
@@ -66,6 +79,8 @@ export function ChatLine({ who, message, customKey }: Props) {
               alt="other"
               sx={{
                 backgroundColor: materialColors.green[500],
+                boxShadow:
+                  "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
               }}
             ></Avatar>
           </ListItemAvatar>
@@ -79,12 +94,8 @@ export function ChatLine({ who, message, customKey }: Props) {
           <ListItemText
             primary={message}
             style={{
-              backgroundColor: theme.palette.primary.light,
-              borderRadius: "20px",
-              padding: "8px 16px",
-              maxWidth: 300,
+              ...messageStyle,
               overflowWrap: "break-word",
-              color: theme.palette.primary.contrastText,
             }}
           />
         )}

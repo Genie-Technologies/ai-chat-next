@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { Chat } from "./Chat";
-import { styled, useTheme } from "@mui/material/styles";
+import { Theme, styled, useTheme, CSSObject } from "@mui/material/styles";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import ChatsList from "./ChatList";
+import ChatList from "./ChatList";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -21,26 +21,101 @@ import { connectSocket } from "../socket";
 import { ReceivedMessageData, grabSubsetOfMessage } from "../utils";
 
 const threadService = new ThreadService();
-const userService = new UserService();
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
+import Typography from "@mui/material/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
+const drawerWidth = 240;
+
+const openedMixin = (theme: Theme): CSSObject => ({
+  width: drawerWidth,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden",
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})<AppBarProps>(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
 }));
 
 export default function ChatCard({
   user,
   accessToken,
   threads,
-  socket
+  socket,
 }: {
   user: User;
   accessToken: string;
   threads: Threads[];
-  socket: any
+  socket: any;
 }) {
   const theme = useTheme();
   const router = useRouter();
@@ -67,6 +142,25 @@ export default function ChatCard({
 
   const handleLogoutClick = () => {
     router.push("/api/auth/logout");
+  };
+
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [aiDrawerOpen, setAiDrawerOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpenDrawer(false);
+  };
+
+  const handleDrawerOpenOrClose = () => {
+    setOpenDrawer(!openDrawer);
+  };
+
+  const handleAiDrawerOpenClose = () => {
+    setAiDrawerOpen(!aiDrawerOpen);
   };
 
   useEffect(() => {
@@ -213,15 +307,14 @@ export default function ChatCard({
 
   return (
     <Card
-      sx={{
-        minWidth: 275,
-        borderRadius: "10px",
-        minHeight: "100vh",
-        width: "100%",
-      }}
+    // sx={{
+    //   minWidth: 275,
+    //   borderRadius: "10px",
+    //   minHeight: "100vh",
+    //   width: "100%",
+    // }}
     >
-      <CardContent>
-        <Grid container spacing={2}>
+      {/* <Grid container spacing={2}>
           <Grid item xs={8}></Grid>
           <Grid item xs={4}>
             <Item
@@ -281,45 +374,91 @@ export default function ChatCard({
               </Menu>
             </Item>
           </Grid>
+        </Grid> */}
+
+      {/* <Grid container spacing={1} marginTop={5}>
+        <Grid item xs={6} md={4} lg={4}>
+          <ChatList
+            newChat={startNewChat}
+            threads={_threads}
+            currentThread={currentThread}
+            user={user}
+            setCurrentThread={onSetCurrentThread}
+          />
         </Grid>
-        <Grid container spacing={2} justifyContent={"center"} marginTop={5}>
-          <Grid item>
-            <ChatsList
-              newChat={startNewChat}
-              threads={_threads}
-              currentThread={currentThread}
-              user={user}
-              setCurrentThread={onSetCurrentThread}
-            />
-          </Grid>
-          <Grid
-            item
-            style={{
-              minHeight: "70vh",
-              height: "100%",
+        <Grid item xs={6} md={8} lg={8}>
+          <Chat
+            user={user}
+            handleSendMessage={handleSendMessage}
+            isNewChat={!currentThread || isNewChat}
+            currentThread={currentThread}
+            setCurrentThread={(thread: Threads) => {
+              // TODO: Can implement when we add creating new threads
+              // setCurrentThread(thread);
+              // // save it to the threads array if it doesn't exist
+              // if (!_threads.find((t) => t.id === thread.id)) {
+              //   setThreads([..._threads, thread]);
+              // }
+              // setIsNewChat(false);
             }}
-          >
-            {
-              <Chat
-                user={user}
-                handleSendMessage={handleSendMessage}
-                isNewChat={!currentThread || isNewChat}
-                currentThread={currentThread}
-                setCurrentThread={(thread: Threads) => {
-                  // TODO: Can implement when we add creating new threads
-                  // setCurrentThread(thread);
-                  // // save it to the threads array if it doesn't exist
-                  // if (!_threads.find((t) => t.id === thread.id)) {
-                  //   setThreads([..._threads, thread]);
-                  // }
-                  // setIsNewChat(false);
-                }}
-                socket={socket}
-              />
-            }
-          </Grid>
+            socket={socket}
+          />
         </Grid>
-      </CardContent>
+      </Grid> */}
+
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <Drawer
+          variant="permanent"
+          open={openDrawer}
+          anchor="left"
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerOpenOrClose}>
+              {!openDrawer ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <ChatList
+            newChat={startNewChat}
+            threads={_threads}
+            currentThread={currentThread}
+            user={user}
+            setCurrentThread={onSetCurrentThread}
+            openDrawer={openDrawer}
+          />
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Chat
+            user={user}
+            handleSendMessage={handleSendMessage}
+            isNewChat={!currentThread || isNewChat}
+            currentThread={currentThread}
+            setCurrentThread={(thread: Threads) => {
+              // TODO: Can implement when we add creating new threads
+              // setCurrentThread(thread);
+              // // save it to the threads array if it doesn't exist
+              // if (!_threads.find((t) => t.id === thread.id)) {
+              //   setThreads([..._threads, thread]);
+              // }
+              // setIsNewChat(false);
+            }}
+            socket={socket}
+          />
+        </Box>
+        <Drawer variant="permanent" open={aiDrawerOpen} anchor="right">
+          <DrawerHeader>
+            <IconButton onClick={handleAiDrawerOpenClose}>
+              {aiDrawerOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <p>AI Stuff Here</p>
+        </Drawer>
+      </Box>
     </Card>
   );
 }
