@@ -221,7 +221,6 @@ export function Chat({
     <Card
       elevation={0}
       sx={{
-        maxWidth: "40rem",
         height: "100%",
         minHeight: "100vh",
         maxHeight: "100vh",
@@ -231,7 +230,6 @@ export function Chat({
         overflow: "hidden",
         borderRadius: "10px",
         margin: "auto",
-        boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
       }}
     >
       {false && (
@@ -267,12 +265,14 @@ export function Chat({
 
       <>
         <Paper
-          elevation={1}
+          elevation={0}
           sx={{
-            padding: 1,
             borderRadius: "10px",
-            display: "flex",
+            display: "fixed",
+            top: 0,
             justifyContent: "center",
+            width: "max-content",
+            margin: "10px auto",
           }}
         >
           {currentThread?.participants &&

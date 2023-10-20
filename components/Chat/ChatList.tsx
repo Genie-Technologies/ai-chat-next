@@ -1,19 +1,15 @@
 import * as React from "react";
 
-import { Button, useTheme } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
-import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
 import { Threads } from "../../services/ThreadService/Threads.service";
 import { User } from "../../services/UserService/User.service";
@@ -41,23 +37,126 @@ export default function ChatsList({
   };
 
   const ChosenListItemStyles = {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.secondary.contrastText,
-    wordWrap: "break-word",
+    borderRadius: "10px",
+    transition: "all 1s ease",
   };
 
   const ListItemStyles = {
-    borderBottom: "1px solid #e0e0e0",
+    transition: "all 1s ease",
     "&:hover": {
-      transition: "all 0.5s ease",
       cursor: "pointer",
       boxShadow: `rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px`,
     },
-    wordWrap: "break-word",
+    borderRadius: "10px",
+  };
+
+  const renderThreads = (drawerOpen: boolean): JSX.Element[] | JSX.Element => {
+    if (!threads && !drawerOpen) {
+      return [];
+    }
+
+    if (!threads && drawerOpen) {
+      return (
+        <ListItem alignItems="flex-start" sx={ListItemStyles}>
+          <ListItemAvatar>
+            <Avatar alt="Loading..." />
+          </ListItemAvatar>
+          <ListItemText primary="Loading..." />
+        </ListItem>
+      );
+    }
+
+    if (!threads.length && drawerOpen) {
+      return (
+        <ListItem alignItems="flex-start" sx={ListItemStyles}>
+          <ListItemAvatar>
+            <Avatar alt="No chats" />
+          </ListItemAvatar>
+          <ListItemText primary="No chats yet." />
+        </ListItem>
+      );
+    }
+
+    if (drawerOpen) {
+      return threads.map((item, idx) => {
+        return (
+          <ListItem
+            alignItems="flex-start"
+            sx={selectedId === item.id ? ChosenListItemStyles : ListItemStyles}
+            key={idx}
+            onClick={() => onSetSelectedThread(item.id)}
+          >
+            <ListItemAvatar>
+              <Avatar
+                alt={item.threadName}
+                {...stringAvatar(item.threadName)}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={item.threadName}
+              secondary={
+                <Typography
+                  sx={{
+                    display: "inline",
+                    wordWrap: "break-word",
+                  }}
+                  component="p"
+                  variant="caption"
+                  color={theme.palette.secondary.light}
+                  textOverflow={"ellipsis"}
+                >
+                  {item.lastMessage}
+                </Typography>
+              }
+            />
+          </ListItem>
+        );
+      });
+    } else {
+      return threads.map((item, idx) => {
+        // Just return the icons for when the drawer is closed
+        return (
+          <ListItem
+            alignItems="flex-start"
+            sx={selectedId === item.id ? ChosenListItemStyles : ListItemStyles}
+            key={idx}
+            onClick={() => onSetSelectedThread(item.id)}
+          >
+            <ListItemAvatar>
+              <Avatar
+                alt={item.threadName}
+                {...stringAvatar(item.threadName)}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={item.threadName}
+              secondary={
+                <Typography
+                  sx={{
+                    display: "inline",
+                    wordWrap: "break-word",
+                  }}
+                  component="p"
+                  variant="caption"
+                  color={theme.palette.secondary.light}
+                  textOverflow={"ellipsis"}
+                >
+                  {item.lastMessage}
+                </Typography>
+              }
+            />
+          </ListItem>
+        );
+      });
+    }
+
+    return [];
   };
 
   return (
-    <Paper elevation={2}>
+    <Paper elevation={0} sx={{ height: "100%", overflow: "auto" }}>
       <Stack spacing={0}>
         {openDrawer ? (
           <Button
@@ -65,13 +164,24 @@ export default function ChatsList({
             startIcon={<AddIcon />}
             onClick={newChat}
             sx={{
-              // Animate the button to the right when the drawer is open
               transition: "all 0.5s ease",
+              maxWidth: "80%",
+              margin: "10px auto",
             }}
           >
             New Chat
           </Button>
-        ) : null}
+        ) : (
+          // Show an IconButton for when the drawer is closed
+          <IconButton
+            onClick={newChat}
+            sx={{
+              transition: "all 2s ease",
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        )}
         <List>
           {/** Have a pinned chat item at the top for AI chat */}
           <ListItem
@@ -103,74 +213,7 @@ export default function ChatsList({
             />
           </ListItem>
 
-          {threads &&
-            threads.map((item, idx) => {
-              return (
-                <ListItem
-                  alignItems="flex-start"
-                  sx={
-                    selectedId === item.id
-                      ? ChosenListItemStyles
-                      : ListItemStyles
-                  }
-                  key={idx}
-                  onClick={() => onSetSelectedThread(item.id)}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={item.threadName}
-                      {...stringAvatar(item.threadName)}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.threadName}
-                    secondary={
-                      <React.Fragment>
-                        {/* <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color={theme.palette.primary.main}
-                      >
-                        {
-                          // Besides the first item in the participants array, all other items are the other participants in the chat
-                          item.participants &&
-                            item.participants
-                              .filter(
-                                (participant) =>
-                                  participant.email !== user.email
-                              )
-                              .map((participant, idx) => {
-                                return (
-                                  <span key={idx}>
-                                    {participant.email ?? participant.firstName}
-                                    {idx !== item.participants.length - 2
-                                      ? ", "
-                                      : ""}
-                                  </span>
-                                );
-                              })
-                        }
-                      </Typography> */}
-                        {" — "}
-                        <Typography
-                          sx={{ display: "inline" }}
-                          component="span"
-                          variant="body2"
-                          color={
-                            theme.palette.mode === "dark"
-                              ? theme.palette.text.primary
-                              : theme.palette.primary.dark
-                          }
-                        >
-                          {item.lastMessage}
-                        </Typography>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-              );
-            })}
+          {renderThreads(openDrawer)}
         </List>
       </Stack>
     </Paper>

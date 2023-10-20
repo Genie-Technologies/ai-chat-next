@@ -35,7 +35,7 @@ import List from "@mui/material/List";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-const drawerWidth = 240;
+const drawerWidth = 340;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
