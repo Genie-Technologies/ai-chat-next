@@ -2,7 +2,8 @@ import { ChatLine } from "./ChatLine";
 import { useEffect, useState, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -296,6 +297,28 @@ export function Chat({
             <Avatar alt="responAI" sx={{ marginRight: 1 }} />
           )}
         </Paper>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            fontSize: "2rem",
+            fontWeight: "bold",
+          }}
+        >
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value='1'
+            label="Thread Name"
+            onChange={() => {
+              console.log('hi')
+            }}
+          >
+            <MenuItem value='1'>Shitposters</MenuItem>
+            <MenuItem value='2'>Batgun</MenuItem>
+            <MenuItem value='3'>AnotherThread</MenuItem>
+          </Select>  
+        </div>
         <List sx={{ overflow: "auto", p: 2 }}>
           {messages.map((message, index) => {
             return (
