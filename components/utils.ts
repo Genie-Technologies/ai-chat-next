@@ -82,10 +82,8 @@ export const chatListItems: ChatListItem[] = [
 
 export const featuresForPricing = [
   "AI-generated replies based on your texting style",
-  "AI-generated memes",
+  "AI-generated memes/pictures of the conversation context",
   "Daily summaries of unread messages",
-  "AI-generated notes based on conversations",
-  "Basic integrations with other apps",
 ];
 
 export const validateEmail = (email: string) => {

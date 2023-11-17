@@ -1,9 +1,7 @@
 import { ChatLine } from "./ChatLine";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -34,7 +32,7 @@ export function Chat({
   isNewChat,
   currentThread,
   setCurrentThread,
-  socket,
+  socket
 }: {
   user: User;
   handleSendMessage: Function;
@@ -231,8 +229,10 @@ export function Chat({
         overflow: "hidden",
         borderRadius: "10px",
         margin: "auto",
+        backgroundColor: theme.palette.background.paper,
       }}
     >
+      {/* Lookup new chat feature */}
       {false && (
         <Autocomplete
           freeSolo
@@ -278,7 +278,7 @@ export function Chat({
         >
           {currentThread?.participants &&
           currentThread?.participants?.length > 0 ? (
-            <AvatarGroup>
+            <AvatarGroup sx={{ backgroundColor: theme.palette.background.paper}}>
               {currentThread.participants
                 .filter((participant) => participant.userId !== user.email)
                 .map((participant) => {
@@ -294,32 +294,11 @@ export function Chat({
                 })}
             </AvatarGroup>
           ) : (
-            <Avatar alt="responAI" sx={{ marginRight: 1 }} />
+            <Avatar alt="responAI" />
           )}
         </Paper>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            fontSize: "2rem",
-            fontWeight: "bold",
-          }}
-        >
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value='1'
-            label="Thread Name"
-            onChange={() => {
-              console.log('hi')
-            }}
-          >
-            <MenuItem value='1'>Shitposters</MenuItem>
-            <MenuItem value='2'>Batgun</MenuItem>
-            <MenuItem value='3'>AnotherThread</MenuItem>
-          </Select>  
-        </div>
-        <List sx={{ overflow: "auto", p: 2 }}>
+
+        <List sx={{ overflow: "auto", p: 2, marginTop: "auto" }}>
           {messages.map((message, index) => {
             return (
               <ChatLine
@@ -336,6 +315,7 @@ export function Chat({
           setInput={setInput}
           sendMessage={sendMessage}
           loading={loading}
+          threadId={currentThread?.id}
         />
       </>
     </Card>

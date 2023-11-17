@@ -3,7 +3,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { useTheme } from "@mui/material";
+import { useTheme, useMediaQuery } from "@mui/material";
 import * as materialColors from "@mui/material/colors";
 import Skeleton from "@mui/material/Skeleton";
 import { stringAvatar } from "../utils";
@@ -16,7 +16,7 @@ export type Props = {
 
 export function ChatLine({ who, message, customKey }: Props) {
   const [loading, setLoading] = React.useState(false);
-
+  const isLargeScreen = useMediaQuery("(min-width:1200px)");
   const theme = useTheme();
 
   if (!message) {
@@ -32,8 +32,7 @@ export function ChatLine({ who, message, customKey }: Props) {
     color: theme.palette.secondary.contrastText,
     boxShadow:
       "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
-    maxWidth: "300px",
-    minWidth: "50px",
+    maxWidth: 'fit-content',
     padding: "8px 16px",
   };
 
@@ -49,6 +48,7 @@ export function ChatLine({ who, message, customKey }: Props) {
               style={{
                 ...messageStyle,
                 overflowWrap: "break-word",
+                textAlign: "right",
               }}
             />
           )}

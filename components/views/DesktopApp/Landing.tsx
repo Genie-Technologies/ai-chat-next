@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -5,13 +7,9 @@ import Main from "../../layouts/Main";
 import Container from "../../Container";
 import {
   Customization,
-  Download,
   Hero,
   Hub,
-  Integrations,
   Pricings,
-  ForWho,
-  Support,
 } from "./components";
 
 import styles from "../../../styles/Landing.module.scss";
@@ -23,7 +21,7 @@ const Landing = (): JSX.Element => {
       <Box
         position={"relative"}
         sx={{
-          backgroundColor: theme.palette.background.paper,
+          background: "linear-gradient(to bottom, #2C2C2C, #000000)",
           marginTop: -13,
           paddingTop: 13,
           scrollbarColor: "rebeccapurple green"
@@ -32,9 +30,7 @@ const Landing = (): JSX.Element => {
         <Container>
           <Hero />
         </Container>
-        <Container paddingY={"0 !important"}>
-          <ForWho />
-        </Container>
+       
         <Container>
           <Hub />
         </Container>
@@ -56,13 +52,12 @@ const Landing = (): JSX.Element => {
           ></path>
         </Box>
       </Box>
-      {/* <Container>
-        <Support />
-      </Container> */}
+
       <Box position={"relative"} className={styles.customizationSection}>
         <Container position="relative" zIndex={2}>
           <Customization />
         </Container>
+
         <Box
           component={"svg"}
           preserveAspectRatio="none"
@@ -86,17 +81,11 @@ const Landing = (): JSX.Element => {
           />
         </Box>
       </Box>
-      <Container>
-        <Integrations />
-      </Container>
       <Box bgcolor={"alternate.main"}>
         <Container>
           <Pricings />
         </Container>
       </Box>
-      {/* <Container>
-        <Download />
-      </Container> */}
     </Main>
   );
 };

@@ -4,7 +4,6 @@ import {
   withPageAuthRequired,
 } from "@auth0/nextjs-auth0";
 
-import { Main } from "../components/layouts";
 import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import ChatCard from "../components/Chat/ChatCard";
@@ -15,7 +14,6 @@ import ThreadService, {
   Threads,
 } from "../services/ThreadService/Threads.service";
 import { connectSocket } from "../components/socket";
-import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
@@ -34,7 +32,7 @@ const ChatPage = ({
     "error" | "warning" | "info" | "success"
   >("success");
   // TODO: This could potentially cause a bug if this component rerenders. Had
-  // bug previosly when in child component and rerendering.
+  // bug previosly when in child ChatCard component and rerendering.
   let socket = connectSocket(accessToken);
 
   const handleSnackbarClose = () => {
@@ -55,7 +53,7 @@ const ChatPage = ({
       <Head>
         <title>Respon Chat</title>
       </Head>
-      <Box sx={{ flexGrow: 1, p: 2 }}>
+      <Box sx={{ flexGrow: 1, p: 2, padding: 0 }}>
         {user ? (
           <ChatCard
             user={user}

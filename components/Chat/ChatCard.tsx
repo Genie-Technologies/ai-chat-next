@@ -1,39 +1,32 @@
-import { useEffect } from "react";
-import { Chat } from "./Chat";
+import { useEffect, useState } from "react";
 import { Theme, styled, useTheme, CSSObject } from "@mui/material/styles";
-import * as React from "react";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import ChatList from "./ChatList";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import UserService, { User } from "../../services/UserService/User.service";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
+import { Chat } from "./Chat";
+import ChatList from "./ChatList";
+import AIChat from "./AIChat";
+
+import { User } from "../../services/UserService/User.service";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
-import { connectSocket } from "../socket";
-import { ReceivedMessageData, grabSubsetOfMessage } from "../utils";
+
+import { ReceivedMessageData, grabSubsetOfMessage, croppedLogoSrc } from "../utils";
+import {  } from "../utils";
 
 const threadService = new ThreadService();
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
-import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ThreadSelect from "./ThreadSelect";
 
 const drawerWidth = 340;
 
@@ -44,6 +37,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
+  backgroundColor: theme.palette.background.default,
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -51,7 +45,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: "hidden",
+  overflow: "hidden",
+  backgroundColor: theme.palette.background.default,
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
@@ -63,6 +58,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
+  backgroundColor: theme.palette.background.default,
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -120,13 +116,15 @@ export default function ChatCard({
   const theme = useTheme();
   const router = useRouter();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [connectedWS, setConnectedWS] = React.useState<any>(null);
-  const [isNewChat, setIsNewChat] = React.useState<boolean>(false);
-  const [_threads, setThreads] = React.useState<Threads[]>(
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [connectedWS, setConnectedWS] = useState<any>(null);
+  const [isNewChat, setIsNewChat] = useState<boolean>(false);
+  const [_threads, setThreads] = useState<Threads[]>(
     threads && threads.length > 0 ? threads : []
   );
-  const [currentThread, setCurrentThread] = React.useState<Threads | null>(
+  const [currentThread, setCurrentThread] = useState<Threads | null>(
     null
   );
 
@@ -143,9 +141,6 @@ export default function ChatCard({
   const handleLogoutClick = () => {
     router.push("/api/auth/logout");
   };
-
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-  const [aiDrawerOpen, setAiDrawerOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -306,106 +301,7 @@ export default function ChatCard({
   };
 
   return (
-    <Card
-    // sx={{
-    //   minWidth: 275,
-    //   borderRadius: "10px",
-    //   minHeight: "100vh",
-    //   width: "100%",
-    // }}
-    >
-      {/* <Grid container spacing={2}>
-          <Grid item xs={8}></Grid>
-          <Grid item xs={4}>
-            <Item
-              style={{
-                boxShadow: "none",
-                backgroundColor: theme.palette.background.paper,
-              }}
-            >
-              <Button
-                onClick={handleUserMenuClick}
-                aria-controls={openUserMenu ? "user-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openUserMenu ? "true" : undefined}
-                id="user-menu-button"
-                sx={{
-                  backgroundColor: `${theme.palette.background.paper} !important`,
-                  boxShadow: "none",
-                  borderRadius: 10,
-                  ":hover": {
-                    backgroundColor: `${theme.palette.background.paper} !important`,
-                    boxShadow: "none",
-                  },
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    float: "right",
-                    ":hover": {
-                      cursor: "pointer",
-                      boxShadow:
-                        "rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
-                      transition: "all 0.3s ease",
-                    },
-                    boxShadow:
-                      theme.palette.mode === "dark"
-                        ? "none"
-                        : "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-                  }}
-                  alt="Shagun Mistry"
-                  variant="circular"
-                  src={user.picture}
-                ></Avatar>
-                Hello
-              </Button>
-              <Menu
-                id="user-menu"
-                anchorEl={anchorEl}
-                open={openUserMenu}
-                onClose={handleUserMenuClose}
-                MenuListProps={{
-                  "aria-labelledby": "user-menu-button",
-                }}
-              >
-                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-              </Menu>
-            </Item>
-          </Grid>
-        </Grid> */}
-
-      {/* <Grid container spacing={1} marginTop={5}>
-        <Grid item xs={6} md={4} lg={4}>
-          <ChatList
-            newChat={startNewChat}
-            threads={_threads}
-            currentThread={currentThread}
-            user={user}
-            setCurrentThread={onSetCurrentThread}
-          />
-        </Grid>
-        <Grid item xs={6} md={8} lg={8}>
-          <Chat
-            user={user}
-            handleSendMessage={handleSendMessage}
-            isNewChat={!currentThread || isNewChat}
-            currentThread={currentThread}
-            setCurrentThread={(thread: Threads) => {
-              // TODO: Can implement when we add creating new threads
-              // setCurrentThread(thread);
-              // // save it to the threads array if it doesn't exist
-              // if (!_threads.find((t) => t.id === thread.id)) {
-              //   setThreads([..._threads, thread]);
-              // }
-              // setIsNewChat(false);
-            }}
-            socket={socket}
-          />
-        </Grid>
-      </Grid> */}
-
+    <Card>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <Drawer
@@ -417,6 +313,12 @@ export default function ChatCard({
           }}
         >
           <DrawerHeader>
+            {openDrawer ? <Box display={"flex"} title="ResponAi" width={{ xs: 70 }} sx={{marginRight: 'auto'}}>
+              <Link href={"/"} style={{ textDecoration: "none" }}>
+                <Box component={"img"} src={croppedLogoSrc} height={1} width={100} />
+              </Link>
+            </Box> : null}
+            
             <IconButton onClick={handleDrawerOpenOrClose}>
               {!openDrawer ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
@@ -431,7 +333,8 @@ export default function ChatCard({
             openDrawer={openDrawer}
           />
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" sx={{ flexGrow: 1, backgroundColor: theme.palette.background.default }}>
+        {currentThread ? 
           <Chat
             user={user}
             handleSendMessage={handleSendMessage}
@@ -439,25 +342,11 @@ export default function ChatCard({
             currentThread={currentThread}
             setCurrentThread={(thread: Threads) => {
               // TODO: Can implement when we add creating new threads
-              // setCurrentThread(thread);
-              // // save it to the threads array if it doesn't exist
-              // if (!_threads.find((t) => t.id === thread.id)) {
-              //   setThreads([..._threads, thread]);
-              // }
-              // setIsNewChat(false);
             }}
             socket={socket}
           />
+          : <AIChat ThreadSelect={({ selectedThread, setThreadId }: any) => <ThreadSelect threads={threads} selectedThread={selectedThread} setThreadId={setThreadId} />} />}
         </Box>
-        <Drawer variant="permanent" open={aiDrawerOpen} anchor="right">
-          <DrawerHeader>
-            <IconButton onClick={handleAiDrawerOpenClose}>
-              {aiDrawerOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <p>AI Stuff Here</p>
-        </Drawer>
       </Box>
     </Card>
   );

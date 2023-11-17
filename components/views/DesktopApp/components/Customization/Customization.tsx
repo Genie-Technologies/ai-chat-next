@@ -26,7 +26,7 @@ const Customization = (): JSX.Element => {
           color={"secondary"}
           align={"center"}
         >
-          EXPERIENCE
+          EXPERIENCE THE
         </Typography>
         <Typography
           variant="h4"

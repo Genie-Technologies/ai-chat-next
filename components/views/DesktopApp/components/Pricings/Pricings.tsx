@@ -68,8 +68,8 @@ const Pricing = (): JSX.Element => {
           (For a Limited Time)
         </Typography>
       </Box>
-      <Grid container spacing={isMd ? 0 : 2}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={isMd ? 0 : 2} justifyContent="center">
+        <Grid container item xs={12} md={6}>
           <Card
             data-aos={isMd ? "fade-right" : "fade-up"}
             sx={{

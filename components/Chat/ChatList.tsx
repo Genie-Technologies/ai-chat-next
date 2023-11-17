@@ -156,7 +156,12 @@ export default function ChatsList({
   };
 
   return (
-    <Paper elevation={0} sx={{ height: "100%", overflow: "auto" }}>
+    <Paper elevation={0} sx={{
+      height: "100%",
+      overflow: "auto",
+      backgroundColor: theme.palette.background.default,
+      overflowX: "hidden",
+    }}>
       <Stack spacing={0}>
         {openDrawer ? (
           <Button
@@ -186,7 +191,7 @@ export default function ChatsList({
           {/** Have a pinned chat item at the top for AI chat */}
           <ListItem
             alignItems="flex-start"
-            sx={ListItemStyles}
+            sx={selectedId === null ? ChosenListItemStyles : ListItemStyles}
             onClick={() => onSetSelectedThread(null)}
           >
             <ListItemAvatar>

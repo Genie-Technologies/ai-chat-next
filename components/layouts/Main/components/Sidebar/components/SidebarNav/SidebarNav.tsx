@@ -3,7 +3,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 import NavItem from "./components/NavItem";
 import { PageItem, croppedLogoSrc } from "../../../../../../utils";
@@ -21,6 +28,7 @@ interface Props {
 
 const SidebarNav = ({ pages }: Props): JSX.Element => {
   const theme = useTheme();
+  const { user } = useUser();
   const { mode } = theme.palette;
 
   const {
@@ -31,6 +39,7 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
     portfolio: portfolioPages,
     blog: blogPages,
   } = pages;
+  const drawerOptions = user ? ['Chat'] : ['Signup'];
 
   return (
     <Box>
@@ -48,35 +57,26 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
         </Box>
       </Box>
       <Box paddingX={2} paddingY={2}>
-        <Box marginTop={1}>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            sx={{
-              display:
-                process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none",
-            }}
-          >
-            <Link
-              href="/chat"
-              style={{
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              <Typography
-                variant="subtitle1"
-                color="text.primary"
-                display={
-                  process.env.CHAT_FEATURE_ENABLED === "true" ? "block" : "none"
-                }
+        <List>
+          {drawerOptions.map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <Link
+                href={user ? "/chat" : "/api/auth/login"}
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.primary,
+                }}
               >
-                Try Now
-              </Typography>
-            </Link>
-          </Button>
-        </Box>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Box>
   );

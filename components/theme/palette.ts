@@ -44,14 +44,14 @@ export const dark = {
   },
   mode: "dark" as PaletteMode,
   primary: {
-    main: "#7400b8ff",
+    main: "#FF6347", // #7400b8ff
     light: "#6930c3ff",
     dark: "#5e60ceff",
     contrastText: "#fff",
   },
   secondary: {
     light: "#2979ff",
-    main: "#2196f3",
+    main: "#6246bb",
     dark: "#2962ff",
     contrastText: "rgba(0, 0, 0, 0.87)",
   },
@@ -61,8 +61,10 @@ export const dark = {
   },
   divider: "rgba(255, 255, 255, 0.12)",
   background: {
-    paper: "#000000",
-    default: "#311D3F",
+    dark: "#202123",
+    light: "#343641",
+    paper: "#202123", // original: "#000000",
+    default: "#343641", //  original:#311D3F
     level2: "#E23E57",
     level1: "#88304E",
   },

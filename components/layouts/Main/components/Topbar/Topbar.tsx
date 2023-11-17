@@ -102,9 +102,6 @@ const Topbar = ({
               </Link>
             </Button>
           </Box>
-          <Box marginLeft={4}>
-            <ThemeSwitcher />
-          </Box>
         </Box>
       )}
 

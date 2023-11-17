@@ -1,11 +1,11 @@
+'use client'
+
 import React, { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import CssBaseline from "@mui/material/CssBaseline";
 import getTheme from "./theme";
 import AOS from "aos";
-
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 export const useDarkMode = (): [string, () => void, boolean] => {
   const [themeMode, setTheme] = useState("dark");
