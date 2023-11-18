@@ -62,7 +62,7 @@ const Pricing = (): JSX.Element => {
         <Typography
           variant="h6"
           align={"center"}
-          color={"text.secondary"}
+          color={"text.primary"}
           data-aos={"fade-up"}
         >
           (For a Limited Time)
@@ -123,7 +123,7 @@ const Pricing = (): JSX.Element => {
                           </svg>
                         </Box>
                       </Box>
-                      <ListItemText primary={item} />
+                      <ListItemText primary={item} color="white" />
                     </Box>
                   </Grid>
                 ))}
