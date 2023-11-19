@@ -74,7 +74,7 @@ const Footer = (): JSX.Element => {
         <Typography
           align={"center"}
           variant={"subtitle2"}
-          color="text.secondary"
+          color="text.primary"
           gutterBottom
         >
           &copy; ResponAi. 2023, United States. All rights reserved
@@ -82,7 +82,7 @@ const Footer = (): JSX.Element => {
         <Typography
           align={"center"}
           variant={"caption"}
-          color="text.secondary"
+          color="text.primary"
           component={"p"}
         >
           When you visit or interact with our sites, services or tools, we or

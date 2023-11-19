@@ -89,7 +89,7 @@ const Hero = (): JSX.Element => {
             >
               Our Messenger Offers Features To Help You{" "}
               <Typography
-                color={"secondary"}
+                color={"primary"}
                 component={"span"}
                 variant={"inherit"}
               >
@@ -121,7 +121,7 @@ const Hero = (): JSX.Element => {
                     </Box>
                   </Typography>
                   <Typography
-                    color="text.secondary"
+                    color="text.primary"
                     component="p"
                     textAlign={"center"}
                   >

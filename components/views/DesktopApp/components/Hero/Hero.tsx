@@ -34,7 +34,7 @@ const Hero = (): JSX.Element => {
             >
               Communicate smarter{" "}
               <Typography
-                color={"secondary"}
+                color={"primary"}
                 component={"span"}
                 variant={"inherit"}
                 sx={{

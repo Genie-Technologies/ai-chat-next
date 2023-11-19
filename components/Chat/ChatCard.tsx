@@ -13,8 +13,11 @@ import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
 
-import { ReceivedMessageData, grabSubsetOfMessage, croppedLogoSrc } from "../utils";
-import {  } from "../utils";
+import {
+  ReceivedMessageData,
+  grabSubsetOfMessage,
+  croppedLogoSrc,
+} from "../utils";
 
 const threadService = new ThreadService();
 
@@ -124,9 +127,7 @@ export default function ChatCard({
   const [_threads, setThreads] = useState<Threads[]>(
     threads && threads.length > 0 ? threads : []
   );
-  const [currentThread, setCurrentThread] = useState<Threads | null>(
-    null
-  );
+  const [currentThread, setCurrentThread] = useState<Threads | null>(null);
 
   const openUserMenu = Boolean(anchorEl);
 
@@ -313,12 +314,24 @@ export default function ChatCard({
           }}
         >
           <DrawerHeader>
-            {openDrawer ? <Box display={"flex"} title="ResponAi" width={{ xs: 70 }} sx={{marginRight: 'auto'}}>
-              <Link href={"/"} style={{ textDecoration: "none" }}>
-                <Box component={"img"} src={croppedLogoSrc} height={1} width={100} />
-              </Link>
-            </Box> : null}
-            
+            {openDrawer ? (
+              <Box
+                display={"flex"}
+                title="ResponAi"
+                width={{ xs: 70 }}
+                sx={{ marginRight: "auto" }}
+              >
+                <Link href={"/"} style={{ textDecoration: "none" }}>
+                  <Box
+                    component={"img"}
+                    src={croppedLogoSrc}
+                    height={1}
+                    width={100}
+                  />
+                </Link>
+              </Box>
+            ) : null}
+
             <IconButton onClick={handleDrawerOpenOrClose}>
               {!openDrawer ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
@@ -333,19 +346,35 @@ export default function ChatCard({
             openDrawer={openDrawer}
           />
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, backgroundColor: theme.palette.background.default }}>
-        {currentThread ? 
-          <Chat
-            user={user}
-            handleSendMessage={handleSendMessage}
-            isNewChat={!currentThread || isNewChat}
-            currentThread={currentThread}
-            setCurrentThread={(thread: Threads) => {
-              // TODO: Can implement when we add creating new threads
-            }}
-            socket={socket}
-          />
-          : <AIChat ThreadSelect={({ selectedThread, setThreadId }: any) => <ThreadSelect threads={threads} selectedThread={selectedThread} setThreadId={setThreadId} />} />}
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            backgroundColor: theme.palette.background.default,
+          }}
+        >
+          {currentThread ? (
+            <Chat
+              user={user}
+              handleSendMessage={handleSendMessage}
+              isNewChat={!currentThread || isNewChat}
+              currentThread={currentThread}
+              setCurrentThread={(thread: Threads) => {
+                // TODO: Can implement when we add creating new threads
+              }}
+              socket={socket}
+            />
+          ) : (
+            <AIChat
+              ThreadSelect={({ selectedThread, setThreadId }: any) => (
+                <ThreadSelect
+                  threads={threads}
+                  selectedThread={selectedThread}
+                  setThreadId={setThreadId}
+                />
+              )}
+            />
+          )}
         </Box>
       </Box>
     </Card>
