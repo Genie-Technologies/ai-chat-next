@@ -233,7 +233,7 @@ export function Chat({
       }}
     >
       {/* Lookup new chat feature */}
-      {false && (
+      {currentThread?.participants && currentThread?.participants?.length < 1 && (
         <Autocomplete
           freeSolo
           id="grouped-demo"

@@ -65,12 +65,11 @@ export default function Page({ children }: Props): JSX.Element {
     AOS.refresh();
   }, [mountedComponent, themeMode]);
 
-  const [mode, setMode] = React.useState<"light" | "dark">("light");
+  const [mode, setMode] = React.useState<"light" | "dark">("dark");
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
         themeToggler();
-        // setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
       },
     }),
     []
@@ -81,12 +80,10 @@ export default function Page({ children }: Props): JSX.Element {
   }, [mode]);
 
   return (
-    // <ColorModeContext.Provider value={}>
     <ThemeProvider theme={getTheme(themeMode, themeToggler)}>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <Paper elevation={0}>{children}</Paper>
     </ThemeProvider>
-    // </ColorModeContext.Provider>
   );
 }

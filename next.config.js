@@ -8,7 +8,7 @@ module.exports = {
     includePaths: [path.join(__dirname, "styles")],
   },
   env: {
-    CHAT_FEATURE_ENABLED: true,
+    CHAT_FEATURE_ENABLED: "true",
     // FIREBASE VARIABLES HERE FOR INITIALIZATION
     DEVELOPMENT_ENV_FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     DEVELOPMENT_ENV_FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
@@ -22,7 +22,7 @@ module.exports = {
       process.env.FIREBASE_MEASUREMENT_ID,
     NEXT_PUBLIC_API_URL:
       process.env.NODE_ENV === "production"
-        ? "https://responai-api.azurewebsites.net"
+        ? "http://34.238.93.10:3001"
         : "http://localhost:3001",
   },
 };
