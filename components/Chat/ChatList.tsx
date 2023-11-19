@@ -14,6 +14,8 @@ import PushPinIcon from "@mui/icons-material/PushPinRounded";
 import { Threads } from "../../services/ThreadService/Threads.service";
 import { User } from "../../services/UserService/User.service";
 import { stringAvatar } from "../utils";
+import { LogoutRounded } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function ChatsList({
   newChat,
@@ -156,12 +158,15 @@ export default function ChatsList({
   };
 
   return (
-    <Paper elevation={0} sx={{
-      height: "100%",
-      overflow: "auto",
-      backgroundColor: theme.palette.background.default,
-      overflowX: "hidden",
-    }}>
+    <Paper
+      elevation={0}
+      sx={{
+        height: "100%",
+        overflow: "auto",
+        backgroundColor: theme.palette.background.default,
+        overflowX: "hidden",
+      }}
+    >
       <Stack spacing={0}>
         {openDrawer ? (
           <Button
@@ -170,8 +175,8 @@ export default function ChatsList({
             onClick={newChat}
             sx={{
               transition: "all 0.5s ease",
-              maxWidth: "80%",
-              margin: "10px auto",
+              maxWidth: "100%",
+              margin: "10px",
             }}
           >
             New Chat
@@ -220,6 +225,32 @@ export default function ChatsList({
 
           {renderThreads(openDrawer)}
         </List>
+
+        <Link href="/api/auth/logout" style={{ textDecoration: "none" }}>
+          {openDrawer ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                window.location.reload();
+              }}
+              sx={{
+                transition: "all 0.5s ease",
+                maxWidth: "80%",
+                margin: "10px",
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <IconButton
+              sx={{
+                transition: "all 2s ease",
+              }}
+            >
+              <LogoutRounded />
+            </IconButton>
+          )}
+        </Link>
       </Stack>
     </Paper>
   );

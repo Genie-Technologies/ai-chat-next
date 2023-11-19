@@ -98,6 +98,8 @@ export const getServerSideProps = withPageAuthRequired({
       threads: null,
     };
 
+    console.log("session", session);
+
     if (session) {
       const user = session.user;
       const accessToken = (await getAccessToken(req, res).catch((err) => {
@@ -126,6 +128,8 @@ export const getServerSideProps = withPageAuthRequired({
         user as AuthOUser,
         accessToken.accessToken
       );
+
+      console.log("userData", userData);
 
       if (!userData) {
         return {
