@@ -10,11 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const ThreadSelect = ({ threads, selectedThread, setThreadId  }: { threads: Threads[], selectedThread?: string, setThreadId?: (id: string) => void}) => {
   const [loading, setLoading] = useState(false);
-  console.log('selectedThread', selectedThread, "setSelectedThread", setThreadId);
+
   const handleThreadSelect = async (event: SelectChangeEvent<string>) => {
-    // make post api request to localhost:3001/ai/save-msgs-embeddings with threadId as body
-    console.log('THREAD_ID', event.target.value);
     setLoading(true);
+
     if (setThreadId) setThreadId(event.target.value);
 
     try {
@@ -26,7 +25,7 @@ const ThreadSelect = ({ threads, selectedThread, setThreadId  }: { threads: Thre
         }
       });
       const data = await response.json();
-      console.log(data);
+
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);

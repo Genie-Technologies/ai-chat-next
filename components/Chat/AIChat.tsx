@@ -29,7 +29,6 @@ export function AIChat({
     }
   });
 
-  console.log('messages', messages);
   return (
     <Card
       elevation={0}

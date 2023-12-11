@@ -22,6 +22,7 @@ import { snackbar_message } from "../constants";
 import { Message } from "../utils";
 import { Socket } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
+import AddChatUser from "./AddChatUser";
 
 const threadService = new ThreadService();
 const userService = new UserService();
@@ -29,17 +30,17 @@ const userService = new UserService();
 export function Chat({
   user,
   handleSendMessage,
-  isNewChat,
   currentThread,
-  setCurrentThread,
-  socket
+  setThreads,
+  socket,
+  setCurrentThread
 }: {
   user: User;
   handleSendMessage: Function;
-  isNewChat: boolean;
   currentThread: Threads | null;
-  setCurrentThread: Function;
+  setThreads: Function;
   socket: Socket;
+  setCurrentThread: Function;
 }) {
   const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -127,94 +128,9 @@ export function Chat({
     setLoading(false);
   };
 
-  const handleNewChatCreationAfterSearch = async (
-    selectedUser: any,
-    type: "email" | "phone"
-  ) => {
-    const newThread: Threads = {
-      id: "",
-      userId: user.id,
-      participants: [selectedUser.id, user.id],
-      createdAt: new Date().toISOString(),
-      isActive: true,
-      lastMessage: null,
-      threadName: type === "email" ? selectedUser.email : selectedUser.phone,
-    };
+  
 
-    const newThreadResponse = await threadService.createThread(newThread);
-
-    if (newThreadResponse) {
-      sendEventToWindowListener(
-        snackbar_message,
-        "New chat started!",
-        "success"
-      );
-      setCurrentThread(newThreadResponse[0]);
-    }
-  };
-
-  const startNewChat = async (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
-      const theElement = e.target as HTMLInputElement;
-      const valueEntered = theElement.value;
-
-      if (!valueEntered) {
-        sendEventToWindowListener(
-          snackbar_message,
-          "Please enter a phone number or an email to chat with.",
-          "error"
-        );
-        return;
-      }
-
-      if (valueEntered && isEmail(valueEntered)) {
-        // Search for the user by email
-        const userFound = await userService.searchUsers(
-          `email=${valueEntered}`
-        );
-
-        updateFriendsList(userFound);
-
-        if (userFound && userFound.length === 1) {
-          handleNewChatCreationAfterSearch(userFound[0], "email");
-        } else {
-          sendEventToWindowListener(
-            snackbar_message,
-            "No user found with that email address.",
-            "error"
-          );
-        }
-      }
-
-      // If a phone number was entered.
-      if (valueEntered && isMobileNumber(valueEntered)) {
-        // Search for the user by phone number
-        // TODO: Even if the phone number is not found, we should still create a new thread and send a message to the user via SMS.
-        const userFound = await userService.searchUsers(
-          `phone=${valueEntered}`
-        );
-
-        updateFriendsList(userFound);
-
-        if (userFound && userFound.length === 1) {
-          handleNewChatCreationAfterSearch(userFound[0], "phone");
-        } else {
-          sendEventToWindowListener(
-            snackbar_message,
-            "No user found with that phone number.",
-            "error"
-          );
-        }
-      }
-    } catch (error) {
-      sendEventToWindowListener(
-        snackbar_message,
-        "There was an error creating a new thread. Please try again later.",
-        "error"
-      );
-    }
-  };
+  
 
   return (
     <Card
@@ -232,38 +148,6 @@ export function Chat({
         backgroundColor: theme.palette.background.paper,
       }}
     >
-      {/* Lookup new chat feature */}
-      {currentThread?.participants && currentThread?.participants?.length < 1 && (
-        <Autocomplete
-          freeSolo
-          id="grouped-demo"
-          options={
-            userFriends.length > 0
-              ? userFriends.sort(
-                  (a, b) => -b.substring(0, 1).localeCompare(a.substring(0, 1))
-                )
-              : []
-          }
-          groupBy={(option) => option.substring(0, 1)}
-          getOptionLabel={(option) => option}
-          sx={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Search Or Enter Phone Number"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === "Tab") {
-                  startNewChat(e);
-                }
-              }}
-              onBlur={(e) => {
-                startNewChat(e);
-              }}
-            />
-          )}
-        />
-      )}
-
       <>
         <Paper
           elevation={0}
@@ -297,6 +181,11 @@ export function Chat({
             <Avatar alt="responAI" />
           )}
         </Paper>
+
+        {/* Original code for this is with phone number lookup is stored in Notion Project QuickNotes */}
+      {currentThread?.participants && currentThread.participants?.length < 1 && (
+        <AddChatUser threadId={currentThread.id} setThreads={setThreads} userId={user.id} setCurrentThread={setCurrentThread} />
+      )}
 
         <List sx={{ overflow: "auto", p: 2, marginTop: "auto" }}>
           {messages.map((message, index) => {

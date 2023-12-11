@@ -58,6 +58,14 @@ const getTheme = (
             },
           } as ComponentsOverrides["MuiCard"],
         },
+        MuiFormControl: {
+          styleOverrides: {
+            root: {
+              // Set a minimum height to accommodate the helper text
+              minHeight: '80px',
+            },
+          },
+        },
       },
       // @ts-ignore
       themeToggler,
