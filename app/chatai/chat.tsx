@@ -4,9 +4,10 @@ import { useChat } from 'ai/react';
 
 export default function Chat() {
     const { messages, input, handleInputChange, handleSubmit } = useChat({
-        api: 'http://localhost:3001/ai/chat',
+      // TODO-AL-NEXT: test this, make sure it still works.
+        api: `${process.env.NEXT_PUBLIC_API_URL}/ai/chat`,
     });
- 
+  
     return (
       <div>
         {messages.map(m => (
