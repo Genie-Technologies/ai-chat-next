@@ -30,7 +30,6 @@ const Pricing = (): JSX.Element => {
   const [signUpDialogOpen, setSignUpDialogOpen] = useState(false);
 
   const openSignUpModal = () => {
-    console.log("Open sign up modal");
     setSignUpDialogOpen(true);
   };
 
@@ -63,14 +62,14 @@ const Pricing = (): JSX.Element => {
         <Typography
           variant="h6"
           align={"center"}
-          color={"text.secondary"}
+          color={"text.primary"}
           data-aos={"fade-up"}
         >
           (For a Limited Time)
         </Typography>
       </Box>
-      <Grid container spacing={isMd ? 0 : 2}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={isMd ? 0 : 2} justifyContent="center">
+        <Grid container item xs={12} md={6}>
           <Card
             data-aos={isMd ? "fade-right" : "fade-up"}
             sx={{
@@ -124,7 +123,7 @@ const Pricing = (): JSX.Element => {
                           </svg>
                         </Box>
                       </Box>
-                      <ListItemText primary={item} />
+                      <ListItemText primary={item} color="white" />
                     </Box>
                   </Grid>
                 ))}

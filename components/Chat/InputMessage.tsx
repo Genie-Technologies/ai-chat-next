@@ -1,5 +1,3 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import styles from "../../styles/ChatPage.module.scss";
 import SendIcon from "@mui/icons-material/Send";
 import Stack from "@mui/material/Stack";
@@ -12,23 +10,23 @@ type InputMessageType = {
   setInput: Function;
   sendMessage: Function;
   loading: boolean;
+  threadId?: string;
 };
 
-function InputMessage({
-  input,
-  setInput,
-  sendMessage,
-  loading,
-}: InputMessageType) {
+function InputMessage({ input, setInput, sendMessage, threadId }: InputMessageType) {
   const theme = useTheme();
+
+  const fillInput = (reply: string) => {
+    setInput(reply);
+  };
+
   return (
-    <div>
-      <Stack
+    <div style={{ marginTop: !threadId ? 'auto' : 0 }}>
+      {!threadId ? <Stack
         direction="column"
         spacing={0}
         className={styles.aiGeneratedOptions}
         sx={{
-          // display: "flex",
           flexWrap: "wrap",
           display:
             process.env.CHAT_FEATURE_ENABLED === "true" ? "none" : "flex",
@@ -51,29 +49,33 @@ function InputMessage({
               <Chip
                 key={index}
                 label={reply}
-                onClick={() => {
-                  console.log(reply);
-                }}
-                color={theme.palette.mode === "dark" ? "secondary" : "primary"}
+                onClick={() => fillInput(reply)}
                 variant="outlined"
               />
             </div>
           );
         })}
-      </Stack>
+      </Stack> : null}
       <br />
       <Paper
         component="form"
+        elevation={3}
         sx={{
-          p: "2px 4px",
+          p: "5px 10px",
           display: "flex",
           alignItems: "center",
           width: "auto",
+          borderRadius: "10px",
         }}
       >
         <InputBase
           color="primary"
-          sx={{ ml: 1, flex: 1 }}
+          sx={{
+            ml: 1,
+            flex: 1,
+            padding: "0 10px",
+            height: "auto",
+          }}
           placeholder="Type Message"
           inputProps={{ "aria-label": "type message" }}
           value={input}
@@ -84,7 +86,7 @@ function InputMessage({
             }
           }}
           onChange={(e) => {
-            setInput(e.target.value);
+            if (e.target.value !== "\n") setInput(e.target.value);
           }}
           multiline
           required
@@ -92,8 +94,8 @@ function InputMessage({
 
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
-          color="secondary"
-          sx={{ p: "10px" }}
+          color="primary"
+          size="large"
           aria-label="directions"
           onClick={() => {
             sendMessage(input);

@@ -1,260 +1,212 @@
-import { type Message, ChatLine } from "./ChatLine";
-import { useCookies } from "react-cookie";
+import { ChatLine } from "./ChatLine";
 import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
 import InputMessage from "./InputMessage";
 import List from "@mui/material/List";
-import MenuIcon from "@mui/icons-material/Menu";
-import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useTheme } from "@mui/material/styles";
-import { TextField } from "@mui/material";
-import { User } from "../../services/UserService/User.service";
-import { isMobileNumber } from "../utils";
+import { AvatarGroup, Paper, TextField } from "@mui/material";
+import UserService, { User } from "../../services/UserService/User.service";
+import {
+  ReceivedMessageData,
+  isEmail,
+  isMobileNumber,
+  sendEventToWindowListener,
+  stringAvatar,
+} from "../utils";
 import ThreadService, {
   Threads,
 } from "../../services/ThreadService/Threads.service";
+import { snackbar_message } from "../constants";
+import { Message } from "../utils";
+import { Socket } from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
+import AddChatUser from "./AddChatUser";
 
-const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
-const snackbar_message = "snackbar_message";
-
-// default first message to display in UI (not necessary to define the prompt)
-export const initialMessages: Message[] = [
-  {
-    who: "other",
-    message: "Hi! I'm A friendly AI assistant. Ask me anything!",
-    customKey: 1,
-  },
-];
+const threadService = new ThreadService();
+const userService = new UserService();
 
 export function Chat({
   user,
   handleSendMessage,
-  isNewChat,
   currentThread,
-  setCurrentThread,
+  setThreads,
+  socket,
+  setCurrentThread
 }: {
   user: User;
   handleSendMessage: Function;
-  isNewChat: boolean;
-  currentThread: Threads;
+  currentThread: Threads | null;
+  setThreads: Function;
+  socket: Socket;
   setCurrentThread: Function;
 }) {
   const theme = useTheme();
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [cookie, setCookie] = useCookies([COOKIE_NAME]);
 
-  const [chatLoading, setChatLoading] = useState(false);
-
-  useEffect(() => {
-    if (!cookie[COOKIE_NAME]) {
-      // generate a semi random short id
-      const randomId = Math.random().toString(36).substring(7);
-      setCookie(COOKIE_NAME, randomId);
-    }
-  }, [cookie, setCookie]);
+  const [userFriends, setUserFriends] = useState<string[]>(user.friends ?? []);
 
   useEffect(() => {
-    if (currentThread) {
-      // Call out to the API to get the messages for this thread
-      const threadService = new ThreadService();
-      const newMessages = threadService.getMessagesForThread(currentThread.id);
-      console.log("newMessages", newMessages);
-      // setMessages(newMessages);
-    }
+    const getMessages = async () => {
+      if (!currentThread) {
+        setMessages([]);
+        return;
+      }
+
+      const messages = await threadService.getMessagesForThread(
+        currentThread.id
+      );
+
+      if (messages) {
+        setMessages(messages);
+      }
+    };
+    getMessages();
   }, [currentThread]);
+
+  // handle new message from socket
+  useEffect(() => {
+    function onReceivedMessage(messageData: ReceivedMessageData) {
+      const { threadId, newMessage, participants } = messageData;
+
+      if (threadId === currentThread?.id && participants.includes(user.id)) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    }
+
+    socket.on(`received_message`, onReceivedMessage);
+
+    return () => {
+      socket.off(`received_message`, onReceivedMessage);
+    };
+  }, [socket, currentThread?.id, user.id]);
+
+  const updateFriendsList = (friends: []) => {
+    if (friends && friends.length > 0) {
+      // push the new user to the friends array if they are not already in there
+      friends.forEach((friend: User) => {
+        const fullName = `${friend.firstName} ${friend.lastName}`;
+        if (
+          !userFriends.includes(fullName) &&
+          !userFriends.includes(friend.email)
+        ) {
+          setUserFriends([...userFriends, friend.email]);
+        }
+      });
+    }
+  };
 
   // send message to API /api/chat endpoint
   const sendMessage = async (message: string) => {
     setLoading(true);
+    // Handling adding the message optimistically could be complicated.
     const newMessages = [
       ...messages,
-      { message: message, who: "me" } as Message,
+      {
+        message: message,
+        threadId: currentThread?.id,
+        createdAt: new Date().toISOString(),
+        senderId: user.id,
+        // generate a uuid for the message below using the uuid package
+        id: uuidv4(),
+      } as Message,
     ];
     setMessages(newMessages);
-    const last10messages = newMessages.slice(-10);
 
-    // const response = await fetch("/api/chat", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     messages: last10messages,
-    //     user: cookie[COOKIE_NAME],
-    //   }),
-    // });
+    const listOfParticipants = currentThread?.participants
+      .map((participant) => {
+        if (participant.userId !== user.id) {
+          return participant.userId;
+        }
+      })
+      .filter(Boolean);
 
-    handleSendMessage(message);
-
+    if (currentThread) handleSendMessage(message, listOfParticipants);
     setLoading(false);
   };
 
-  const sendEventToWindowListener = (message: string, severity: string) => {
-    const event = new CustomEvent(snackbar_message, {
-      detail: { message, severity },
-    });
-    window.dispatchEvent(event);
-  };
+  
 
-  // handle new chat creation
-  const startNewChat = async (e: React.FormEvent) => {
-    try {
-      setChatLoading(true);
-      e.preventDefault();
-      const theElement = e.target as HTMLInputElement;
-      const numberEntered = theElement.value;
-      if (numberEntered && isMobileNumber(numberEntered)) {
-        console.log("Start new chat with: ", numberEntered);
-        const threadService = new ThreadService();
-        console.log("User: ", user);
-        const newThread: Threads = {
-          id: "",
-          userId: user.id ?? user.authOId,
-          participants: [user.id ?? user.authOId, numberEntered],
-          messages: [],
-          createdAt: new Date().toISOString(),
-          isActive: true,
-          lastMessage: null,
-          threadName: numberEntered,
-        };
-
-        const newThreadResponse = await threadService.createThread(newThread);
-        if (newThreadResponse) {
-          console.log("New thread created: ", newThreadResponse);
-          sendEventToWindowListener("New chat started!", "success");
-          setCurrentThread(newThreadResponse);
-        }
-      }
-      setChatLoading(false);
-    } catch (error) {
-      console.log("Error creating new thread: ", error);
-      sendEventToWindowListener(
-        "There was an error creating a new thread. Please try again later.",
-        "error"
-      );
-      setChatLoading(false);
-    }
-  };
+  
 
   return (
     <Card
       elevation={0}
       sx={{
-        width: "100%",
         height: "100%",
         minHeight: "100vh",
         maxHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        backgroundColor: theme.palette.background.paper,
         padding: 2,
-        overflow: "scroll",
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${theme.palette.info.main}`
-            : "none",
+        overflow: "hidden",
         borderRadius: "10px",
-        boxShadow:
-          theme.palette.mode === "dark"
-            ? `0px 0px 25px 0px ${theme.palette.info.main}`
-            : `0px 0px 25px 0px ${theme.palette.grey[300]}`,
+        margin: "auto",
+        backgroundColor: theme.palette.background.paper,
       }}
     >
-      {isNewChat && (
-        // Show a search bar to look up a user to chat with
-        <Autocomplete
-          freeSolo
-          id="grouped-demo"
-          options={
-            user.friends
-              ? user.friends.sort(
-                  (a, b) => -b.substring(0, 1).localeCompare(a.substring(0, 1))
-                )
-              : []
-          }
-          groupBy={(option) => option.substring(0, 1)}
-          getOptionLabel={(option) => option}
-          sx={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Search Or Enter Phone Number"
-              // Once they press enter or click on a friend, start a new chat
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === "Tab") {
-                  startNewChat(e);
-                }
-              }}
-              onBlur={(e) => {
-                startNewChat(e);
-              }}
-            />
+      <>
+        <Paper
+          elevation={0}
+          sx={{
+            borderRadius: "10px",
+            display: "fixed",
+            top: 0,
+            justifyContent: "center",
+            width: "max-content",
+            margin: "10px auto",
+          }}
+        >
+          {currentThread?.participants &&
+          currentThread?.participants?.length > 0 ? (
+            <AvatarGroup sx={{ backgroundColor: theme.palette.background.paper}}>
+              {currentThread.participants
+                .filter((participant) => participant.userId !== user.email)
+                .map((participant) => {
+                  if (participant.userId !== user.id) {
+                    return (
+                      <Avatar
+                        key={participant.userId}
+                        alt={participant.firstName}
+                        {...stringAvatar(participant.userId)}
+                      />
+                    );
+                  }
+                })}
+            </AvatarGroup>
+          ) : (
+            <Avatar alt="responAI" />
           )}
-        />
+        </Paper>
+
+        {/* Original code for this is with phone number lookup is stored in Notion Project QuickNotes */}
+      {currentThread?.participants && currentThread.participants?.length < 1 && (
+        <AddChatUser threadId={currentThread.id} setThreads={setThreads} userId={user.id} setCurrentThread={setCurrentThread} />
       )}
 
-      {!isNewChat && currentThread && (
-        <>
-          <Grid container spacing={0}>
-            <Grid
-              item
-              xs={8}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                borderBottom: `1px solid ${theme.palette.divider}`,
-              }}
-            >
-              {/* <AvatarGroup max={3}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-                <Avatar
-                  alt="Travis Howard"
-                  src="https://material-ui.com/static/images/avatar/2.jpg"
-                />
-                <Avatar
-                  alt="Cindy Baker"
-                  src="https://material-ui.com/static/images/avatar/3.jpg"
-                />
-              </AvatarGroup> */}
-              <Typography
-                variant="h6"
-                sx={{ color: theme.palette.text.primary }}
-              >
-                {currentThread?.participants[1]}
-              </Typography>
-            </Grid>
-            {/* <Grid item xs={4}>
-              <Button sx={{ float: "right" }} variant="contained">
-                <MenuIcon />
-              </Button>
-            </Grid> */}
-          </Grid>
-          <List sx={{ overflow: "auto", p: 2 }}>
-            {currentThread.messages
-              ? currentThread.messages.map((id, index) => (
-                  <ChatLine key={id} message={id} customKey={index} who="me" />
-                ))
-              : null}
-          </List>
-          <InputMessage
-            input={input}
-            setInput={setInput}
-            sendMessage={sendMessage}
-            loading={loading}
-          />
-        </>
-      )}
+        <List sx={{ overflow: "auto", p: 2, marginTop: "auto" }}>
+          {messages.map((message, index) => {
+            return (
+              <ChatLine
+                key={index}
+                message={message.message}
+                customKey={index}
+                who={message.senderId === user.id ? "me" : "other"}
+              />
+            );
+          })}
+        </List>
+        <InputMessage
+          input={input}
+          setInput={setInput}
+          sendMessage={sendMessage}
+          loading={loading}
+          threadId={currentThread?.id}
+        />
+      </>
     </Card>
   );
 }

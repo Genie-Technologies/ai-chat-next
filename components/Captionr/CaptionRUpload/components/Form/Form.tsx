@@ -121,7 +121,6 @@ const Form = (): JSX.Element => {
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           setLoading(false);
           setSnackBarMessage("Something went wrong!");
           setSnackBarOpen(true);
@@ -136,12 +135,8 @@ const Form = (): JSX.Element => {
             let storageRef = ref(storage, storageRefName);
 
             deleteObject(storageRef)
-              .then(() => {
-                console.log("File deleted");
-              })
-              .catch((error) => {
-                console.log("File deletion error: ");
-              });
+              .then(() => {})
+              .catch((error) => {});
           }
         });
     } else {

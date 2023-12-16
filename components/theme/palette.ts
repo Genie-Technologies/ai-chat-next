@@ -8,20 +8,20 @@ export const light = {
   cardShadow: "rgba(23, 70, 161, .11)",
   mode: "light" as PaletteMode,
   primary: {
-    main: "#3a0ca3",
-    light: "#4895ef",
-    dark: "#03045e",
+    main: "#7400b8ff",
+    light: "#6930c3ff",
+    dark: "#5e60ceff",
     contrastText: "#fff",
   },
   secondary: {
-    light: "#ffba08",
-    main: "#fca311",
-    dark: "#6a040f",
-    contrastText: "rgba(0, 0, 0, 0.87)",
+    light: "#2196f3",
+    main: "#48bfe3ff",
+    dark: "#1976d2",
+    contrastText: "#ffffff",
   },
   text: {
-    primary: "#03045e",
-    secondary: "#00b4d8",
+    primary: "#000000",
+    secondary: "#edf2f4",
   },
   divider: "rgba(0, 0, 0, 0.12)",
   background: {
@@ -44,15 +44,15 @@ export const dark = {
   },
   mode: "dark" as PaletteMode,
   primary: {
-    main: "#E23E57",
-    light: "#9A1663",
-    dark: "#609966",
+    main: "#FF6347", // #7400b8ff
+    light: "#6930c3ff",
+    dark: "#5e60ceff",
     contrastText: "#fff",
   },
   secondary: {
-    light: "#38ef7d",
-    main: "#03C988",
-    dark: "#609966",
+    light: "#2979ff",
+    main: "#6246bb",
+    dark: "#2962ff",
     contrastText: "rgba(0, 0, 0, 0.87)",
   },
   text: {
@@ -61,8 +61,10 @@ export const dark = {
   },
   divider: "rgba(255, 255, 255, 0.12)",
   background: {
-    paper: "#000000",
-    default: "#311D3F",
+    dark: "#202123",
+    light: "#343641",
+    paper: "#202123", // original: "#000000",
+    default: "#343641", //  original:#311D3F
     level2: "#E23E57",
     level1: "#88304E",
   },

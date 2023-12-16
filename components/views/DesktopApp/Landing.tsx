@@ -1,18 +1,11 @@
+"use client";
+
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Main from "../../layouts/Main";
 import Container from "../../Container";
-import {
-  Customization,
-  Download,
-  Hero,
-  Hub,
-  Integrations,
-  Pricings,
-  ForWho,
-  Support,
-} from "./components";
+import { Customization, Hero, Hub, Pricings } from "./components";
 
 import styles from "../../../styles/Landing.module.scss";
 
@@ -23,17 +16,17 @@ const Landing = (): JSX.Element => {
       <Box
         position={"relative"}
         sx={{
-          backgroundColor: theme.palette.background.paper,
+          // Have a background of linear gradient of purple and green
+          background: `linear-gradient(180deg, ${theme.palette.primary.dark} 0%, ${theme.palette.background.paper} 100%)`,
           marginTop: -13,
           paddingTop: 13,
+          scrollbarColor: "rebeccapurple green",
         }}
       >
         <Container>
           <Hero />
         </Container>
-        <Container paddingY={"0 !important"}>
-          <ForWho />
-        </Container>
+
         <Container>
           <Hub />
         </Container>
@@ -55,47 +48,17 @@ const Landing = (): JSX.Element => {
           ></path>
         </Box>
       </Box>
-      {/* <Container>
-        <Support />
-      </Container> */}
+
       <Box position={"relative"} className={styles.customizationSection}>
         <Container position="relative" zIndex={2}>
           <Customization />
         </Container>
-        <Box
-          component={"svg"}
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-          x="0px"
-          y="0px"
-          viewBox="0 0 1921 273"
-          sx={{
-            position: "absolute",
-            width: "100%",
-            left: 0,
-            bottom: 0,
-            right: 0,
-            zIndex: 1,
-            height: "35%",
-          }}
-        >
-          <polygon
-            fill={theme.palette.background.paper}
-            points="0,273 1921,273 1921,0 "
-          />
-        </Box>
       </Box>
-      <Container>
-        <Integrations />
-      </Container>
       <Box bgcolor={"alternate.main"}>
         <Container>
           <Pricings />
         </Container>
       </Box>
-      {/* <Container>
-        <Download />
-      </Container> */}
     </Main>
   );
 };

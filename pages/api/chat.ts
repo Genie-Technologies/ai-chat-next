@@ -1,7 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { initialMessages } from "../../components/Chat/Chat";
-import { type Message } from "../../components/Chat/ChatLine";
-import { conversationsSummaryForDemo } from "../../components/utils";
+import { Message, conversationsSummaryForDemo } from "../../components/utils";
 
 // break the app if the API key is missing
 if (!process.env.OPENAI_API_KEY) {
@@ -10,12 +8,9 @@ if (!process.env.OPENAI_API_KEY) {
 
 const botName = "AI";
 const userName = "News reporter"; // TODO: move to ENV var
-const firstMessge = initialMessages[0].message;
 
 // @TODO: unit test this. good case for unit testing
 const generatePromptFromMessages = (messages: Message[]) => {
-  console.log("== INITIAL messages ==", messages);
-
   let prompt = "";
 
   // add first user message to prompt
@@ -23,7 +18,6 @@ const generatePromptFromMessages = (messages: Message[]) => {
 
   // remove first conversaiton (first 2 messages)
   const messagesWithoutFirstConvo = messages.slice(2);
-  console.log(" == messagesWithoutFirstConvo", messagesWithoutFirstConvo);
 
   // early return if no messages
   if (messagesWithoutFirstConvo.length == 0) {
@@ -31,7 +25,7 @@ const generatePromptFromMessages = (messages: Message[]) => {
   }
 
   messagesWithoutFirstConvo.forEach((message: Message) => {
-    const name = message.who === "other" ? userName : botName;
+    const name = message.senderId === "other" ? userName : botName;
     prompt += `\n${name}: ${message.message}`;
   });
   return prompt;
@@ -94,7 +88,6 @@ export default async function handler(req: NextRequest, res: any) {
     })
     .join("\n");
 
-  console.log("== conversationSummaryForDemo ==", conversationSummaryForDemo);
   // return response with 200 and stringify json text
   return res.json({
     text: conversationSummaryForDemo,

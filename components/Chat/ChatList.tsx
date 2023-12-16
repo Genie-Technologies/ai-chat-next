@@ -1,214 +1,333 @@
-import * as React from "react";
+import { MouseEventHandler, useState } from "react";
 
-import { chatListItems } from "../utils";
-import { useTheme } from "@mui/material";
+import { Button, IconButton, styled, useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
+import Stack from "@mui/material/Stack";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
-import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-import styles from "../../styles/ChatList.module.scss";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
-import { Threads } from "../../services/ThreadService/Threads.service";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from '@mui/material/CircularProgress';
+import { LogoutRounded } from "@mui/icons-material";
+import Link from "next/link";
+
+import ThreadService, { Threads } from "../../services/ThreadService/Threads.service";
+import { User } from "../../services/UserService/User.service";
+import { stringAvatar } from "../utils";
+import DeleteModal from "./DeleteChat";
+
+const threadService = new ThreadService();
+
+let deleteId: string | null = null;
 
 export default function ChatsList({
-  newChat,
   threads,
-  currentThread,
+  setCurrentThread,
+  openDrawer,
+  user,
+  setThreads,
 }: {
-  newChat: () => void;
   threads: Threads[];
-  currentThread: any;
+  currentThread: Threads | null;
+  user: User;
+  setCurrentThread: (threadId: string | null) => void;
+  openDrawer: boolean;
+  setThreads: React.Dispatch<React.SetStateAction<Threads[]>>;
 }) {
-  console.log("threads", threads, currentThread);
   const theme = useTheme();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [newChatLoading, setNewChatLoading] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
-  const pinnedItemListStyle = {
-    border: `1px solid ${theme.palette.secondary.main}`,
-    borderRadius: "10px",
-    boxShadow:
-      "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
-    margin: "10px 0 10px 0",
-    "&:hover": {
-      boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
-      borderRadius: "10px",
-      transition: "all 0.5s ease",
-      cursor: "pointer",
-    },
+  const onSetSelectedThread = (id: string | null) => {
+    setSelectedId(id);
+    setCurrentThread(id);
   };
 
-  const basePaperStyle = {
-    width: "100%",
-    maxWidth: 360,
-    border:
-      theme.palette.mode === "dark"
-        ? `1px solid ${theme.palette.secondary.main}`
-        : "none",
-    minHeight: "100vh",
-    backgroundColor: theme.palette.background.paper,
-    padding: "10px",
+  const ChosenListItemStyles = {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.secondary.contrastText,
     borderRadius: "10px",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px"
-        : "none",
-    marginRight: "10px",
+    transition: "all 1s ease",
+  };
+
+  const ListItemStyles = {
+    transition: "all 1s ease",
+    "&:hover": {
+      cursor: "pointer",
+      boxShadow: `rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px`,
+    },
+    borderRadius: "10px",
+  };
+
+  const HoverStyles = {
+    "&:hover": {
+      cursor: "pointer",
+      boxShadow: `rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px`,
+      '& > svg': {
+              display: 'block',
+            },
+       },
+      };
+
+  const handleCreateNewChat = async () => {
+    setNewChatLoading(true);
+    // fetch messages for threadId
+    const newThread = await threadService.createThread({
+      createdAt: new Date().toISOString(),
+      isActive: false,
+      userId: user.id,
+    });
+
+    if (newThread) {
+      setNewChatLoading(false);
+      setThreads(threads => [...threads, newThread]);
+    }
+  }
+
+  const handleDelete = async (e:  any, id?: string) => {
+    if (id) {
+      deleteId = id;
+      e.stopPropagation();
+      setDeleteOpen(true);
+      return;
+    }
+
+    setDeleteLoading(true);
+    try {
+      const deleted = await threadService.deleteThread(deleteId as string);
+
+      // update thread list
+      if (deleted) {
+        setThreads(threads => threads.filter((thread) => thread.id !== deleteId));
+
+        if (selectedId === deleteId) onSetSelectedThread(null);
+      }
+      setDeleteLoading(false);
+      setDeleteOpen(false);
+    } catch(e) {
+      console.log('ERROR DELETING', e);
+    }
+  }
+
+  const renderThreads = (drawerOpen: boolean): JSX.Element[] | JSX.Element => {
+    if (!threads && !drawerOpen) {
+      return [];
+    }
+
+    if (!threads && drawerOpen) {
+      return (
+        <ListItem alignItems="flex-start" sx={ListItemStyles}>
+          <ListItemAvatar>
+            <Avatar alt="Loading..." />
+          </ListItemAvatar>
+          <ListItemText primary="Loading..." />
+        </ListItem>
+      );
+    }
+
+    if (!threads.length && drawerOpen) {
+      return (
+        <ListItem alignItems="flex-start" sx={ListItemStyles}>
+          <ListItemAvatar>
+            <Avatar alt="No chats" />
+          </ListItemAvatar>
+          <ListItemText primary="No chats yet." />
+        </ListItem>
+      );
+    }
+
+    if (drawerOpen) {
+      return threads.map((item, idx) => {
+        return (
+          <ListItem
+            alignItems="flex-start"
+            sx={selectedId === item.id ? { ...ChosenListItemStyles, ...HoverStyles} : { ...ListItemStyles, ...HoverStyles }}
+            key={idx}
+            onClick={() => onSetSelectedThread(item.id)}
+          >
+            <ListItemAvatar>
+              <Avatar
+                alt={item.threadName}
+                {...stringAvatar(item.threadName || "New Chat")}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={item.threadName || "New Chat"}
+              secondary={
+                <Typography
+                  sx={{
+                    display: "inline",
+                    wordWrap: "break-word",
+                  }}
+                  component="p"
+                  variant="caption"
+                  color={theme.palette.secondary.light}
+                  textOverflow={"ellipsis"}
+                >
+                  {item.lastMessage || "No messages"}
+                </Typography>
+              }
+            />
+            <DeleteIcon
+              sx={{
+                display: 'none',
+                margin: 'auto',
+                color: 'white',
+                cursor: 'pointer',
+              }}
+              onClick={(e) => handleDelete(e, item.id)}
+            />
+          </ListItem>
+        );
+      });
+    } else {
+      return threads.map((item, idx) => {
+        // Just return the icons for when the drawer is closed
+        return (
+          <ListItem
+            alignItems="flex-start"
+            sx={selectedId === item.id ? ChosenListItemStyles : ListItemStyles}
+            key={idx}
+            onClick={() => onSetSelectedThread(item.id)}
+          >
+            <ListItemAvatar>
+              <Avatar
+                alt={item.threadName}
+                {...stringAvatar(item.threadName || "New Chat")}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={item.threadName}
+              secondary={
+                <Typography
+                  sx={{
+                    display: "inline",
+                    wordWrap: "break-word",
+                  }}
+                  component="p"
+                  variant="caption"
+                  color={theme.palette.secondary.light}
+                  textOverflow={"ellipsis"}
+                >
+                  {item.lastMessage || "New Chat"}
+                </Typography>
+              }
+            />
+          </ListItem>
+        );
+      });
+    }
+
+    return [];
   };
 
   return (
-    <Paper elevation={0} sx={{ ...basePaperStyle }}>
-      <Grid container spacing={2}>
-        <Grid
-          item
-          xs={8}
-          style={{
-            boxShadow: "none",
-          }}
-        >
-          <InputBase
-            sx={{
-              ml: 1,
-              flex: 1,
-              borderBottom: `1px solid ${theme.palette.secondary.main}`,
-              borderRadius: "0",
-            }}
-            placeholder="Search Chats"
-            inputProps={{ "aria-label": "Search Chats" }}
-          />
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon color="secondary" />
-          </IconButton>
-        </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{
-            boxShadow: "none",
-          }}
-        >
+    <Paper
+      elevation={0}
+      sx={{
+        height: "100%",
+        overflow: "auto",
+        backgroundColor: theme.palette.background.default,
+        overflowX: "hidden",
+      }}
+    >
+      <Stack spacing={0}>
+        {openDrawer ? (
           <Button
             variant="contained"
-            color="success"
+            startIcon={<AddIcon />}
+            onClick={handleCreateNewChat}
             sx={{
-              color: theme.palette.primary.contrastText,
-              borderRadius: "10px",
-              "&:hover": {
-                backgroundColor: theme.palette.primary.main,
-                transition: "all 0.5s ease",
-              },
+              transition: "all 0.5s ease",
+              maxWidth: "100%",
+              margin: "10px",
             }}
-            onClick={() => newChat()}
+            disabled={newChatLoading}
           >
-            <AddIcon />
+            New Chat {newChatLoading && <CircularProgress size={20} sx={{
+              marginLeft: "8px",
+            }} />}
           </Button>
-        </Grid>
-      </Grid>
-      <List
-        sx={{
-          width: "100%",
-          maxWidth: 360,
-          borderRadius: "10px",
-        }}
-      >
-        {/** Have a pinned chat item at the top for AI chat */}
-        <ListItem
-          alignItems="flex-start"
-          sx={{ ...pinnedItemListStyle }}
-          className={styles.chatListItem}
-        >
-          <ListItemAvatar>
-            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-              <PushPinIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary="Talk to ResponAi"
-            primaryTypographyProps={{
-              sx: {
-                fontWeight: "bold",
-                color: theme.palette.primary.main,
-                fontSize: "1.2rem",
-              },
+        ) : (
+          // Show an IconButton for when the drawer is closed
+          <IconButton
+            onClick={handleCreateNewChat}
+            sx={{
+              transition: "all 2s ease",
             }}
-          />
-        </ListItem>
-
-        {threads.map((item, idx) => {
-          return (
-            <ListItem
-              alignItems="flex-start"
-              sx={{
-                color: theme.palette.secondary.main,
-                borderRadius: "0",
-                boxShadow:
-                  "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
-                margin: "10px 0 10px 0",
-                "&:hover": {
-                  boxShadow: `${theme.palette.primary.light} 0px 10px 10px -5px, ${theme.palette.primary.dark} 0px 8px 10px -8px`,
-                  borderRadius: "10px",
-                  transition: "all 0.5s ease",
-                  cursor: "pointer",
+            disabled={newChatLoading}
+          >
+            {newChatLoading ? <CircularProgress size={20} /> : <AddIcon />}
+          </IconButton>
+        )}
+        <List>
+          {/** Have a pinned chat item at the top for AI chat */}
+          <ListItem
+            alignItems="flex-start"
+            sx={selectedId === null ? ChosenListItemStyles : ListItemStyles}
+            onClick={() => onSetSelectedThread(null)}
+          >
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+                <PushPinIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Talk to "
+              primaryTypographyProps={{
+                sx: {
+                  fontWeight: "bold",
+                  fontSize: "1rem",
                 },
               }}
-              key={idx}
-              className={styles.chatListItem}
+              secondary="ResponAi"
+              secondaryTypographyProps={{
+                sx: {
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  color: theme.palette.secondary.dark,
+                },
+              }}
+            />
+          </ListItem>
+
+          {renderThreads(openDrawer)}
+        </List>
+
+        <Link href="/api/auth/logout" style={{ textDecoration: "none" }}>
+          {openDrawer ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                window.location.reload();
+              }}
+              sx={{
+                transition: "all 0.5s ease",
+                maxWidth: "80%",
+                margin: "10px",
+              }}
             >
-              <ListItemAvatar>
-                <Avatar
-                  alt={item.threadName}
-                  src="/static/images/avatar/2.jpg"
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.threadName}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color={theme.palette.primary.main}
-                    >
-                      {
-                        // Besides the first item in the participants array, all other items are the other participants in the chat
-                        item.participants.slice(1).map((participant, idx) => {
-                          return (
-                            <span key={idx}>
-                              {participant}
-                              {idx !== item.participants.length - 2 ? ", " : ""}
-                            </span>
-                          );
-                        })
-                      }
-                    </Typography>
-                    {" — "}
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color={
-                        theme.palette.mode === "dark"
-                          ? theme.palette.text.primary
-                          : theme.palette.primary.dark
-                      }
-                    >
-                      {item.lastMessage}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-          );
-        })}
-      </List>
+              Logout
+            </Button>
+          ) : (
+            <IconButton
+              sx={{
+                transition: "all 2s ease",
+              }}
+            >
+              <LogoutRounded />
+            </IconButton>
+          )}
+        </Link>
+        <DeleteModal open={deleteOpen} onClose={() => setDeleteOpen(false)} handleDelete={handleDelete} deleteLoading={deleteLoading}  />
+      </Stack>
     </Paper>
   );
 }

@@ -28,17 +28,7 @@ const mock = [
     icon: <SummarizeIcon color="primary" />,
     subtitle: "Daily summaries of unread messages",
     suffix: "%",
-  },
-  {
-    icon: <SaveAsIcon color="primary" />,
-    subtitle: "AI-generated notes based on conversations",
-    suffix: "%",
-  },
-  {
-    icon: <ShieldIcon color="primary" />,
-    subtitle: "Privacy-Focused and your data is in your control",
-    suffix: "%",
-  },
+  }
 ];
 
 const Hero = (): JSX.Element => {
@@ -97,9 +87,9 @@ const Hero = (): JSX.Element => {
               color="text.primary"
               sx={{ fontWeight: 700 }}
             >
-              Our Messenger Offers A Range Of Features To Help You{" "}
+              Our Messenger Offers Features To Help You{" "}
               <Typography
-                color={"secondary"}
+                color={"primary"}
                 component={"span"}
                 variant={"inherit"}
               >
@@ -131,7 +121,7 @@ const Hero = (): JSX.Element => {
                     </Box>
                   </Typography>
                   <Typography
-                    color="text.secondary"
+                    color="text.primary"
                     component="p"
                     textAlign={"center"}
                   >

@@ -3,34 +3,38 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { useTheme } from "@mui/material";
+import { useTheme, useMediaQuery } from "@mui/material";
 import * as materialColors from "@mui/material/colors";
 import Skeleton from "@mui/material/Skeleton";
+import { stringAvatar } from "../utils";
 
-export type Message = {
-  who: "me" | "other" | undefined;
-  message?: string;
+export type Props = {
+  who: "me" | "other";
+  message: string;
   customKey: number;
 };
 
-// util helper to convert new lines to <br /> tags
-const convertNewLines = (text: string) =>
-  text.split("\n").map((line, i) => (
-    <span key={i}>
-      {line}
-      <br />
-    </span>
-  ));
-
-export function ChatLine({ who = "other", message, customKey }: Message) {
+export function ChatLine({ who, message, customKey }: Props) {
   const [loading, setLoading] = React.useState(false);
-
+  const isLargeScreen = useMediaQuery("(min-width:1200px)");
   const theme = useTheme();
 
   if (!message) {
     return null;
   }
-  const formatteMessage = convertNewLines(message);
+
+  const messageStyle = {
+    borderRadius: "10px",
+    background:
+      who === "me"
+        ? theme.palette.secondary.light
+        : theme.palette.secondary.dark,
+    color: theme.palette.secondary.contrastText,
+    boxShadow:
+      "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+    maxWidth: 'fit-content',
+    padding: "8px 16px",
+  };
 
   const getMessageBubble = () => {
     if (who === "me") {
@@ -42,11 +46,9 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
             <ListItemText
               primary={message}
               style={{
-                backgroundColor: theme.palette.primary.main,
-                borderRadius: "20px",
-                padding: "8px 16px",
-                maxWidth: 300,
-                color: theme.palette.primary.contrastText,
+                ...messageStyle,
+                overflowWrap: "break-word",
+                textAlign: "right",
               }}
             />
           )}
@@ -57,6 +59,8 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
                 sx={{
                   backgroundColor: materialColors.red[500],
                   marginLeft: "8px",
+                  boxShadow:
+                    "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
                 }}
               ></Avatar>
             </ListItemAvatar>
@@ -75,6 +79,8 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
               alt="other"
               sx={{
                 backgroundColor: materialColors.green[500],
+                boxShadow:
+                  "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
               }}
             ></Avatar>
           </ListItemAvatar>
@@ -88,12 +94,8 @@ export function ChatLine({ who = "other", message, customKey }: Message) {
           <ListItemText
             primary={message}
             style={{
-              backgroundColor: theme.palette.primary.light,
-              borderRadius: "20px",
-              padding: "8px 16px",
-              maxWidth: 300,
+              ...messageStyle,
               overflowWrap: "break-word",
-              color: theme.palette.primary.contrastText,
             }}
           />
         )}

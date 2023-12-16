@@ -14,14 +14,11 @@ export default async function handler(
   // get the email from the request body
   const email = req.body.email;
 
-  console.log(`Received request to subscribe ${email} to the newsletter.`);
-
   const requestHeaders: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
   try {
-    console.log("Sending request to lambda function...");
     const response = await fetch(
       "https://diigtm5ng7.execute-api.us-east-1.amazonaws.com/beta_signup",
       {

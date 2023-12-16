@@ -34,7 +34,6 @@ const Topbar = ({
   const { mode } = theme.palette;
 
   const { user, error, isLoading } = useUser();
-  console.log("Loading: ", isLoading);
 
   return (
     <Box
@@ -56,27 +55,27 @@ const Topbar = ({
       ) : (
         <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
           <Box marginLeft={4}>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="large"
-              sx={{
-                display:
-                  process.env.NODE_ENV === "production" ? "none" : "block",
+            <Link
+              href={user ? "/chat" : "/api/auth/login"}
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
               }}
             >
-              <Link
-                href={user ? "/chat" : "/api/auth/login"}
-                style={{
-                  textDecoration: "none",
-                  color: theme.palette.text.primary,
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                sx={{
+                  display:
+                    process.env.NODE_ENV === "production" ? "none" : "block",
                 }}
               >
                 <Typography variant="subtitle1" color="text.primary">
                   {user ? "Chat" : "Sign In"}
                 </Typography>
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Box>
           <Box marginLeft={4}>
             <Button
@@ -102,9 +101,6 @@ const Topbar = ({
                 </Typography>
               </Link>
             </Button>
-          </Box>
-          <Box marginLeft={4}>
-            <ThemeSwitcher />
           </Box>
         </Box>
       )}

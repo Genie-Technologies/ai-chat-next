@@ -36,14 +36,12 @@ const FileUploadAndPreview = ({
   };
 
   const uploadFile = (e: any) => {
-    console.log(e.target.files);
     // Get the URL of the uploaded file
     if (e.target.files) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        console.log(reader.result);
         setFile(reader.result);
         _setFile(reader.result);
 
@@ -54,8 +52,6 @@ const FileUploadAndPreview = ({
 
         uploadBytes(storageRef, file)
           .then((snapshot) => {
-            console.log("Uploaded a blob or file! ", snapshot);
-
             // get the url of the uploaded file
             getDownloadURL(storageRef)
               .then((url) => {
@@ -64,14 +60,12 @@ const FileUploadAndPreview = ({
                 setSnackBarOpen(true);
               })
               .catch((error) => {
-                console.log(error);
                 handleError();
               });
 
             setStorageRefName(storageRefName);
           })
           .catch((error) => {
-            console.log(error);
             handleError();
           });
       };

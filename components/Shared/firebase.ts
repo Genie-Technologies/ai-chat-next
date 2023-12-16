@@ -15,14 +15,12 @@ const firebaseConfig = {
 };
 
 export default function initFirebase() {
-  console.log("--- Firebase init ---");
   if (!firebase?.getApps().length) {
     const app = firebase.initializeApp(firebaseConfig);
 
     if (typeof window !== "undefined" && "measurementId" in firebaseConfig) {
       firebaseAnalytics.getAnalytics(app);
     }
-    console.log("--- Firebase was successfully init ---");
   }
 }
 

@@ -3,17 +3,19 @@ import {
   getSession,
   withPageAuthRequired,
 } from "@auth0/nextjs-auth0";
-import ChatCard from "../components/Chat/ChatCard";
-import Paper from "@mui/material/Paper";
 
-import { Main } from "../components/layouts";
+import { useState } from "react";
+import Alert from "@mui/material/Alert";
+import ChatCard from "../components/Chat/ChatCard";
 import Head from "next/head";
-import { Alert, Snackbar, Typography } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
 import UserService, { AuthOUser } from "../services/UserService/User.service";
-import { useEffect, useState } from "react";
 import ThreadService, {
-  ThreadsResponseData,
+  Threads,
 } from "../services/ThreadService/Threads.service";
+import { connectSocket } from "../components/socket";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const ChatPage = ({
   user,
@@ -22,52 +24,63 @@ const ChatPage = ({
 }: {
   user: any;
   accessToken: any;
-  threads: ThreadsResponseData;
+  threads: Threads[];
 }) => {
-  useEffect(() => {
-    console.log("--> User: ", user);
-  }, []);
-
-  const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<
     "error" | "warning" | "info" | "success"
   >("success");
+  // TODO: This could potentially cause a bug if this component rerenders. Had
+  // bug previosly when in child ChatCard component and rerendering.
+  let socket = connectSocket(accessToken);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   if (typeof window !== "undefined") {
     window.addEventListener("snackbar_message", (e) => {
-      console.log("snackbar_message", e);
       const { detail } = e as CustomEvent;
       setMessage(detail.message);
       setSeverity(detail.severity);
-      setOpen(true);
+      setSnackbarOpen(true);
     });
   }
 
   return (
-    <Main>
+    <>
       <Head>
         <title>Respon Chat</title>
       </Head>
-      <Paper>
+      <Box sx={{ flexGrow: 1, p: 2, padding: 0 }}>
         {user ? (
-          <ChatCard user={user} accessToken={accessToken} threads={threads} />
+          <ChatCard
+            user={user}
+            accessToken={accessToken}
+            threads={threads}
+            socket={socket}
+          />
         ) : (
           <Typography variant="h4" component="h4">
             You are not logged in.
           </Typography>
         )}
-      </Paper>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={severity}
+          sx={{ width: "100%" }}
+        >
           {message}
         </Alert>
       </Snackbar>
-    </Main>
+    </>
   );
 };
 
@@ -76,29 +89,51 @@ export default ChatPage;
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
     const { req, res } = context;
+
     const session = await getSession(req, res);
+
+    const nullReturn = {
+      user: null,
+      accessToken: null,
+      threads: null,
+    };
 
     if (session) {
       const user = session.user;
-      const accessToken = await getAccessToken(req, res);
+      const accessToken = (await getAccessToken(req, res).catch((err) => {
+        if (err.code === "ERR_EXPIRED_ACCESS_TOKEN") {
+          // Clear the cookie and redirect to the login page
+          res.writeHead(302, {
+            Location: "/api/auth/logout",
+          });
+          res.end();
 
-      console.log("Access Token ---> ", accessToken);
+          return null;
+        }
+      })) as any;
 
-      // if session exists, then reach out to the API to get the user data
       const userService = new UserService();
       const threadService = new ThreadService();
 
+      if (!accessToken || !user) {
+        return {
+          props: nullReturn,
+        };
+      }
+
       const userData = await userService.getUser(
-        user.sid,
+        user.email,
         user as AuthOUser,
         accessToken.accessToken
       );
 
-      const threads = await threadService.getThreads(userData?.id ?? user.sid);
-      console.log("SERVER Threads: ", threads);
-      console.log("Og: ", user);
-      console.log("Access Token: ", accessToken);
-      console.log("User: ", userData);
+      if (!userData) {
+        return {
+          props: nullReturn,
+        };
+      }
+
+      const threads = await threadService.getThreads(userData.id as string);
 
       return {
         props: {

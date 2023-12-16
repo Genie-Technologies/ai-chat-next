@@ -16,6 +16,31 @@ export interface ChatListItem {
   recievers: string[];
 }
 
+export interface Message {
+  createdAt: string;
+  id: string;
+  message: string;
+  receiverId: string;
+  senderId: string;
+  threadId: string;
+  updatedAt: string;
+}
+
+export interface Participant {
+  userId: string;
+  threadId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export type ReceivedMessageData = {
+  threadId: string;
+  threadName: string;
+  newMessage: Message;
+  participants: string[];
+};
+
 export const chatListItems: ChatListItem[] = [
   {
     threadName: "Summer BBQ",
@@ -57,10 +82,8 @@ export const chatListItems: ChatListItem[] = [
 
 export const featuresForPricing = [
   "AI-generated replies based on your texting style",
-  "AI-generated memes",
+  "AI-generated memes/pictures of the conversation context",
   "Daily summaries of unread messages",
-  "AI-generated notes based on conversations",
-  "Basic integrations with other apps",
 ];
 
 export const validateEmail = (email: string) => {
@@ -104,3 +127,55 @@ export const isMobileNumber = (number: string) => {
   const re = /^\d{10}$/;
   return re.test(number);
 };
+
+export const isEmail = (email: string) => {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};
+
+export const sendEventToWindowListener = (
+  event_type: string,
+  message: string,
+  severity: string
+) => {
+  const event = new CustomEvent(event_type, {
+    detail: { message, severity },
+  });
+  window.dispatchEvent(event);
+};
+
+export const grabSubsetOfMessage = (message: string) => {
+  if (message.length < 40) return message;
+
+  // Grab first 100 characthers of message.
+  return message.substring(0, 40);
+};
+
+export function stringToColor(_string: string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < _string.length; i += 1) {
+    hash = _string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+export function stringAvatar(name: string) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(" ")[0][0]}`,
+  };
+}

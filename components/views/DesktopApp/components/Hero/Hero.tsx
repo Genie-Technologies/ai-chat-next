@@ -5,8 +5,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Image from 'next/image';
 import Dialog from "../../../../GeneralDialog/Dialog";
 import SignUpForm from "../../../../Signup/Signup";
+import homepage from '../../../../../imgs/homepage.png';
 
 const Hero = (): JSX.Element => {
   const theme = useTheme();
@@ -32,7 +34,7 @@ const Hero = (): JSX.Element => {
             >
               Communicate smarter{" "}
               <Typography
-                color={"secondary"}
+                color={"primary"}
                 component={"span"}
                 variant={"inherit"}
                 sx={{
@@ -85,22 +87,6 @@ const Hero = (): JSX.Element => {
         data-aos-easing="ease-out-cubic"
         data-aos-duration="2000"
       >
-        <Box
-          component={"img"}
-          loading="lazy"
-          height={1}
-          width={1}
-          src={
-            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fbuddies.png?alt=media&token=058d59e7-d3ee-44ee-965c-1bc59ffe272c"
-          }
-          alt="..."
-          boxShadow={3}
-          borderRadius={2}
-          maxWidth={600}
-          sx={{
-            filter: theme.palette.mode === "dark" ? "brightness(0.7)" : "none",
-          }}
-        />
       </Grid>
       <Dialog
         open={openSignUp}
