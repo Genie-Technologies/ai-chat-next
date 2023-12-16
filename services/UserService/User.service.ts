@@ -45,6 +45,22 @@ export default class UserService {
     }
   }
 
+  public async getUsers() {
+    try {
+      const users = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return users.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public async getUser(
     userEmail: string,
     _user?: AuthOUser,
