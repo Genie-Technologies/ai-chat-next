@@ -62,15 +62,7 @@ const Topbar = ({
                 color: theme.palette.text.primary,
               }}
             >
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                sx={{
-                  display:
-                    process.env.NODE_ENV === "production" ? "none" : "block",
-                }}
-              >
+              <Button variant="contained" color="secondary" size="large">
                 <Typography variant="subtitle1" color="text.primary">
                   {user ? "Chat" : "Sign In"}
                 </Typography>

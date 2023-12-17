@@ -90,7 +90,11 @@ export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
     const { req, res } = context;
 
+    console.log("req", req);
+    console.log("res", res);
     const session = await getSession(req, res);
+
+    console.log("session", session);
 
     const nullReturn = {
       user: null,
