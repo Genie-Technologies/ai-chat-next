@@ -9,27 +9,8 @@ if (!process.env.OPENAI_API_KEY) {
 const botName = "AI";
 const userName = "News reporter"; // TODO: move to ENV var
 
-// @TODO: unit test this. good case for unit testing
-const generatePromptFromMessages = (messages: Message[]) => {
-  let prompt = "";
+export const maxDuration = 200
 
-  // add first user message to prompt
-  prompt += messages[1].message;
-
-  // remove first conversaiton (first 2 messages)
-  const messagesWithoutFirstConvo = messages.slice(2);
-
-  // early return if no messages
-  if (messagesWithoutFirstConvo.length == 0) {
-    return prompt;
-  }
-
-  messagesWithoutFirstConvo.forEach((message: Message) => {
-    const name = message.senderId === "other" ? userName : botName;
-    prompt += `\n${name}: ${message.message}`;
-  });
-  return prompt;
-};
 
 export default async function handler(req: NextRequest, res: any) {
   // read body from request
