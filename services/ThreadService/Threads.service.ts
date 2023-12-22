@@ -19,7 +19,7 @@ export interface NewThread {
 
 export type ThreadsResponseData = [Threads[], number];
 
-export const maxDuration = 30;
+// export const maxDuration = 30;
 
 export default class ThreadService {
   public async createThread(thread: NewThread) {

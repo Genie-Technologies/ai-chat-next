@@ -86,7 +86,7 @@ const ChatPage = ({
 
 export default ChatPage;
 
-export const maxDuration = 30;
+// export const maxDuration = 30;
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
