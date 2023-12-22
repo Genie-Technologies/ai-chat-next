@@ -27,8 +27,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ThreadSelect from "./ThreadSelect";
 
 const drawerWidth = 340;
@@ -263,9 +261,9 @@ export default function ChatCard({
             return res;
           }
           return thread;
-        }) 
+        });
       } else {
-        return [...prevThreads, res]
+        return [...prevThreads, res];
       }
     });
     setCurrentThread(res);
@@ -303,7 +301,11 @@ export default function ChatCard({
             ) : null}
 
             <IconButton onClick={handleDrawerOpenOrClose}>
-              {!openDrawer ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {!openDrawer ? (
+                <i className="fas fa-bars"></i>
+              ) : (
+                <i className="fas fa-times"></i>
+              )}
             </IconButton>
           </DrawerHeader>
           <Divider />
