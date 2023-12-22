@@ -92,11 +92,10 @@ export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context): Promise<any> {
     const { req, res } = context;
 
-    console.log("req", req);
-    console.log("res", res);
+    console.log("Res in Serverside props", res);
     const session = await getSession(req, res);
 
-    console.log("session", session);
+    console.log("Sessio in ServerSide props", session);
 
     const nullReturn = {
       user: null,
@@ -106,6 +105,7 @@ export const getServerSideProps = withPageAuthRequired({
 
     if (session) {
       const user = session.user;
+      console.log("About to get access token");
       const accessToken = (await getAccessToken(req, res).catch((err) => {
         if (err.code === "ERR_EXPIRED_ACCESS_TOKEN") {
           // Clear the cookie and redirect to the login page
@@ -121,23 +121,30 @@ export const getServerSideProps = withPageAuthRequired({
       const userService = new UserService();
       const threadService = new ThreadService();
 
+      console.log("Access token: ", accessToken, "User: ", user);
+
       if (!accessToken || !user) {
         return {
           props: nullReturn,
         };
       }
 
+      console.log("ABout to get User data: ", user.email);
       const userData = await userService.getUser(
         user.email,
         user as AuthOUser,
         accessToken.accessToken
       );
 
+      console.log("User data: ", userData);
+
       if (!userData) {
         return {
           props: nullReturn,
         };
       }
+
+      console.log("About to get threads");
 
       const threads = await threadService.getThreads(userData.id as string);
 
