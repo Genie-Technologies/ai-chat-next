@@ -1,6 +1,6 @@
-import * as React from "react";
+import { MouseEventHandler, useState } from "react";
 
-import { Button, IconButton, useTheme } from "@mui/material";
+import { Button, IconButton, styled, useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
@@ -11,27 +11,39 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PushPinIcon from "@mui/icons-material/PushPinRounded";
-import { Threads } from "../../services/ThreadService/Threads.service";
-import { User } from "../../services/UserService/User.service";
-import { stringAvatar } from "../utils";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from '@mui/material/CircularProgress';
 import { LogoutRounded } from "@mui/icons-material";
 import Link from "next/link";
 
+import ThreadService, { Threads } from "../../services/ThreadService/Threads.service";
+import { User } from "../../services/UserService/User.service";
+import { stringAvatar } from "../utils";
+import DeleteModal from "./DeleteChat";
+
+const threadService = new ThreadService();
+
+let deleteId: string | null = null;
+
 export default function ChatsList({
-  newChat,
   threads,
   setCurrentThread,
   openDrawer,
+  user,
+  setThreads,
 }: {
-  newChat: () => void;
   threads: Threads[];
-  currentThread: any;
+  currentThread: Threads | null;
   user: User;
   setCurrentThread: (threadId: string | null) => void;
   openDrawer: boolean;
+  setThreads: React.Dispatch<React.SetStateAction<Threads[]>>;
 }) {
   const theme = useTheme();
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [newChatLoading, setNewChatLoading] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const onSetSelectedThread = (id: string | null) => {
     setSelectedId(id);
@@ -53,6 +65,56 @@ export default function ChatsList({
     },
     borderRadius: "10px",
   };
+
+  const HoverStyles = {
+    "&:hover": {
+      cursor: "pointer",
+      boxShadow: `rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px`,
+      '& > svg': {
+              display: 'block',
+            },
+       },
+      };
+
+  const handleCreateNewChat = async () => {
+    setNewChatLoading(true);
+    // fetch messages for threadId
+    const newThread = await threadService.createThread({
+      createdAt: new Date().toISOString(),
+      isActive: false,
+      userId: user.id,
+    });
+
+    if (newThread) {
+      setNewChatLoading(false);
+      setThreads(threads => [...threads, newThread]);
+    }
+  }
+
+  const handleDelete = async (e:  any, id?: string) => {
+    if (id) {
+      deleteId = id;
+      e.stopPropagation();
+      setDeleteOpen(true);
+      return;
+    }
+
+    setDeleteLoading(true);
+    try {
+      const deleted = await threadService.deleteThread(deleteId as string);
+
+      // update thread list
+      if (deleted) {
+        setThreads(threads => threads.filter((thread) => thread.id !== deleteId));
+
+        if (selectedId === deleteId) onSetSelectedThread(null);
+      }
+      setDeleteLoading(false);
+      setDeleteOpen(false);
+    } catch(e) {
+      console.log('ERROR DELETING', e);
+    }
+  }
 
   const renderThreads = (drawerOpen: boolean): JSX.Element[] | JSX.Element => {
     if (!threads && !drawerOpen) {
@@ -86,18 +148,18 @@ export default function ChatsList({
         return (
           <ListItem
             alignItems="flex-start"
-            sx={selectedId === item.id ? ChosenListItemStyles : ListItemStyles}
+            sx={selectedId === item.id ? { ...ChosenListItemStyles, ...HoverStyles} : { ...ListItemStyles, ...HoverStyles }}
             key={idx}
             onClick={() => onSetSelectedThread(item.id)}
           >
             <ListItemAvatar>
               <Avatar
                 alt={item.threadName}
-                {...stringAvatar(item.threadName)}
+                {...stringAvatar(item.threadName || "New Chat")}
               />
             </ListItemAvatar>
             <ListItemText
-              primary={item.threadName}
+              primary={item.threadName || "New Chat"}
               secondary={
                 <Typography
                   sx={{
@@ -109,9 +171,18 @@ export default function ChatsList({
                   color={theme.palette.secondary.light}
                   textOverflow={"ellipsis"}
                 >
-                  {item.lastMessage}
+                  {item.lastMessage || "No messages"}
                 </Typography>
               }
+            />
+            <DeleteIcon
+              sx={{
+                display: 'none',
+                margin: 'auto',
+                color: 'white',
+                cursor: 'pointer',
+              }}
+              onClick={(e) => handleDelete(e, item.id)}
             />
           </ListItem>
         );
@@ -129,7 +200,7 @@ export default function ChatsList({
             <ListItemAvatar>
               <Avatar
                 alt={item.threadName}
-                {...stringAvatar(item.threadName)}
+                {...stringAvatar(item.threadName || "New Chat")}
               />
             </ListItemAvatar>
             <ListItemText
@@ -145,7 +216,7 @@ export default function ChatsList({
                   color={theme.palette.secondary.light}
                   textOverflow={"ellipsis"}
                 >
-                  {item.lastMessage}
+                  {item.lastMessage || "New Chat"}
                 </Typography>
               }
             />
@@ -172,24 +243,28 @@ export default function ChatsList({
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={newChat}
+            onClick={handleCreateNewChat}
             sx={{
               transition: "all 0.5s ease",
               maxWidth: "100%",
               margin: "10px",
             }}
+            disabled={newChatLoading}
           >
-            New Chat
+            New Chat {newChatLoading && <CircularProgress size={20} sx={{
+              marginLeft: "8px",
+            }} />}
           </Button>
         ) : (
           // Show an IconButton for when the drawer is closed
           <IconButton
-            onClick={newChat}
+            onClick={handleCreateNewChat}
             sx={{
               transition: "all 2s ease",
             }}
+            disabled={newChatLoading}
           >
-            <AddIcon />
+            {newChatLoading ? <CircularProgress size={20} /> : <AddIcon />}
           </IconButton>
         )}
         <List>
@@ -251,6 +326,7 @@ export default function ChatsList({
             </IconButton>
           )}
         </Link>
+        <DeleteModal open={deleteOpen} onClose={() => setDeleteOpen(false)} handleDelete={handleDelete} deleteLoading={deleteLoading}  />
       </Stack>
     </Paper>
   );
