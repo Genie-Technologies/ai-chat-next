@@ -25,7 +25,7 @@ export function AIChat({
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: 'http://localhost:3001/ai/chat',
     body: {
-      threadId: selectedThreadId,
+      threadId: selectedThreadId ? selectedThreadId : null,
     }
   });
 
