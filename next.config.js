@@ -22,7 +22,7 @@ module.exports = {
       process.env.FIREBASE_MEASUREMENT_ID,
     NEXT_PUBLIC_API_URL: 
       process.env.NODE_ENV === "production"
-        ? "http://34.238.93.10:3001"
+        ? "https://aichatapi.lebroncode.com"
         : "http://localhost:3001",
   },
 };
