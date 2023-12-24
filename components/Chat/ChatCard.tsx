@@ -192,9 +192,6 @@ export default function ChatCard({
     };
   }, [connectedWS, socket, _threads, user.id]);
 
-  // join the current thread to show online users for that thread.
-  // TODO: Do we need to loop through all threads and join them? That way we can emit to threads
-  // that the user has not clicked on to display latest message or to show a message arrived for that thread.
   useEffect(() => {
     if (connectedWS && currentThread?.id) {
       socket.emit("join", {
