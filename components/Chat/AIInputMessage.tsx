@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import { Divider, IconButton, InputBase, Paper, useTheme } from "@mui/material";
 import { aiGeneratedRepliesForDemo } from "../utils";
-import { ChangeEvent, ChangeEventHandler, FormEventHandler } from "react";
+import { ChangeEvent, ChangeEventHandler, FormEvent, FormEventHandler, useRef } from "react";
 
 type InputMessageType = {
   input: string;
@@ -17,6 +17,7 @@ type InputMessageType = {
 
 function InputMessage({ input, setInput, sendMessage, threadId, aiChat }: InputMessageType) {
   const theme = useTheme();
+  const formRef = useRef(null);
 
   const fillInput = (reply: string) => {
     setInput({ target: { value: reply }} as ChangeEvent<HTMLInputElement>);
@@ -70,6 +71,7 @@ function InputMessage({ input, setInput, sendMessage, threadId, aiChat }: InputM
           borderRadius: "10px",
         }}
         onSubmit={sendMessage}
+        ref={formRef}
       >
         <InputBase
           color="primary"
@@ -85,6 +87,13 @@ function InputMessage({ input, setInput, sendMessage, threadId, aiChat }: InputM
           onChange={setInput}
           multiline
           required
+          // Add prop to handle when the enter key is pressed and submit the form
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (sendMessage) sendMessage(e as unknown as FormEvent<HTMLFormElement>);
+            }
+          }}
         />
 
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

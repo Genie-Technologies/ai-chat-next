@@ -25,11 +25,10 @@ export function AIChat({
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: `${process.env.NEXT_PUBLIC_API_URL}/ai/chat`,
     body: {
-      threadId: selectedThreadId,
+      threadId: selectedThreadId ? selectedThreadId : null,
     }
   });
 
-  console.log('messages', messages);
   return (
     <Card
       elevation={0}

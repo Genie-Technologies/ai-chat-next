@@ -8,7 +8,6 @@ export const metadata = {
   }
 
 function Page() {
-    console.log('LANDING PAGE')
   return (<Landing />);
 }
 

@@ -13,6 +13,7 @@ const ThreadSelect = ({ threads, selectedThread, setThreadId  }: { threads: Thre
 
   const handleThreadSelect = async (event: SelectChangeEvent<string>) => {
     setLoading(true);
+
     if (setThreadId) setThreadId(event.target.value);
 
     try {
@@ -24,7 +25,7 @@ const ThreadSelect = ({ threads, selectedThread, setThreadId  }: { threads: Thre
         }
       });
       const data = await response.json();
-      console.log(data);
+
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);

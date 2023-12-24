@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 
 const supportTeam = [
   {
-    name: "Shagun Mistry",
+    name: "Shagun M",
     title: "Co-Founder",
     avatar:
       "https://firebasestorage.googleapis.com/v0/b/responai-70dd0.appspot.com/o/about%2Fshagun_mistry.png?alt=media&token=c67d7e95-e036-4db0-8032-b65d1b27b537",

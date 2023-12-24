@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Theme, styled, useTheme, CSSObject } from "@mui/material/styles";
 import Card from "@mui/material/Card";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { Chat } from "./Chat";
@@ -27,8 +26,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ThreadSelect from "./ThreadSelect";
 
 const drawerWidth = 340;
@@ -107,7 +104,6 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ChatCard({
   user,
-  accessToken,
   threads,
   socket,
 }: {
@@ -117,46 +113,16 @@ export default function ChatCard({
   socket: any;
 }) {
   const theme = useTheme();
-  const router = useRouter();
 
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDrawer, setOpenDrawer] = useState(true);
   const [connectedWS, setConnectedWS] = useState<any>(null);
-  const [isNewChat, setIsNewChat] = useState<boolean>(false);
   const [_threads, setThreads] = useState<Threads[]>(
     threads && threads.length > 0 ? threads : []
   );
   const [currentThread, setCurrentThread] = useState<Threads | null>(null);
 
-  const openUserMenu = Boolean(anchorEl);
-
-  const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleUserMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogoutClick = () => {
-    router.push("/api/auth/logout");
-  };
-
-  const handleDrawerOpen = () => {
-    setOpenDrawer(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpenDrawer(false);
-  };
-
   const handleDrawerOpenOrClose = () => {
     setOpenDrawer(!openDrawer);
-  };
-
-  const handleAiDrawerOpenClose = () => {
-    setAiDrawerOpen(!aiDrawerOpen);
   };
 
   useEffect(() => {
@@ -256,6 +222,7 @@ export default function ChatCard({
         thread_id: currentThread.id,
         thread_name: currentThread.threadName,
         timestamp: new Date().toISOString(),
+        user_id: user.id,
       });
 
       // Set last message of thread
@@ -272,10 +239,6 @@ export default function ChatCard({
     }
   };
 
-  const startNewChat = () => {
-    setIsNewChat(!isNewChat);
-  };
-
   const onSetCurrentThread = async (threadId: string | null) => {
     if (!threadId) {
       setCurrentThread(null);
@@ -283,20 +246,24 @@ export default function ChatCard({
     }
 
     // fetch messages for threadId
-    const res = await threadService.getThread(threadId);
+    const res = await threadService.getThread(threadId, user.id);
 
     if (!res) {
       return;
     }
 
     setThreads((prevThreads) => {
-      return prevThreads.map((thread) => {
-        if (thread.id === threadId) {
-          res.isActive = true;
-          return res;
-        }
-        return thread;
-      });
+      if (prevThreads.find((thread) => thread.id === threadId)) {
+        return prevThreads.map((thread) => {
+          if (thread.id === threadId) {
+            res.isActive = true;
+            return res;
+          }
+          return thread;
+        });
+      } else {
+        return [...prevThreads, res];
+      }
     });
     setCurrentThread(res);
   };
@@ -333,17 +300,21 @@ export default function ChatCard({
             ) : null}
 
             <IconButton onClick={handleDrawerOpenOrClose}>
-              {!openDrawer ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {!openDrawer ? (
+                <i className="fas fa-bars"></i>
+              ) : (
+                <i className="fas fa-times"></i>
+              )}
             </IconButton>
           </DrawerHeader>
           <Divider />
           <ChatList
-            newChat={startNewChat}
             threads={_threads}
             currentThread={currentThread}
             user={user}
             setCurrentThread={onSetCurrentThread}
             openDrawer={openDrawer}
+            setThreads={setThreads}
           />
         </Drawer>
         <Box
@@ -357,12 +328,10 @@ export default function ChatCard({
             <Chat
               user={user}
               handleSendMessage={handleSendMessage}
-              isNewChat={!currentThread || isNewChat}
               currentThread={currentThread}
-              setCurrentThread={(thread: Threads) => {
-                // TODO: Can implement when we add creating new threads
-              }}
+              setThreads={setThreads}
               socket={socket}
+              setCurrentThread={setCurrentThread}
             />
           ) : (
             <AIChat
