@@ -37,11 +37,6 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    ``;
-    setAnchorElUser(null);
-  };
-
   const handleMenuItemClick = (page: string) => {
     router.push(`/${page.toLowerCase()}`);
   };

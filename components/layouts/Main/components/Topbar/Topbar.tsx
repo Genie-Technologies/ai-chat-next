@@ -5,10 +5,8 @@ import { alpha, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { NavItem } from "./components";
 import { PageItem, croppedLogoSrc } from "../../../../utils";
 import Link from "next/link";
-import ThemeSwitcher from "../../../../ThemeSwitch/ThemeSwitch";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Skeleton } from "@mui/material";
 
@@ -27,13 +25,9 @@ interface Props {
 
 const Topbar = ({
   onSidebarOpen,
-  pages,
-  colorInvert = false,
 }: Props): JSX.Element => {
   const theme = useTheme();
-  const { mode } = theme.palette;
-
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
 
   return (
     <Box

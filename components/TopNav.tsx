@@ -3,8 +3,6 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 
-import ThemeModeToggler from "./ThemeModeToggler";
-
 interface Props {
   colorInvert?: boolean;
 }
@@ -42,20 +40,6 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
           </Box>
         </Link>
       </Box>
-
-      {/* <Box marginRight={{ xs: 1, sm: 2 }}>
-        <Link
-          underline="none"
-          component="a"
-          href="/docs/introduction"
-          color={colorInvert ? "common.white" : "text.primary"}
-        >
-          Docs
-        </Link>
-      </Box>
-      <Box>
-        <ThemeModeToggler />
-      </Box> */}
     </Box>
   );
 };
