@@ -23,7 +23,7 @@ export function AIChat({
   const theme = useTheme();
   const [selectedThreadId, setThreadId] = useState("");
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: 'http://localhost:3001/ai/chat',
+    api: `${process.env.NEXT_PUBLIC_API_URL}/ai/chat`,
     body: {
       threadId: selectedThreadId,
     }
