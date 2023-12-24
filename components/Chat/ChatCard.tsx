@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Theme, styled, useTheme, CSSObject } from "@mui/material/styles";
 import Card from "@mui/material/Card";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { Chat } from "./Chat";
