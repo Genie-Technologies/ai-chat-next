@@ -27,6 +27,8 @@ export interface AuthOUser {
   sid: string;
 }
 
+export const maxDuration = 30;
+
 export default class UserService {
   public async createUser(user: User) {
     try {
