@@ -19,6 +19,14 @@ import ThreadService, {
 const userService = new UserService();
 const threadService = new ThreadService();
 
+const getFullName = (user: User) => {
+  if (!user.fullName) {
+    return `${user.firstName} ${user.lastName}`
+  }; 
+
+  return user.fullName;
+};
+
 export default function AddChatUser({ threadId, setThreads, userId, setCurrentThread }: { threadId: string, setThreads: Function, userId: string, setCurrentThread: Function }) {
   const [threadName, setThreadName] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -38,7 +46,7 @@ export default function AddChatUser({ threadId, setThreads, userId, setCurrentTh
         usrs = usrs.map((u: User) => {
           // Filter out the current user
           if (u.id !== userId) {
-            return { ...u, fullName: `${u.firstName} ${u.lastName}` }
+            return { ...u, fullName: getFullName(u) }
           }
         }).filter(Boolean);
         setUsers(usrs);
