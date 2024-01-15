@@ -37,3 +37,4 @@ The app should be up and running at http://localhost:3000.
 ![ai_chat_landing](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/d7648ad1-e88c-47e9-a94c-24c714342292)
 
 ![chat_thread_landing](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/86e00d3f-cba6-4dc6-aa45-3d0b73e70d38)
+![Screenshot 2024-01-15 at 3 59 58 PM](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/96db6265-13ee-44b2-b2af-8447f7eec359)
