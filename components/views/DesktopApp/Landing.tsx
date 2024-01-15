@@ -19,11 +19,11 @@ const Landing = (): JSX.Element => {
           // Have a background of linear gradient of purple and green
           background: `linear-gradient(180deg, ${theme.palette.primary.dark} 0%, ${theme.palette.background.paper} 100%)`,
           marginTop: -13,
-          paddingTop: 13,
+          paddingTop: 20,
           scrollbarColor: "rebeccapurple green",
         }}
       >
-        <Container>
+        <Container  paddingY={{ xs: 2 }}>
           <LandingPage />
         </Container>
 
