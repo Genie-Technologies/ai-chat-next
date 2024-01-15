@@ -33,6 +33,10 @@ yarn dev
 
 The app should be up and running at http://localhost:3000.
 
+### Keep in Touch
+- Author - [Shagun Mistry](https://twitter.com/mistry_shagun)
+- Author - [Alex LeBron](https://twitter.com/lebron_tech)
+
 ### Screenshots
 ![ai_chat_landing](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/d7648ad1-e88c-47e9-a94c-24c714342292)
 
