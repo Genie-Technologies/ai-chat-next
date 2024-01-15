@@ -71,8 +71,6 @@ const Landing = (): JSX.Element => {
                 borderRadius: 2,
                 marginRight: isMd ? 2 : 0,
                 marginBottom: isMd ? 0 : 2,
-                display: 'block',
-                textAlign: 'center',
               }}
               onClick={openSignUpDialog}
             >
