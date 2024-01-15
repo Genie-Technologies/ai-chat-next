@@ -95,9 +95,8 @@ const Customization = (): JSX.Element => {
               loading="lazy"
               height={1}
               width={1}
-              src={
-                "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fphotosession.png?alt=media&token=1e0fa105-80d5-4413-b3ec-f3b0e2b1717d"
-              }
+              src=
+                "/imgs/chat_thread_landing.png"
               alt="..."
               boxShadow={3}
               borderRadius={2}
@@ -123,7 +122,7 @@ const Customization = (): JSX.Element => {
               height={1}
               width={1}
               src={
-                "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fsignup.png?alt=media&token=3bc87305-4902-4e2f-aa91-5093e2c5b32a"
+                "/imgs/ai_chat_landing.png"
               }
               alt="..."
               boxShadow={3}

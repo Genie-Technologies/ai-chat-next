@@ -9,7 +9,6 @@ const ThemeModeToggler = (): JSX.Element => {
   return (
     <Button
       variant={"outlined"}
-      // TODO: onClick={() => themeToggler()}
       aria-label="Dark mode toggler"
       color={mode === "light" ? "primary" : "secondary"}
       sx={{

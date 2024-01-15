@@ -10,8 +10,6 @@ import Grid from "@mui/material/Grid";
 import ForumIcon from "@mui/icons-material/Forum";
 import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
-import ShieldIcon from "@mui/icons-material/Shield";
 
 const mock = [
   {
@@ -57,29 +55,29 @@ const Hero = (): JSX.Element => {
         alignItems={"center"}
         justifyContent={"center"}
         xs={12}
-        md={6}
         data-aos="flip-left"
         data-aos-easing="ease-out-cubic"
         data-aos-duration="2000"
+        sx={{
+          paddingTop: 0,
+        }}
       >
         <Box
           component={"img"}
           loading="lazy"
           height={1}
           width={1}
-          src={
-            "https://firebasestorage.googleapis.com/v0/b/shagunresume.appspot.com/o/CosmicChat%2FUndraw%2Fengineering.png?alt=media&token=925b5a4b-2f3f-40fd-9915-980435fa60a7"
-          }
+          src="/imgs/ai_chat_landing.png"
           alt="..."
           boxShadow={3}
           borderRadius={2}
-          maxWidth={600}
           sx={{
             filter: theme.palette.mode === "dark" ? "brightness(0.7)" : "none",
           }}
         />
       </Grid>
-      <Grid item container xs={12} md={6} alignItems={"center"}>
+
+      <Grid item container xs={12} alignItems={"center"} justifyContent="center">
         <Box data-aos={isMd ? "fade-right" : "fade-up"}>
           <Box marginBottom={2}>
             <Typography
@@ -110,12 +108,6 @@ const Hero = (): JSX.Element => {
                         }
                         delayedCall
                       >
-                        {/* <CountUp
-                          duration={2}
-                          end={viewPortEntered ? item.title : 0}
-                          start={0}
-                          suffix={item.suffix}
-                        /> */}
                         {item.icon}
                       </VisibilitySensor>
                     </Box>
