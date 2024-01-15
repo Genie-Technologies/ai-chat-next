@@ -1,34 +1,15 @@
-# AI Chat GPT-3 example
+# ResponAI FE Repo
 
-This example shows how to implement a simple chat bot using Next.js, API Routes, and [OpenAI API](https://beta.openai.com/docs/api-reference/completions/create).
+This Repo is a nextjs application that communicates with a nestJS backend. It uses the [OpenAI API](https://beta.openai.com/docs/api-reference/completions/create) to make completion requests based on user chat history.
+It is bases off the vercel [ai-chatgpt](https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt) repo.
 
 ### Components
 
 - Next.js
 - OpenAI API (REST endpoint)
-- API Routes (Edge runtime)
+- API Routes (NestJS Backend)
 
-## How to Use
-
-You can choose from one of the following two methods to use this repository:
-
-### One-Click Deploy
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt&project-name=ai-chatgpt&repository-name=ai-chatgpt&env=OPENAI_API_KEY)
-
-### Clone and Deploy
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt
-# or
-yarn create next-app --example https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt
-```
-
-#### Set up environment variables
+### Getting Started
 
 Rename [`.env.example`](.env.example) to `.env.local`:
 
@@ -52,4 +33,7 @@ yarn dev
 
 The app should be up and running at http://localhost:3000.
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=edge-middleware-eap) ([Documentation](https://nextjs.org/docs/deployment)).
+### Screenshots
+![ai_chat_landing](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/d7648ad1-e88c-47e9-a94c-24c714342292)
+
+![chat_thread_landing](https://github.com/Genie-Technologies/ai-chat-next/assets/14829509/86e00d3f-cba6-4dc6-aa45-3d0b73e70d38)
