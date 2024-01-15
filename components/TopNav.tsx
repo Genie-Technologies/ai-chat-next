@@ -22,7 +22,7 @@ const TopNav = ({ colorInvert = false }: Props): JSX.Element => {
           sx={{
             alignItems: "center",
           }}
-        >
+        > 
           Try Now
           <Box
             padding={0.5}

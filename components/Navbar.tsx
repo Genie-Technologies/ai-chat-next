@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 import styles from "../styles/Navbar.module.scss";
 
@@ -91,6 +92,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
+         
           <Box
             sx={{
               flexGrow: 1,

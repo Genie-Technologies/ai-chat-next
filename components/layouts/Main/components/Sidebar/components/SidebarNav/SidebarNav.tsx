@@ -11,8 +11,8 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
-import NavItem from "./components/NavItem";
 import { PageItem, croppedLogoSrc } from "../../../../../../utils";
 
 interface Props {
@@ -39,7 +39,6 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
     portfolio: portfolioPages,
     blog: blogPages,
   } = pages;
-  const drawerOptions = user ? ['Chat'] : ['Signup'];
 
   return (
     <Box>
@@ -58,24 +57,56 @@ const SidebarNav = ({ pages }: Props): JSX.Element => {
       </Box>
       <Box paddingX={2} paddingY={2}>
         <List>
-          {drawerOptions.map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <Link
-                href={user ? "/chat" : "/api/auth/login"}
-                style={{
-                  textDecoration: "none",
-                  color: theme.palette.text.primary,
-                }}
-              >
-                <ListItemButton>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
+          {user && (<ListItem key={'chat'} disablePadding>
+            <Link
+              href={"/chat"}
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Chat'} />
+              </ListItemButton>
+            </Link>
+          </ListItem>)}
+          {!user && (<ListItem key={'Signup'} disablePadding>
+            <Link
+              href={"/api/auth/login"}
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Signin"} />
+              </ListItemButton>
+            </Link>
+          </ListItem>)}
+          <ListItem key={"Twitter"} disablePadding>
+            <Link
+              href="https://twitter.com/ResponAi"
+              target="_blank"
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  {<TwitterIcon />}
+                </ListItemIcon>
+                <ListItemText primary={'Twitter'} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
+          
         </List>
       </Box>
     </Box>

@@ -9,6 +9,7 @@ import { PageItem, croppedLogoSrc } from "../../../../utils";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Skeleton } from "@mui/material";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 interface Props {
   onSidebarOpen: () => void;
@@ -50,6 +51,21 @@ const Topbar = ({
         <Box sx={{ display: { xs: "none", md: "flex" } }} alignItems={"center"}>
           <Box marginLeft={4}>
             <Link
+              href="https://twitter.com/ResponAi"
+              style={{
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+              target="_blank"
+            >
+              <Button variant="contained" color="secondary" size="large" sx={{ color: 'white'}}>
+                <TwitterIcon />
+              </Button>
+            </Link>
+          </Box>
+
+          <Box marginLeft={4}>
+            <Link
               href={user ? "/chat" : "/api/auth/login"}
               style={{
                 textDecoration: "none",
@@ -63,6 +79,7 @@ const Topbar = ({
               </Button>
             </Link>
           </Box>
+
           <Box marginLeft={4}>
             <Button
               variant="contained"
