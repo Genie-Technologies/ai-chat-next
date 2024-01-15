@@ -7,7 +7,7 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 const botName = "AI";
-const userName = "News reporter"; // TODO: move to ENV var
+const userName = "News reporter";
 
 // I don't think this func is being used. 
 export default async function handler(req: NextRequest, res: any) {

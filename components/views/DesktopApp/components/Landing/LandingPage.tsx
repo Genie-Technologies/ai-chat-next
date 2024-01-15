@@ -10,7 +10,7 @@ import Dialog from "../../../../GeneralDialog/Dialog";
 import SignUpForm from "../../../../Signup/Signup";
 import homepage from '../../../../../imgs/homepage.png';
 
-const Hero = (): JSX.Element => {
+const Landing = (): JSX.Element => {
   const theme = useTheme();
   const [openSignUp, setOpenSignUp] = useState(false);
 
@@ -23,8 +23,8 @@ const Hero = (): JSX.Element => {
   };
 
   return (
-    <Grid container spacing={4}>
-      <Grid item container xs={12} md={6} alignItems={"center"}>
+    <Grid container>
+      <Grid container item xs={12} alignItems="center" justifyContent="center">
         <Box data-aos={isMd ? "fade-right" : "fade-up"}>
           <Box marginBottom={2}>
             <Typography
@@ -48,15 +48,18 @@ const Hero = (): JSX.Element => {
               </Typography>
             </Typography>
           </Box>
-          <Box marginBottom={3}>
+
+          <Box marginBottom={3} sx={{
+                  textAlign: 'center',
+                }}>
             <Typography variant="h6" component="p" color="text.secondary">
               Experience a new level of messaging with our AI-assisted Messenger
             </Typography>
           </Box>
+
           <Box
             display="flex"
-            flexDirection={{ xs: "column", sm: "row" }}
-            alignItems={{ xs: "stretched", sm: "flex-start" }}
+            justifyContent="center"
           >
             <Button
               variant="contained"
@@ -68,14 +71,17 @@ const Hero = (): JSX.Element => {
                 borderRadius: 2,
                 marginRight: isMd ? 2 : 0,
                 marginBottom: isMd ? 0 : 2,
+                display: 'block',
+                textAlign: 'center',
               }}
               onClick={openSignUpDialog}
             >
-              SIGN UP FOR EARLY ACCESS
+              SIGN UP NOW
             </Button>
           </Box>
         </Box>
       </Grid>
+
       <Grid
         item
         container
@@ -99,4 +105,4 @@ const Hero = (): JSX.Element => {
   );
 };
 
-export default Hero;
+export default Landing;

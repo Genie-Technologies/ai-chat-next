@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Main from "../../layouts/Main";
 import Container from "../../Container";
-import { Customization, Hero, Hub, Pricings } from "./components";
+import { Customization, LandingPage, Hub, Pricings } from "./components";
 
 import styles from "../../../styles/Landing.module.scss";
 
@@ -24,12 +24,13 @@ const Landing = (): JSX.Element => {
         }}
       >
         <Container>
-          <Hero />
+          <LandingPage />
         </Container>
 
         <Container>
           <Hub />
         </Container>
+
         <Box
           component={"svg"}
           preserveAspectRatio="none"

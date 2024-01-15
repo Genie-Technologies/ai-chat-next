@@ -24,6 +24,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import ThreadSelect from "./ThreadSelect";
@@ -297,11 +298,7 @@ export default function ChatCard({
             ) : null}
 
             <IconButton onClick={handleDrawerOpenOrClose}>
-              {!openDrawer ? (
-                <i className="fas fa-bars"></i>
-              ) : (
-                <i className="fas fa-times"></i>
-              )}
+              <MenuIcon />
             </IconButton>
           </DrawerHeader>
           <Divider />
