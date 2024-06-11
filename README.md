@@ -1,7 +1,7 @@
 # ResponAI FE Repo
 
 This Repo is a nextjs application that communicates with a nestJS backend. It uses the [OpenAI API](https://beta.openai.com/docs/api-reference/completions/create) to make completion requests based on user chat history.
-It is bases off the vercel [ai-chatgpt](https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt) repo.
+It is based off the vercel [ai-chatgpt](https://github.com/vercel/examples/tree/main/solutions/ai-chatgpt) repo.
 
 ### Components
 
